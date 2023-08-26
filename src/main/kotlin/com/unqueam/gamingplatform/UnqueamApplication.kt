@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class GamingPlatformApplication
+class UnqueamApplication
 
 fun main(args: Array<String>) {
-    runApplication<GamingPlatformApplication>(*args)
+    runApplication<UnqueamApplication>(*args)
 }

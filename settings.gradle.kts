@@ -1,1 +1,1 @@
-rootProject.name = "gaming-platform"
+rootProject.name = "unqueam"
