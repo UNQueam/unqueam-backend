@@ -13,6 +13,7 @@ class UnqueamApplicationTests {
     @Test
     fun testAssert() {
         assert(1 == 1)
+        assert(2 == 1)
     }
 
 }
