@@ -10,4 +10,9 @@ class UnqueamApplicationTests {
     fun contextLoads() {
     }
 
+    @Test
+    fun testAssert() {
+        assert(1 == 1)
+    }
+
 }
