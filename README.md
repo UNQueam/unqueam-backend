@@ -1,6 +1,6 @@
 # UNQueam Backend Project
 
-> This project is the backend of the gaming platform UNQueam. It is developed with Kotlin with Spring as framework.
+> This project is the backend of the gaming platform UNQueam. It is developed with Kotlin and Spring as a framework.
 
 ## Prerequisites
 
