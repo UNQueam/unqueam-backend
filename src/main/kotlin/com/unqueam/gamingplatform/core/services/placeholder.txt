@@ -1,1 +1,0 @@
-Services that make interactions between domain objects
