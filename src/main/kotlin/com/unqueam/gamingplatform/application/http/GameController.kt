@@ -51,7 +51,7 @@ class GameController {
     }
 
     @PutMapping (API.ID_PATH_VARIABLE)
-    fun updateGameById(@PathVariable id: Long, updatedGame: GameRequest) : ResponseEntity<Any> {
+    fun updateGameById(@PathVariable id: Long, @RequestBody updatedGame: GameRequest) : ResponseEntity<Any> {
         gameService.updateGameById(id, updatedGame)
         return ResponseEntity.status(HttpStatus.OK).build()
     }
