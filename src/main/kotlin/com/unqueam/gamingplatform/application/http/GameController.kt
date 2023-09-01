@@ -27,7 +27,7 @@ class GameController {
     }
 
     @PostMapping
-    fun publishGame(@RequestBody gameRequest: Game) : ResponseEntity<Any> {
+    fun publishGame(@RequestBody gameRequest: GameRequest) : ResponseEntity<Any> {
         gameService.publishGame(gameRequest)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }

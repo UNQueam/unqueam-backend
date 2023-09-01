@@ -5,9 +5,9 @@ import com.unqueam.gamingplatform.core.domain.Game
 
 interface IGameService {
 
-    fun publishGame(gameRequest: Game)
+    fun publishGame(gameRequest: GameRequest)
     fun fetchGames(): List<Game>
     fun fetchGameById(id: Long): Game
     fun deleteGameById(id: Long)
-    fun updateGameById(id: Long, updatedGame: GameRequest)
+    fun updateGameById(id: Long, updatedGameRequest: GameRequest)
 }

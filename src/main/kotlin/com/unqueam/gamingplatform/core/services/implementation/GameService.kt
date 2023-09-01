@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.core.domain.Game
+import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import jakarta.persistence.EntityNotFoundException
@@ -9,13 +10,16 @@ import jakarta.persistence.EntityNotFoundException
 class GameService : IGameService {
 
     private val gameRepository: GameRepository
+    private val gameMapper: GameMapper
 
-    constructor(aGameRepository: GameRepository) {
+    constructor(aGameRepository: GameRepository, aGameMapper: GameMapper) {
         this.gameRepository = aGameRepository
+        this.gameMapper = aGameMapper
     }
 
-    override fun publishGame(gameRequest: Game) {
-        gameRepository.save(gameRequest)
+    override fun publishGame(gameRequest: GameRequest) {
+        val game = gameMapper.map(gameRequest)
+        gameRepository.save(game)
     }
 
     override fun fetchGames(): List<Game> {
@@ -32,8 +36,13 @@ class GameService : IGameService {
         gameRepository.deleteById(id)
     }
 
-    override fun updateGameById(id: Long, updatedGame: GameRequest) {
-        // TODO: Do implementation!
+    override fun updateGameById(id: Long, updatedGameRequest: GameRequest) {
+        val updatedGameFromRequest = gameMapper.map(updatedGameRequest)
+
+        val storedGame = fetchGameById(id)
+        val updatedGame = storedGame.syncWith(updatedGameFromRequest)
+
+        gameRepository.save(updatedGame)
     }
 
 }
