@@ -11,8 +11,8 @@ class Game(
     aDescription: String,
     aLinkToGame: String,
     aReleaseDate: LocalDate,
-    developers: List<Developer>,
-    images: List<GameImage>,
+    developers: Set<Developer>,
+    images: Set<GameImage>,
     rankBadge: RankBadge
 ) {
 
@@ -25,9 +25,9 @@ class Game(
     var linkToGame: String = aLinkToGame
     var releaseDate: LocalDate = aReleaseDate
     @ManyToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val developers: List<Developer> = developers
+    val developers: Set<Developer> = developers
     @OneToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val images: List<GameImage> = images
+    val images: Set<GameImage> = images
     @Enumerated (EnumType.STRING)
     var rankBadge: RankBadge = rankBadge
 
@@ -50,7 +50,7 @@ class Game(
      * @return Boolean true if the game has changed his rank.
      */
     fun checkAndUpdateRankIfMeetsTheRequirements(gameViewsEvents: Long): Boolean {
-        if (this.rankBadge.shouldPassToNextRank(gameViewsEvents)) {
+        if (this.rankBadge.shouldMoveUpToTheNextRank(gameViewsEvents)) {
             this.rankBadge = rankBadge.nextRank
             return true
         }

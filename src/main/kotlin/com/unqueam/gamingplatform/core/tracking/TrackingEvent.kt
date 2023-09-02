@@ -1,4 +1,4 @@
-package com.unqueam.gamingplatform.core.services.implementation
+package com.unqueam.gamingplatform.core.tracking
 
 import jakarta.persistence.*
 import java.time.LocalDateTime

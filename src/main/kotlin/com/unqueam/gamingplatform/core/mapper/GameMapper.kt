@@ -24,11 +24,13 @@ class GameMapper {
         )
     }
 
-    private fun mapDevelopers(developersInput: List<DeveloperGameInput>): List<Developer> {
-        return developersInput.map { Developer(null, it.firstName, it.lastName) }
+    private fun mapDevelopers(developersInput: Set<DeveloperGameInput>): Set<Developer> {
+        val set = mutableSetOf<Developer>()
+        return developersInput.mapTo(set) { Developer(null, it.firstName, it.lastName) }
     }
 
-    private fun mapImages(gameImages: List<GameImageInput>): List<GameImage> {
-        return gameImages.map { GameImage(null, it.url) }
+    private fun mapImages(gameImages: Set<GameImageInput>): Set<GameImage> {
+        val set = mutableSetOf<GameImage>()
+        return gameImages.mapTo(set) { GameImage(null, it.url) }
     }
 }

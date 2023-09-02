@@ -4,28 +4,29 @@ import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
-import com.unqueam.gamingplatform.infrastructure.persistence.GameAndViews
+import com.unqueam.gamingplatform.core.services.ITrackingService
+import com.unqueam.gamingplatform.core.tracking.TrackingEntity
+import com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
-import com.unqueam.gamingplatform.infrastructure.persistence.TrackingEventsRepository
 import jakarta.persistence.EntityNotFoundException
-import java.time.LocalDateTime
+
+private const val GAME_NOT_FOUND_ERROR_MESSAGE = "There is no game with ID: %s"
 
 class GameService : IGameService {
 
     private val gameRepository: GameRepository
     private val gameMapper: GameMapper
-    private val trackingEventRepository: TrackingEventsRepository
+    private val trackingService: ITrackingService
 
-    constructor(aGameRepository: GameRepository, aGameMapper: GameMapper, trackingEventRepository: TrackingEventsRepository) {
+    constructor(aGameRepository: GameRepository, aGameMapper: GameMapper, trackingService: ITrackingService) {
         this.gameRepository = aGameRepository
         this.gameMapper = aGameMapper
-        this.trackingEventRepository = trackingEventRepository
+        this.trackingService = trackingService
     }
 
     override fun publishGame(gameRequest: GameRequest) {
         val game = gameMapper.map(gameRequest)
         gameRepository.save(game)
-        trackingEventRepository.save(TrackingEvent(null, TrackingType.VIEW, TrackingEntity.GAME, game.id!!, LocalDateTime.now()))
     }
 
     override fun fetchGames(): List<Game> {
@@ -33,21 +34,20 @@ class GameService : IGameService {
     }
 
     override fun fetchGameById(id: Long): Game {
-        // GameAndViews en misma query haciendo join por entity
-        val gameAndViews: GameAndViews = gameRepository
+        val gameAndViewsRow: GameAndViewsRow = gameRepository
             .findGameAndCountViews(id)
-            .orElseThrow { EntityNotFoundException("There is no game with ID: %s".format(id)) }
+            .orElseThrow { EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE.format(id)) }
 
-        trackingEventRepository.save(TrackingEvent(null, TrackingType.VIEW, TrackingEntity.GAME, gameAndViews.game.id!!, LocalDateTime.now()))
+        trackingService.trackViewEvent(TrackingEntity.GAME, gameAndViewsRow.game.id!!)
 
-        val gameViewsEvents: Long = gameAndViews.views + 1
+        val gameViewsEvents: Long = gameAndViewsRow.views + 1
 
-        val wasUpdated: Boolean = gameAndViews.game.checkAndUpdateRankIfMeetsTheRequirements(gameViewsEvents)
+        val gameHasChanged: Boolean = gameAndViewsRow.game.checkAndUpdateRankIfMeetsTheRequirements(gameViewsEvents)
 
-        if (wasUpdated) {
-            return gameRepository.save(gameAndViews.game)
+        if (gameHasChanged) {
+            return gameRepository.save(gameAndViewsRow.game)
         }
-        return gameAndViews.game
+        return gameAndViewsRow.game
     }
 
     override fun deleteGameById(id: Long) {
@@ -57,7 +57,10 @@ class GameService : IGameService {
     override fun updateGameById(id: Long, updatedGameRequest: GameRequest) {
         val updatedGameFromRequest = gameMapper.map(updatedGameRequest)
 
-        val storedGame = fetchGameById(id)
+        val storedGame = gameRepository
+            .findById(id)
+            .orElseThrow { EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE.format(id)) }
+
         val updatedGame = storedGame.syncWith(updatedGameFromRequest)
 
         gameRepository.save(updatedGame)

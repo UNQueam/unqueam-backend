@@ -12,8 +12,8 @@ data class GameRequest(
     val linkToGame: String,
     @JsonProperty (value = "release_date")
     val releaseDate: LocalDate,
-    val developers: List<DeveloperGameInput>,
-    val images: List<GameImageInput>
+    val developers: Set<DeveloperGameInput>,
+    val images: Set<GameImageInput>
 )
 
 data class DeveloperGameInput(
