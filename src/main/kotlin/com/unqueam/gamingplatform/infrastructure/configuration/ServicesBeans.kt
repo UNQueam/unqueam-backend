@@ -4,6 +4,7 @@ import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.implementation.GameService
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
+import com.unqueam.gamingplatform.infrastructure.persistence.TrackingEventsRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -11,8 +12,8 @@ import org.springframework.context.annotation.Configuration
 class ServicesBeans {
 
     @Bean
-    fun gameService(gameRepository: GameRepository, gameMapper: GameMapper) : IGameService {
-        return GameService(gameRepository, gameMapper)
+    fun gameService(gameRepository: GameRepository, gameMapper: GameMapper, trackingEventsRepository: TrackingEventsRepository) : IGameService {
+        return GameService(gameRepository, gameMapper, trackingEventsRepository)
     }
 
 }

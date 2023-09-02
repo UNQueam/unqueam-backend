@@ -6,6 +6,7 @@ import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.core.domain.Developer
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.domain.GameImage
+import com.unqueam.gamingplatform.core.domain.RankBadge
 
 class GameMapper {
 
@@ -18,7 +19,8 @@ class GameMapper {
             aGameRequest.linkToGame,
             aGameRequest.releaseDate,
             mapDevelopers(aGameRequest.developers),
-            mapImages(aGameRequest.images)
+            mapImages(aGameRequest.images),
+            RankBadge.RANK_1
         )
     }
 

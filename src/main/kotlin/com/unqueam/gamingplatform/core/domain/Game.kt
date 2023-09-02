@@ -1,9 +1,5 @@
 package com.unqueam.gamingplatform.core.domain
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import jakarta.persistence.*
 import java.time.LocalDate
 
@@ -16,7 +12,8 @@ class Game(
     aLinkToGame: String,
     aReleaseDate: LocalDate,
     developers: List<Developer>,
-    images: List<GameImage>
+    images: List<GameImage>,
+    rankBadge: RankBadge
 ) {
 
     @Id
@@ -26,12 +23,13 @@ class Game(
     var logoUrl: String = aLogoUrl
     var description: String = aDescription
     var linkToGame: String = aLinkToGame
-    // SMELL: delete JsonDeserialize from this class
     var releaseDate: LocalDate = aReleaseDate
     @ManyToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val developers: List<Developer> = developers
     @OneToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val images: List<GameImage> = images
+    @Enumerated (EnumType.STRING)
+    var rankBadge: RankBadge = rankBadge
 
     fun syncWith(updatedGame: Game): Game {
         return Game(
@@ -42,8 +40,21 @@ class Game(
             updatedGame.linkToGame,
             updatedGame.releaseDate,
             developers,
-            images
+            images,
+            this.rankBadge
         )
+    }
+
+    /**
+     * This method move up the game rank to the next rank if rank meets the requirements.
+     * @return Boolean true if the game has changed his rank.
+     */
+    fun checkAndUpdateRankIfMeetsTheRequirements(gameViewsEvents: Long): Boolean {
+        if (this.rankBadge.shouldPassToNextRank(gameViewsEvents)) {
+            this.rankBadge = rankBadge.nextRank
+            return true
+        }
+        return false
     }
 
 }
