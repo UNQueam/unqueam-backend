@@ -16,7 +16,7 @@ object GameTestResource {
             LocalDate.now(),
             setOf(),
             setOf(),
-            RankBadge.RANK_3
+            RankBadge.UNRANKED
         )
     }
 }

@@ -20,7 +20,7 @@ class GameMapper {
             aGameRequest.releaseDate,
             mapDevelopers(aGameRequest.developers),
             mapImages(aGameRequest.images),
-            RankBadge.RANK_5
+            RankBadge.UNRANKED
         )
     }
 
