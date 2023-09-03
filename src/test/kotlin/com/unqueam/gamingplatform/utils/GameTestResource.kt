@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.utils
 
 import com.unqueam.gamingplatform.core.domain.Game
+import com.unqueam.gamingplatform.core.domain.RankBadge
 import java.time.LocalDate
 
 object GameTestResource {
@@ -13,9 +14,9 @@ object GameTestResource {
             "description",
             "link",
             LocalDate.now(),
-            listOf(),
-            listOf()
+            setOf(),
+            setOf(),
+            RankBadge.UNRANKED
         )
     }
-
 }

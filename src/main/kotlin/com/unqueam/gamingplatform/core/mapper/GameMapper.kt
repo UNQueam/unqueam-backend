@@ -6,6 +6,7 @@ import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.core.domain.Developer
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.domain.GameImage
+import com.unqueam.gamingplatform.core.domain.RankBadge
 
 class GameMapper {
 
@@ -18,15 +19,18 @@ class GameMapper {
             aGameRequest.linkToGame,
             aGameRequest.releaseDate,
             mapDevelopers(aGameRequest.developers),
-            mapImages(aGameRequest.images)
+            mapImages(aGameRequest.images),
+            RankBadge.UNRANKED
         )
     }
 
-    private fun mapDevelopers(developersInput: List<DeveloperGameInput>): List<Developer> {
-        return developersInput.map { Developer(null, it.firstName, it.lastName) }
+    private fun mapDevelopers(developersInput: Set<DeveloperGameInput>): Set<Developer> {
+        val set = mutableSetOf<Developer>()
+        return developersInput.mapTo(set) { Developer(null, it.firstName, it.lastName) }
     }
 
-    private fun mapImages(gameImages: List<GameImageInput>): List<GameImage> {
-        return gameImages.map { GameImage(null, it.url) }
+    private fun mapImages(gameImages: Set<GameImageInput>): Set<GameImage> {
+        val set = mutableSetOf<GameImage>()
+        return gameImages.mapTo(set) { GameImage(null, it.url) }
     }
 }

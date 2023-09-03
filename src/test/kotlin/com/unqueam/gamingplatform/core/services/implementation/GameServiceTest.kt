@@ -1,8 +1,9 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
-import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.mapper.GameMapper
+import com.unqueam.gamingplatform.core.tracking.TrackingEntity
+import com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import com.unqueam.gamingplatform.utils.GameRequestTestResource
 import com.unqueam.gamingplatform.utils.GameTestResource
@@ -12,7 +13,6 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
-import java.time.LocalDate
 import java.util.*
 
 class GameServiceTest {
@@ -20,12 +20,14 @@ class GameServiceTest {
     private lateinit var gameService: GameService
     private lateinit var gameMapper: GameMapper
     private lateinit var gameRepository: GameRepository
+    private lateinit var trackingService: TrackingService
 
     @BeforeEach
     fun setup() {
         gameMapper = mock(GameMapper::class.java)
         gameRepository = mock(GameRepository::class.java)
-        gameService = GameService(gameRepository, gameMapper)
+        trackingService = mock(TrackingService::class.java)
+        gameService = GameService(gameRepository, gameMapper, trackingService)
     }
 
     @Test
@@ -55,12 +57,14 @@ class GameServiceTest {
     @Test
     fun `should fetch a game by id`() {
         val id = 1L
-        val game = GameTestResource.buildGameWithId(id)
-        val optionalGame = Optional.of(game)
-        `when`(gameRepository.findById(id)).thenReturn(optionalGame)
+        val gameAndView = GameAndViewsRow(GameTestResource.buildGameWithId(id), 0)
+        val optionalGame = Optional.of(gameAndView)
+        `when`(gameRepository.findGameAndCountViews(id)).thenReturn(optionalGame)
 
         val retrievedGame = gameService.fetchGameById(id)
-        assertThat(retrievedGame).isEqualTo(game)
+        assertThat(retrievedGame).isEqualTo(gameAndView.game)
+        assertThat(0).isEqualTo(gameAndView.views)
+        verify(trackingService, atMostOnce()).trackViewEvent(TrackingEntity.GAME, id)
     }
 
     @Test

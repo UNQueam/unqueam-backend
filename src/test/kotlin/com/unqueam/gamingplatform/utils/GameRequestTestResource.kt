@@ -13,8 +13,8 @@ object GameRequestTestResource {
             "description",
             "link",
             LocalDate.now(),
-            listOf(),
-            listOf()
+            setOf(),
+            setOf()
         )
     }
 
