@@ -14,6 +14,7 @@ object GameRequestTestResource {
             "link",
             LocalDate.now(),
             setOf(),
+            setOf(),
             setOf()
         )
     }

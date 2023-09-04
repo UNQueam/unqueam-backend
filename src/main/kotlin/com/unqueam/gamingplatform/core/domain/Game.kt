@@ -13,7 +13,8 @@ class Game(
     aReleaseDate: LocalDate,
     developers: Set<Developer>,
     images: Set<GameImage>,
-    rankBadge: RankBadge
+    rankBadge: RankBadge,
+    genres: Set<Genre>
 ) {
 
     @Id
@@ -30,6 +31,8 @@ class Game(
     val images: Set<GameImage> = images
     @Enumerated (EnumType.STRING)
     var rankBadge: RankBadge = rankBadge
+    @ManyToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val genres: Set<Genre> = genres
 
     fun syncWith(updatedGame: Game): Game {
         return Game(
@@ -39,9 +42,10 @@ class Game(
             updatedGame.description,
             updatedGame.linkToGame,
             updatedGame.releaseDate,
-            developers,
-            images,
-            this.rankBadge
+            updatedGame.developers,
+            updatedGame.images,
+            this.rankBadge,
+            updatedGame.genres
         )
     }
 
@@ -55,6 +59,12 @@ class Game(
             return true
         }
         return false
+    }
+
+    companion object {
+        fun builder() : GameBuilder {
+            return GameBuilder()
+        }
     }
 
 }
