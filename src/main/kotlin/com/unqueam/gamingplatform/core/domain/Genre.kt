@@ -11,8 +11,8 @@ class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private val id: Long?
-    private val name: String
+    val id: Long?
+    val name: String
 
     constructor(id: Long?, name: String) {
         this.id = id
