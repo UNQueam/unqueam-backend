@@ -14,7 +14,8 @@ class Game(
     developers: Set<Developer>,
     images: Set<GameImage>,
     rankBadge: RankBadge,
-    genres: Set<Genre>
+    genres: Set<Genre>,
+    developmentTeam: String
 ) {
 
     @Id
@@ -33,6 +34,7 @@ class Game(
     var rankBadge: RankBadge = rankBadge
     @ManyToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val genres: Set<Genre> = genres
+    val developmentTeam: String = developmentTeam
 
     fun syncWith(updatedGame: Game): Game {
         return Game(
@@ -45,7 +47,8 @@ class Game(
             updatedGame.developers,
             updatedGame.images,
             this.rankBadge,
-            updatedGame.genres
+            updatedGame.genres,
+            updatedGame.developmentTeam
         )
     }
 

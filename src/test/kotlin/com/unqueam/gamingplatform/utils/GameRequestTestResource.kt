@@ -15,7 +15,8 @@ object GameRequestTestResource {
             LocalDate.now(),
             setOf(),
             setOf(),
-            setOf()
+            setOf(),
+            "developmentTeam"
         )
     }
 

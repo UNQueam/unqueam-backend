@@ -18,6 +18,7 @@ class GameMapper {
             .withGenres(mapGenres(aGameRequest.genres))
             .withImages(mapImages(aGameRequest.images))
             .withLogoUrl(aGameRequest.logoUrl)
+            .withDevelopmentTeam(aGameRequest.developmentTeam)
             .build()
     }
 

@@ -14,6 +14,7 @@ class GameBuilderTest {
             .withLinkToGame("link")
             .describedAs("description")
             .releasedAt(LocalDate.now())
+            .withDevelopmentTeam("devTeam")
             .build()
 
         assertThat(game.developers).isEmpty()
@@ -33,6 +34,7 @@ class GameBuilderTest {
             .describedAs("description")
             .developedBy(setOf())
             .named("name")
+            .withDevelopmentTeam("devTeam")
             .build()
 
         assertThat(game.developers).isEmpty()
@@ -43,5 +45,6 @@ class GameBuilderTest {
         assertThat(game.releaseDate).isEqualTo(releaseDate)
         assertThat(game.logoUrl).isEqualTo("logo")
         assertThat(game.linkToGame).isEqualTo("link")
+        assertThat(game.developmentTeam).isEqualTo("devTeam")
     }
 }
