@@ -17,7 +17,8 @@ object GameTestResource {
             setOf(),
             setOf(),
             RankBadge.UNRANKED,
-            setOf()
+            setOf(),
+            "developmentTeam"
         )
     }
 }

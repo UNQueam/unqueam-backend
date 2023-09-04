@@ -12,9 +12,15 @@ class GameBuilder {
     private lateinit var logoUrl: String
     private var images: Set<GameImage> = setOf()
     private var genres: Set<Genre> = setOf()
+    private lateinit var developmentTeam: String
 
     fun developedBy(developers: Set<Developer>) : GameBuilder {
         this.developers = developers
+        return this
+    }
+
+    fun withDevelopmentTeam(developmentTeam: String) : GameBuilder {
+        this.developmentTeam = developmentTeam
         return this
     }
 
@@ -64,7 +70,8 @@ class GameBuilder {
             developers,
             images,
             RankBadge.UNRANKED,
-            genres
+            genres,
+            developmentTeam
         )
     }
 }

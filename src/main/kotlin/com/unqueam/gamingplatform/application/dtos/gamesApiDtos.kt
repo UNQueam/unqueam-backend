@@ -14,7 +14,9 @@ data class GameRequest(
     val releaseDate: LocalDate,
     val developers: Set<DeveloperGameInput>,
     val images: Set<GameImageInput>,
-    val genres: Set<GenreInput>
+    val genres: Set<GenreInput>,
+    @JsonProperty (value = "development_team")
+    val developmentTeam: String
 )
 
 data class DeveloperGameInput(
