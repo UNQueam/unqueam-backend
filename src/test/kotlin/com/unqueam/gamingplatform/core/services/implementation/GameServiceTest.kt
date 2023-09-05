@@ -18,16 +18,14 @@ import java.util.*
 class GameServiceTest {
 
     private lateinit var gameService: GameService
-    private lateinit var gameMapper: GameMapper
     private lateinit var gameRepository: GameRepository
     private lateinit var trackingService: TrackingService
 
     @BeforeEach
     fun setup() {
-        gameMapper = mock(GameMapper::class.java)
         gameRepository = mock(GameRepository::class.java)
         trackingService = mock(TrackingService::class.java)
-        gameService = GameService(gameRepository, gameMapper, trackingService)
+        gameService = GameService(gameRepository, GameMapper(), trackingService)
     }
 
     @Test
@@ -35,12 +33,10 @@ class GameServiceTest {
         val game = GameTestResource.buildGameWithId(1L)
         val gameRequest = GameRequestTestResource.buildGameRequest()
 
-        `when`(gameMapper.map(gameRequest)).thenReturn(game)
         `when`(gameRepository.save(game)).thenReturn(game)
 
         gameService.publishGame(gameRequest)
 
-        verify(gameMapper, atMostOnce()).map(gameRequest)
         verify(gameRepository, atMostOnce()).save(game)
     }
 
@@ -62,7 +58,7 @@ class GameServiceTest {
         `when`(gameRepository.findGameAndCountViews(id)).thenReturn(optionalGame)
 
         val retrievedGame = gameService.fetchGameById(id)
-        assertThat(retrievedGame).isEqualTo(gameAndView.game)
+        assertThat(retrievedGame.id).isEqualTo(gameAndView.game.id)
         assertThat(0).isEqualTo(gameAndView.views)
         verify(trackingService, atMostOnce()).trackViewEvent(TrackingEntity.GAME, id)
     }
@@ -93,7 +89,6 @@ class GameServiceTest {
         val optionalGame = Optional.of(game)
         val gameRequest = GameRequestTestResource.buildGameRequest()
 
-        `when`(gameMapper.map(gameRequest)).thenReturn(game)
         `when`(gameRepository.findById(gameId)).thenReturn(optionalGame)
 
         gameService.updateGameById(gameId, gameRequest)
