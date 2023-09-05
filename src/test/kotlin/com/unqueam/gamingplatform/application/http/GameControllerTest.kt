@@ -1,6 +1,5 @@
 package com.unqueam.gamingplatform.application.http
 
-import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.services.implementation.GameService
 import com.unqueam.gamingplatform.utils.GameRequestTestResource
@@ -12,7 +11,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.springframework.http.HttpStatus
-import java.time.LocalDate
 
 class GameControllerTest {
 
@@ -50,7 +48,7 @@ class GameControllerTest {
     @Test
     fun `should fetch game by id`() {
         val id = 1L
-        val game = GameTestResource.buildGameWithId(id)
+        val game = GameTestResource.buildGameOutputWithId(id)
         `when`(gameService.fetchGameById(id)).thenReturn(game)
         val response = gameController.fetchGameById(id)
 

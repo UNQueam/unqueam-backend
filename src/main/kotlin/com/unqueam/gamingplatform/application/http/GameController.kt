@@ -1,7 +1,7 @@
 package com.unqueam.gamingplatform.application.http
 
+import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
-import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.services.IGameService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -33,14 +33,14 @@ class GameController {
     }
 
     @GetMapping
-    fun fetchGames(): ResponseEntity<Any> {
-        val games: List<Any> = gameService.fetchGames()
+    fun fetchGames(): ResponseEntity<List<GameOutput>> {
+        val games: List<GameOutput> = gameService.fetchGames()
         return ResponseEntity.status(HttpStatus.OK).body(games)
     }
 
     @GetMapping (API.ID_PATH_VARIABLE)
-    fun fetchGameById(@PathVariable id: Long) : ResponseEntity<Any> {
-        val game: Any = gameService.fetchGameById(id)
+    fun fetchGameById(@PathVariable id: Long) : ResponseEntity<GameOutput> {
+        val game: GameOutput = gameService.fetchGameById(id)
         return ResponseEntity.status(HttpStatus.OK).body(game)
     }
 

@@ -1,7 +1,7 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
+import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
-import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.ITrackingService
@@ -25,15 +25,15 @@ class GameService : IGameService {
     }
 
     override fun publishGame(gameRequest: GameRequest) {
-        val game = gameMapper.map(gameRequest)
+        val game = gameMapper.mapToInput(gameRequest)
         gameRepository.save(game)
     }
 
-    override fun fetchGames(): List<Game> {
-        return gameRepository.findAll()
+    override fun fetchGames(): List<GameOutput> {
+        return gameRepository.findAll().map { gameMapper.mapToOutput(it) }
     }
 
-    override fun fetchGameById(id: Long): Game {
+    override fun fetchGameById(id: Long): GameOutput {
         val gameAndViewsRow: GameAndViewsRow = gameRepository
             .findGameAndCountViews(id)
             .orElseThrow { EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE.format(id)) }
@@ -45,9 +45,9 @@ class GameService : IGameService {
         val gameHasChanged: Boolean = gameAndViewsRow.game.checkAndUpdateRankIfMeetsTheRequirements(gameViewsEvents)
 
         if (gameHasChanged) {
-            return gameRepository.save(gameAndViewsRow.game)
+            return gameMapper.mapToOutput(gameRepository.save(gameAndViewsRow.game))
         }
-        return gameAndViewsRow.game
+        return gameMapper.mapToOutput(gameAndViewsRow.game)
     }
 
     override fun deleteGameById(id: Long) {
@@ -55,7 +55,7 @@ class GameService : IGameService {
     }
 
     override fun updateGameById(id: Long, updatedGameRequest: GameRequest) {
-        val updatedGameFromRequest = gameMapper.map(updatedGameRequest)
+        val updatedGameFromRequest = gameMapper.mapToInput(updatedGameRequest)
 
         val storedGame = gameRepository
             .findById(id)
