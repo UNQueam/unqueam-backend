@@ -30,7 +30,8 @@ class GameMapper {
             mapToSet(aGame.developers) { DeveloperGameOutput(it.id!!, it.firstName, it.lastName) },
             mapToSet(aGame.images) { GameImageOutput(it.id!!, it.url) },
             mapToSet(aGame.genres) { GenreOutput(it.id!!, it.name) },
-            aGame.developmentTeam
+            aGame.developmentTeam,
+            aGame.rankBadge.name
         )
     }
 
