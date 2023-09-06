@@ -48,7 +48,9 @@ data class GameOutput(
     val images: Set<GameImageOutput>,
     val genres: Set<GenreOutput>,
     @JsonProperty (value = "development_team")
-    val developmentTeam: String
+    val developmentTeam: String,
+    @JsonProperty (value = "rank_badge")
+    val rankBadge: String
 )
 
 data class DeveloperGameOutput(
@@ -58,6 +60,7 @@ data class DeveloperGameOutput(
     @JsonProperty (value = "last_name")
     val lastName: String,
 )
+
 
 data class GameImageOutput(
     val id: Long,
