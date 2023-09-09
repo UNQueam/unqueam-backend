@@ -5,6 +5,7 @@ import com.unqueam.gamingplatform.application.dtos.GameImageInput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.dtos.GenreInput
 import com.unqueam.gamingplatform.core.services.IGameService
+import jakarta.transaction.Transactional
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.hibernate.internal.util.collections.CollectionHelper.setOf
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,11 +25,16 @@ class DatabaseSeeder {
         this.gameService = aGameService
     }
 
+    @Transactional
     @EventListener
     fun seed(event: ContextRefreshedEvent) {
 
         if (gameService.fetchGames().isEmpty()) {
             createGames().forEach { gameService.publishGame(it) }
+            loadViewsForGameWithId(3, 18)
+            loadViewsForGameWithId(4, 70)
+            loadViewsForGameWithId(5, 110)
+            loadViewsForGameWithId(6, 14)
         }
     }
 
@@ -223,6 +229,12 @@ class DatabaseSeeder {
             genres,
             developmentTeam
         )
+    }
+
+    private fun loadViewsForGameWithId(gameId: Long, views: Int) {
+        for (i in 1..views) {
+            gameService.fetchGameById(gameId)
+        }
     }
 
 }

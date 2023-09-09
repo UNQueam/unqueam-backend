@@ -21,7 +21,7 @@ interface GameRepository : JpaRepository<Game, Long> {
     )
     fun findGameAndCountViews(@Param("id") id: Long?): Optional<GameAndViewsRow>
 
-    @EntityGraph(attributePaths=["developers", "images"])
+    @EntityGraph(attributePaths=["developers", "images", "genres"])
     override fun findAll(): List<Game>
 }
 
