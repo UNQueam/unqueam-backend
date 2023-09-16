@@ -4,7 +4,10 @@ import com.unqueam.gamingplatform.core.services.IUserService
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.stereotype.Service
 
+
+@Service
 class CustomUserDetailsService : UserDetailsService {
 
     private val userService: IUserService
