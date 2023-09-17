@@ -5,7 +5,6 @@ import com.unqueam.gamingplatform.core.services.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -41,12 +40,16 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf()
             .disable()
-                .authorizeHttpRequests().requestMatchers("/api/games")
-        .permitAll().anyRequest().authenticated()
+            .authorizeHttpRequests()
+            .requestMatchers("/api/games", "/api/auth/**")
+            .permitAll()
+            .anyRequest()
+            .authenticated()
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .and()
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
 }

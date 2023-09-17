@@ -14,7 +14,9 @@ import kotlin.collections.HashMap
 
 @Service
 class JwtServiceImpl : JwtService {
-    private val jwtSigningKey: String = "UNQueam"
+
+    private val jwtSigningKey : Key = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+
     override fun extractUserName(token: String): String {
         return extractClaim<String>(token, Claims::getSubject)
     }
@@ -34,10 +36,17 @@ class JwtServiceImpl : JwtService {
     }
 
     private fun generateToken(extraClaims: Map<String, Any>, userDetails: UserDetails): String {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.username)
-                .setIssuedAt(Date(System.currentTimeMillis()))
-                .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(signingKey, SignatureAlgorithm.HS256).compact()
+        return Jwts.builder()
+            .setClaims(extraClaims)
+            .setSubject(userDetails.username)
+            .setIssuedAt(Date(System.currentTimeMillis()))
+            .setExpiration(generateExpirationDate())
+            .signWith(jwtSigningKey)
+            .compact()
+    }
+
+    private fun generateExpirationDate(): Date? {
+        return Date(System.currentTimeMillis() + 1000 * 60 * 24)
     }
 
     private fun isTokenExpired(token: String): Boolean {
@@ -49,13 +58,10 @@ class JwtServiceImpl : JwtService {
     }
 
     private fun extractAllClaims(token: String): Claims {
-        return Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token)
-                .getBody()
+        return Jwts.parserBuilder()
+            .setSigningKey(jwtSigningKey)
+            .build()
+            .parseClaimsJws(token)
+            .body
     }
-
-    private val signingKey: Key
-        private get() {
-            val keyBytes: ByteArray = Decoders.BASE64.decode(jwtSigningKey)
-            return Keys.hmacShaKeyFor(keyBytes)
-        }
 }
