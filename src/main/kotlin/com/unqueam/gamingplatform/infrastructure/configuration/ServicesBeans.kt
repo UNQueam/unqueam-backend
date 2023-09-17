@@ -38,7 +38,7 @@ class ServicesBeans {
     }
 
     @Bean
-    fun authenticationService(userRepository: UserRepository, authMapper: AuthMapper, jwtService: JwtService, authenticationManager: AuthenticationManager) : IAuthenticationService {
-        return AuthService(userRepository, authMapper, jwtService, authenticationManager)
+    fun authenticationService(userService: IUserService, authMapper: AuthMapper, jwtService: JwtService, authenticationManager: AuthenticationManager, passwordEncoder: PasswordEncoder) : IAuthenticationService {
+        return AuthService(userService, authMapper, jwtService, authenticationManager, passwordEncoder)
     }
 }

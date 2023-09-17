@@ -4,6 +4,7 @@ import com.unqueam.gamingplatform.application.dtos.AuthenticationOutput
 import com.unqueam.gamingplatform.application.dtos.SignInRequest
 import com.unqueam.gamingplatform.application.dtos.SignUpRequest
 import com.unqueam.gamingplatform.core.services.IAuthenticationService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -24,8 +25,8 @@ class AuthController {
     }
 
     @PostMapping ("/signIn")
-    fun userSignIn(@RequestBody signInRequest: SignInRequest) : ResponseEntity<AuthenticationOutput> {
-        val output = authService.signIn(signInRequest)
+    fun userSignIn(@RequestBody signInRequest: SignInRequest, httpServletRequest: HttpServletRequest) : ResponseEntity<AuthenticationOutput> {
+        val output = authService.signIn(signInRequest, httpServletRequest)
         return ResponseEntity.status(HttpStatus.OK).body(output)
     }
 

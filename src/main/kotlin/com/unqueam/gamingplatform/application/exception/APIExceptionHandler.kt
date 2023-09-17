@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -19,6 +20,11 @@ class APIExceptionHandler {
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFound(exception: EntityNotFoundException, httpRequest: HttpServletRequest): ResponseEntity<ErrorAPIResponse> {
         return buildErrorResponse(HttpStatus.NOT_FOUND, exception, httpRequest)
+    }
+
+    @ExceptionHandler(UsernameNotFoundException::class)
+    fun handleUsernameNotFoundException(exception: UsernameNotFoundException, httpRequest: HttpServletRequest): ResponseEntity<ErrorAPIResponse> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
     }
 
     private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest) : ResponseEntity<ErrorAPIResponse> {

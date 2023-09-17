@@ -8,42 +8,47 @@ import com.unqueam.gamingplatform.application.dtos.SignUpRequest
 import com.unqueam.gamingplatform.core.domain.User
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
 import com.unqueam.gamingplatform.core.services.IAuthenticationService
-import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
+import com.unqueam.gamingplatform.core.services.IUserService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import java.util.Optional
+import org.springframework.security.crypto.password.PasswordEncoder
 
 class AuthService : IAuthenticationService {
 
-    private val userRepository: UserRepository
+    private val userService: IUserService
     private val authMapper: AuthMapper
     private val jwtService: JwtService
     private val authenticationManager: AuthenticationManager
+    private val passwordEncoder: PasswordEncoder
 
-    constructor(userRepository: UserRepository, authMapper: AuthMapper, jwtService: JwtService, authenticationManager: AuthenticationManager) {
-        this.userRepository = userRepository
+    constructor(userService: IUserService, authMapper: AuthMapper, jwtService: JwtService, authenticationManager: AuthenticationManager, passwordEncoder: PasswordEncoder) {
+        this.userService = userService
         this.authMapper = authMapper
         this.jwtService = jwtService
         this.authenticationManager = authenticationManager
+        this.passwordEncoder = passwordEncoder
     }
 
     override fun signUp(request: SignUpRequest): AuthenticationOutput {
         // TODO: Validations
 
         val user: User = authMapper.mapToInput(request)
-        userRepository.save<User>(user)
+        userService.save(user)
         val authToken = generateAuthToken(user)
 
         return authMapper.mapToOutput(user, authToken)
     }
 
-    override fun signIn(request: SignInRequest): AuthenticationOutput {
-        authenticationManager.authenticate(UsernamePasswordAuthenticationToken(request.username, request.password))
-        val user = Optional.ofNullable(userRepository.findByUsername(request.username))
-                .orElseThrow { IllegalArgumentException("Invalid email or password") }
-        val authToken = generateAuthToken(user)
+    override fun signIn(request: SignInRequest, httpRequest: HttpServletRequest): AuthenticationOutput {
+        val authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken(request.username, request.password))
+        val authenticatedUser = (authentication.principal as CustomUserDetails).getUser()
 
-        return authMapper.mapToOutput(user, authToken)
+        //val user = Optional.ofNullable(userRepository.findByUsername(request.username))
+        //        .orElseThrow { IllegalArgumentException("Invalid email or password") }
+
+        val authToken = generateAuthToken(authenticatedUser)
+        return authMapper.mapToOutput(authenticatedUser, authToken)
     }
 
     private fun generateAuthToken(user: User): String {
