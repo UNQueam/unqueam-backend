@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
@@ -23,15 +23,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticationFilter ){
 
     @Bean
-    fun userDetailsService(userService: IUserService): UserDetailsService {
-        return CustomUserDetailsService(userService)
-    }
-
-    @Bean
-    fun authenticationManager(http: HttpSecurity, bCryptPasswordEncoder: BCryptPasswordEncoder, userDetailService: CustomUserDetailsService): AuthenticationManager {
+    fun authenticationManager(http: HttpSecurity, passwordEncoder: PasswordEncoder, userDetailService: CustomUserDetailsService): AuthenticationManager {
         return http.getSharedObject(AuthenticationManagerBuilder::class.java)
             .userDetailsService(userDetailService)
-            .passwordEncoder(bCryptPasswordEncoder)
+            .passwordEncoder(passwordEncoder)
             .and()
             .build()
     }
