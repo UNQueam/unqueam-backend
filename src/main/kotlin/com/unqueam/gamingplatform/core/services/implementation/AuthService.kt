@@ -11,7 +11,9 @@ import com.unqueam.gamingplatform.core.services.IAuthenticationService
 import com.unqueam.gamingplatform.core.services.IUserService
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 
 class AuthService : IAuthenticationService {
@@ -41,14 +43,21 @@ class AuthService : IAuthenticationService {
     }
 
     override fun signIn(request: SignInRequest, httpRequest: HttpServletRequest): AuthenticationOutput {
-        val authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken(request.username, request.password))
-        val authenticatedUser = (authentication.principal as CustomUserDetails).getUser()
+        try {
+            val user: User = userService.findUserByUsername(request.username)
 
-        //val user = Optional.ofNullable(userRepository.findByUsername(request.username))
-        //        .orElseThrow { IllegalArgumentException("Invalid email or password") }
+            if (passwordEncoder.matches(request.password, user.getPassword())) {
+                val authToken = generateAuthToken(user)
+                return authMapper.mapToOutput(user, authToken)
+            }
+            throw BadCredentialsException("El usuario y/o contraseña son incorrectos.")
+        } catch (usernameNotFoundException: UsernameNotFoundException) {
+            throw BadCredentialsException("El usuario y/o contraseña son incorrectos.")
+        }
+    }
 
-        val authToken = generateAuthToken(authenticatedUser)
-        return authMapper.mapToOutput(authenticatedUser, authToken)
+    private fun throwBadCredentialsError() {
+        throw BadCredentialsException("El usuario y/o contraseña son incorrectos.")
     }
 
     private fun generateAuthToken(user: User): String {

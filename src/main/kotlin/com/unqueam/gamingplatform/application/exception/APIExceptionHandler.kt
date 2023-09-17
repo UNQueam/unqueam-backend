@@ -5,9 +5,11 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.security.SignatureException
 
 @ControllerAdvice
 class APIExceptionHandler {
@@ -24,6 +26,11 @@ class APIExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException::class)
     fun handleUsernameNotFoundException(exception: UsernameNotFoundException, httpRequest: HttpServletRequest): ResponseEntity<ErrorAPIResponse> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
+    }
+
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleBadCredentialsException(exception: BadCredentialsException, httpRequest: HttpServletRequest): ResponseEntity<ErrorAPIResponse> {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
     }
 
