@@ -1,9 +1,9 @@
 package com.unqueam.gamingplatform.application.auth
 
+import com.unqueam.gamingplatform.core.domain.User
 import com.unqueam.gamingplatform.core.services.IUserService
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 
@@ -17,9 +17,7 @@ class CustomUserDetailsService : UserDetailsService {
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = userService.findUserByUsername(username)
-            ?: throw UsernameNotFoundException("Usuario no encontrado: $username")
-
+        val user: User = userService.findUserByUsername(username)
         return CustomUserDetails(user)
     }
 }

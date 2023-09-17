@@ -23,4 +23,6 @@ class CustomUserDetails(private val user: User) : UserDetails {
     override fun isCredentialsNonExpired(): Boolean = true
 
     override fun isEnabled(): Boolean = true
+
+    fun getUser(): User = user
 }
