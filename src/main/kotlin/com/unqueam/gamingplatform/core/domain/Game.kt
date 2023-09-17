@@ -33,7 +33,7 @@ class Game(
     @Enumerated (EnumType.STRING)
     var rankBadge: RankBadge = rankBadge
     @ElementCollection(targetClass = Genre::class)
-    @CollectionTable(name = "game_genres", joinColumns = [JoinColumn(name = "id")])
+    @CollectionTable(name = "game_genres", joinColumns = [JoinColumn(name = "game_id")])
     @Enumerated(EnumType.STRING)
     val genres: Set<Genre> = genres
     val developmentTeam: String = developmentTeam

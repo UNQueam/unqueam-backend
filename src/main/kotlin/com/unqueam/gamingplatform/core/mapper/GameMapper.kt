@@ -12,7 +12,7 @@ class GameMapper {
             .describedAs(aGameRequest.description)
             .withLinkToGame(aGameRequest.linkToGame)
             .releasedAt(aGameRequest.releaseDate)
-            .withGenres(mapToSet(aGameRequest.genres) { Genre.findGenreByName(it.name) })
+            .withGenres(mapToSet(aGameRequest.genres) { Genre.findGenre(it.name) })
             .withImages(mapToSet(aGameRequest.images) { GameImage(null, it.url) })
             .withLogoUrl(aGameRequest.logoUrl)
             .withDevelopmentTeam(aGameRequest.developmentTeam)
