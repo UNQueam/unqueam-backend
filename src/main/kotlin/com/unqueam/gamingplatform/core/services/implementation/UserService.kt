@@ -4,6 +4,7 @@ import com.unqueam.gamingplatform.core.domain.User
 import com.unqueam.gamingplatform.core.services.IUserService
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import java.util.Optional
 
 class UserService(private val userRepository: UserRepository) : IUserService {
 
@@ -11,6 +12,10 @@ class UserService(private val userRepository: UserRepository) : IUserService {
         return userRepository
             .findByUsername(username)
             .orElseThrow { UsernameNotFoundException("Usuario no encontrado: $username") }
+    }
+
+    override fun findUserByUsernameOrEmail(username: String, email: String): Optional<User> {
+        return userRepository.findByUsernameOrEmail(username, email)
     }
 
     override fun save(user: User): User {

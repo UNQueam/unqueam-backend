@@ -33,6 +33,16 @@ class APIExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
     }
 
+    @ExceptionHandler(UsernameOrEmailAlreadyUsedException::class)
+    fun handleUsernameOrEmailAlreadyUsedException(exception: UsernameOrEmailAlreadyUsedException, httpRequest: HttpServletRequest): ResponseEntity<ErrorAPIResponse> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
+    }
+
+    @ExceptionHandler(InvalidSignUpPasswordFormatException::class)
+    fun handleInvalidPasswordException(exception: InvalidSignUpPasswordFormatException, httpRequest: HttpServletRequest): ResponseEntity<ErrorAPIResponse> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
+    }
+
     private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest) : ResponseEntity<ErrorAPIResponse> {
         return ResponseEntity
             .status(httpStatus)

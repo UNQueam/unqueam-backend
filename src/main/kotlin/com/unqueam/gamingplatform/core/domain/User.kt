@@ -25,4 +25,5 @@ class User {
     fun getRole(): Role = role
     fun getPassword(): String = password
     fun getUsername(): String = username
+    fun getEmail(): String = email
 }

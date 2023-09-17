@@ -5,7 +5,9 @@ import com.unqueam.gamingplatform.application.auth.JwtService
 import com.unqueam.gamingplatform.application.dtos.AuthenticationOutput
 import com.unqueam.gamingplatform.application.dtos.SignInRequest
 import com.unqueam.gamingplatform.application.dtos.SignUpRequest
+import com.unqueam.gamingplatform.application.exception.UsernameOrEmailAlreadyUsedException
 import com.unqueam.gamingplatform.core.domain.User
+import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
 import com.unqueam.gamingplatform.core.services.IAuthenticationService
 import com.unqueam.gamingplatform.core.services.IUserService
@@ -23,16 +25,19 @@ class AuthService : IAuthenticationService {
     private val authMapper: AuthMapper
     private val jwtService: JwtService
     private val passwordEncoder: PasswordEncoder
+    private val passwordFormatValidator: IPasswordFormatValidator
 
-    constructor(userService: IUserService, authMapper: AuthMapper, jwtService: JwtService, authenticationManager: AuthenticationManager, passwordEncoder: PasswordEncoder) {
+    constructor(userService: IUserService, authMapper: AuthMapper, jwtService: JwtService, authenticationManager: AuthenticationManager, passwordEncoder: PasswordEncoder, passwordFormatValidator: IPasswordFormatValidator) {
         this.userService = userService
         this.authMapper = authMapper
         this.jwtService = jwtService
         this.passwordEncoder = passwordEncoder
+        this.passwordFormatValidator = passwordFormatValidator
     }
 
     override fun signUp(request: SignUpRequest): AuthenticationOutput {
-        // TODO: Validations
+        passwordFormatValidator.validateConstraints(request.password)
+        validateUsernameOrEmailAreNotInUse(request)
 
         val user: User = authMapper.mapToInput(request)
         userService.save(user)
@@ -53,6 +58,22 @@ class AuthService : IAuthenticationService {
         } catch (usernameNotFoundException: UsernameNotFoundException) {
             throw BadCredentialsException(SIGN_IN_ERROR_MESSAGE)
         }
+    }
+
+    private fun validateUsernameOrEmailAreNotInUse(request: SignUpRequest) {
+        userService
+            .findUserByUsernameOrEmail(request.username, request.email)
+            .ifPresent { fetchedUser ->
+                if (fetchedUser.getUsername() == request.username && fetchedUser.getEmail() == request.email) {
+                    throw UsernameOrEmailAlreadyUsedException("El nombre de usuario y correo ingresado estan en uso.")
+                }
+                if (fetchedUser.getUsername() == request.username) {
+                    throw UsernameOrEmailAlreadyUsedException("El nombre de usuario ya está en uso.")
+                }
+                if (fetchedUser.getEmail() == request.email) {
+                    throw UsernameOrEmailAlreadyUsedException("El correo electrónico ingresado ya está en uso.")
+                }
+            }
     }
 
     private fun generateAuthToken(user: User): String {

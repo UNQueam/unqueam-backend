@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.infrastructure.configuration
 
 import com.unqueam.gamingplatform.application.auth.JwtService
+import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IAuthenticationService
@@ -38,7 +39,13 @@ class ServicesBeans {
     }
 
     @Bean
-    fun authenticationService(userService: IUserService, authMapper: AuthMapper, jwtService: JwtService, authenticationManager: AuthenticationManager, passwordEncoder: PasswordEncoder) : IAuthenticationService {
-        return AuthService(userService, authMapper, jwtService, authenticationManager, passwordEncoder)
+    fun authenticationService(
+        userService: IUserService,
+        authMapper: AuthMapper,
+        jwtService: JwtService,
+        authenticationManager: AuthenticationManager,
+        passwordEncoder: PasswordEncoder,
+        passwordFormatValidator: IPasswordFormatValidator) : IAuthenticationService {
+        return AuthService(userService, authMapper, jwtService, authenticationManager, passwordEncoder, passwordFormatValidator)
     }
 }
