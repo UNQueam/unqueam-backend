@@ -12,7 +12,7 @@ class GameMapper {
             .describedAs(aGameRequest.description)
             .withLinkToGame(aGameRequest.linkToGame)
             .releasedAt(aGameRequest.releaseDate)
-            .withGenres(mapToSet(aGameRequest.genres) { Genre(null, it.name) })
+            .withGenres(mapToSet(aGameRequest.genres) { Genre.findGenreByName(it.name) })
             .withImages(mapToSet(aGameRequest.images) { GameImage(null, it.url) })
             .withLogoUrl(aGameRequest.logoUrl)
             .withDevelopmentTeam(aGameRequest.developmentTeam)
@@ -29,7 +29,7 @@ class GameMapper {
             aGame.releaseDate,
             mapToSet(aGame.developers) { DeveloperGameOutput(it.id!!, it.firstName, it.lastName) },
             mapToSet(aGame.images) { GameImageOutput(it.id!!, it.url) },
-            mapToSet(aGame.genres) { GenreOutput(it.id!!, it.name) },
+            mapToSet(aGame.genres) { GenreOutput(it.name, it.spanishName, it.englishName) },
             aGame.developmentTeam,
             aGame.rankBadge.name
         )

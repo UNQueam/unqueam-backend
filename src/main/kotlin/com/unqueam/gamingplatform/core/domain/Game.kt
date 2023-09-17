@@ -32,7 +32,9 @@ class Game(
     val images: Set<GameImage> = images
     @Enumerated (EnumType.STRING)
     var rankBadge: RankBadge = rankBadge
-    @ManyToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = Genre::class)
+    @CollectionTable(name = "game_genres", joinColumns = [JoinColumn(name = "id")])
+    @Enumerated(EnumType.STRING)
     val genres: Set<Genre> = genres
     val developmentTeam: String = developmentTeam
 
