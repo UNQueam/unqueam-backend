@@ -4,6 +4,7 @@ import com.unqueam.gamingplatform.application.auth.JwtService
 import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
 import com.unqueam.gamingplatform.core.mapper.GameMapper
+import com.unqueam.gamingplatform.core.mapper.UserMapper
 import com.unqueam.gamingplatform.core.services.IAuthenticationService
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.ITrackingService
@@ -24,8 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder
 class ServicesBeans {
 
     @Bean
-    fun gameService(gameRepository: GameRepository, gameMapper: GameMapper, trackingService: ITrackingService) : IGameService {
-        return GameService(gameRepository, gameMapper, trackingService)
+    fun gameService(gameRepository: GameRepository, trackingService: ITrackingService) : IGameService {
+        return GameService(gameRepository, GameMapper(), trackingService)
     }
 
     @Bean
@@ -35,17 +36,16 @@ class ServicesBeans {
 
     @Bean
     fun userService(userRepository: UserRepository) : IUserService {
-        return UserService(userRepository)
+        return UserService(userRepository, UserMapper())
     }
 
     @Bean
     fun authenticationService(
         userService: IUserService,
-        authMapper: AuthMapper,
         jwtService: JwtService,
         authenticationManager: AuthenticationManager,
         passwordEncoder: PasswordEncoder,
         passwordFormatValidator: IPasswordFormatValidator) : IAuthenticationService {
-        return AuthService(userService, authMapper, jwtService, authenticationManager, passwordEncoder, passwordFormatValidator)
+        return AuthService(userService, AuthMapper(passwordEncoder), jwtService, authenticationManager, passwordEncoder, passwordFormatValidator)
     }
 }

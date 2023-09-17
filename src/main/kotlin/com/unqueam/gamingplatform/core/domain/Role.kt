@@ -2,9 +2,9 @@ package com.unqueam.gamingplatform.core.domain
 
 enum class Role(role: String) {
 
-    ADMIN("admin"),
-    USER("user"),
-    DEVELOPER("developer");
+    ADMIN("Admin"),
+    USER("User"),
+    DEVELOPER("Developer");
 
-    private val role: String = role
+    val role: String = role
 }
