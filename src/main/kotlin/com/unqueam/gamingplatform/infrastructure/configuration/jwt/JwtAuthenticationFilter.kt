@@ -1,39 +1,39 @@
-package com.unqueam.gamingplatform.infrastructure.configuration
+package com.unqueam.gamingplatform.infrastructure.configuration.jwt
 
 import com.unqueam.gamingplatform.application.auth.CustomUserDetailsService
-import com.unqueam.gamingplatform.application.auth.JwtService
+import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtHelper.isPresentAndIsValid
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.apache.commons.lang3.StringUtils.*
+import org.apache.commons.lang3.StringUtils
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
-private const val BEARER_PREFIX = "Bearer "
-private const val AUTH_HEADER_KEY = "Authorization"
-
 @Component
-class JwtAuthenticationFilter(private val jwtService: JwtService, private val userService: CustomUserDetailsService) : OncePerRequestFilter() {
+class JwtAuthenticationFilter(
+    private val jwtService: JwtService,
+    private val userService: CustomUserDetailsService,
+    private val jwtTokenBlacklistService: JwtTokenBlacklistService
+) : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
 
-        val authHeaderValue: String? = request.getHeader(AUTH_HEADER_KEY)
+        val authHeaderValue: String? = JwtHelper.getHeader(request)
 
         if (isNotPresentOrIsInvalid(authHeaderValue)) {
             filterChain.doFilter(request, response)
             return
         }
 
-        val jwt: String = getJwtTokenFromHeader(authHeaderValue!!)
+        val jwt: String = JwtHelper.getJwtTokenFromHeader(authHeaderValue!!)
         val userEmail: String = jwtService.extractUserName(jwt)
 
-        if (isNotEmpty(userEmail) && thereAreNoAuthenticatedUser()) {
+        if (StringUtils.isNotEmpty(userEmail) && thereAreNoAuthenticatedUser()) {
             val userDetails = userService.loadUserByUsername(userEmail)
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 loadAuthenticatedUserByRequest(request, userDetails)
@@ -54,11 +54,7 @@ class JwtAuthenticationFilter(private val jwtService: JwtService, private val us
         return SecurityContextHolder.getContext().authentication == null
     }
 
-    private fun getJwtTokenFromHeader(authHeaderValue: String): String {
-        return authHeaderValue.substring(7)
-    }
-
     private fun isNotPresentOrIsInvalid(headerValue: String?): Boolean {
-        return isEmpty(headerValue) || !startsWith(headerValue, BEARER_PREFIX)
+        return !isPresentAndIsValid(headerValue) || jwtTokenBlacklistService.isBlacklisted(headerValue!!)
     }
 }

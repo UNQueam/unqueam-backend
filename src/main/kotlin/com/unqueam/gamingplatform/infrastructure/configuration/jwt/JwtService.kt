@@ -1,7 +1,6 @@
-package com.unqueam.gamingplatform.application.auth
+package com.unqueam.gamingplatform.infrastructure.configuration.jwt
 
 import org.springframework.security.core.userdetails.UserDetails
-
 
 interface JwtService {
 

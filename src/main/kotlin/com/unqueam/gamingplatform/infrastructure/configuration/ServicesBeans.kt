@@ -1,6 +1,6 @@
 package com.unqueam.gamingplatform.infrastructure.configuration
 
-import com.unqueam.gamingplatform.application.auth.JwtService
+import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtService
 import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
 import com.unqueam.gamingplatform.core.mapper.GameMapper

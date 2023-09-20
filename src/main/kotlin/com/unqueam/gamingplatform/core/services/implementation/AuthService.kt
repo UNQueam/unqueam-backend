@@ -1,7 +1,7 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.auth.CustomUserDetails
-import com.unqueam.gamingplatform.application.auth.JwtService
+import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtService
 import com.unqueam.gamingplatform.application.dtos.AuthenticationOutput
 import com.unqueam.gamingplatform.application.dtos.SignInRequest
 import com.unqueam.gamingplatform.application.dtos.SignUpRequest

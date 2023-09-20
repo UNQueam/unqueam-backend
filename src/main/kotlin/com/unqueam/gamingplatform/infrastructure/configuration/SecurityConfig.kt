@@ -1,7 +1,7 @@
 package com.unqueam.gamingplatform.infrastructure.configuration
 
 import com.unqueam.gamingplatform.application.auth.CustomUserDetailsService
-import com.unqueam.gamingplatform.core.services.IUserService
+import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtAuthenticationFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -20,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticationFilter ){
+class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticationFilter){
 
     @Bean
     fun authenticationManager(http: HttpSecurity, passwordEncoder: PasswordEncoder, userDetailService: CustomUserDetailsService): AuthenticationManager {
@@ -36,8 +35,9 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
         http.csrf()
             .disable()
             .authorizeHttpRequests()
-            .requestMatchers("/api/games", "/api/auth/**")
+            .requestMatchers("/api/games", "/api/auth/signIn", "/api/auth/signUp")
             .permitAll()
+            .requestMatchers("/api/auth/logout").authenticated()
             .anyRequest()
             .authenticated()
             .and()

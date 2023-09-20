@@ -1,16 +1,14 @@
-package com.unqueam.gamingplatform.application.auth
+package com.unqueam.gamingplatform.infrastructure.configuration.jwt
 
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
-import io.jsonwebtoken.io.Decoders;
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.security.Key
 import java.util.*
 import kotlin.collections.HashMap
-
 
 @Service
 class JwtServiceImpl : JwtService {
@@ -46,7 +44,7 @@ class JwtServiceImpl : JwtService {
     }
 
     private fun generateExpirationDate(): Date? {
-        return Date(System.currentTimeMillis() + 1000 * 60 * 24)
+        return Date(System.currentTimeMillis() + JwtHelper.TOKEN_TTL_MS)
     }
 
     private fun isTokenExpired(token: String): Boolean {
