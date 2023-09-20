@@ -5,7 +5,8 @@ import com.unqueam.gamingplatform.application.auth.JwtService
 import com.unqueam.gamingplatform.application.dtos.AuthenticationOutput
 import com.unqueam.gamingplatform.application.dtos.SignInRequest
 import com.unqueam.gamingplatform.application.dtos.SignUpRequest
-import com.unqueam.gamingplatform.application.exception.UsernameOrEmailAlreadyUsedException
+import com.unqueam.gamingplatform.core.exceptions.Exceptions
+import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
 import com.unqueam.gamingplatform.core.domain.User
 import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
@@ -16,8 +17,6 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
-
-private const val SIGN_IN_ERROR_MESSAGE = "El usuario y/o contraseña son incorrectos."
 
 class AuthService : IAuthenticationService {
 
@@ -36,8 +35,7 @@ class AuthService : IAuthenticationService {
     }
 
     override fun signUp(request: SignUpRequest): AuthenticationOutput {
-        passwordFormatValidator.validateConstraints(request.password)
-        validateUsernameOrEmailAreNotInUse(request)
+        executeSignUpValidations(request)
 
         val user: User = authMapper.mapToInput(request)
         userService.save(user)
@@ -54,29 +52,38 @@ class AuthService : IAuthenticationService {
                 val authToken = generateAuthToken(user)
                 return authMapper.mapToOutput(user, authToken)
             }
-            throw BadCredentialsException(SIGN_IN_ERROR_MESSAGE)
+            throw BadCredentialsException(Exceptions.USER_OR_PASSWORD_ARE_INCORRECT)
         } catch (usernameNotFoundException: UsernameNotFoundException) {
-            throw BadCredentialsException(SIGN_IN_ERROR_MESSAGE)
+            throw BadCredentialsException(Exceptions.USER_OR_PASSWORD_ARE_INCORRECT)
         }
     }
 
-    private fun validateUsernameOrEmailAreNotInUse(request: SignUpRequest) {
+    private fun executeSignUpValidations(request: SignUpRequest) {
+        val errors: MutableMap<String, List<String>> = mutableMapOf()
+
+        passwordFormatValidator.validateConstraints(request.password, errors)
+        validateUsernameOrEmailAreNotInUse(request, errors)
+
+        if (errors.isNotEmpty()) throw SignUpFormException(errors)
+    }
+
+    private fun validateUsernameOrEmailAreNotInUse(request: SignUpRequest, errorsMap: MutableMap<String, List<String>>) {
         userService
             .findUserByUsernameOrEmail(request.username, request.email)
             .ifPresent { fetchedUser ->
-                if (fetchedUser.getUsername() == request.username && fetchedUser.getEmail() == request.email) {
-                    throw UsernameOrEmailAlreadyUsedException("El nombre de usuario y correo ingresado estan en uso.")
-                }
-                if (fetchedUser.getUsername() == request.username) {
-                    throw UsernameOrEmailAlreadyUsedException("El nombre de usuario ya está en uso.")
-                }
-                if (fetchedUser.getEmail() == request.email) {
-                    throw UsernameOrEmailAlreadyUsedException("El correo electrónico ingresado ya está en uso.")
-                }
+                if (stringIsEquals(fetchedUser.getUsername(), request.username.lowercase()))
+                    errorsMap["username"] = listOf(Exceptions.THE_USERNAME_IS_ALREADY_IN_USE)
+
+                if (stringIsEquals(fetchedUser.getEmail(), request.email.lowercase()))
+                    errorsMap["email"] = listOf(Exceptions.THE_EMAIL_ADDRESS_IS_ALREADY_IN_USE)
             }
     }
 
     private fun generateAuthToken(user: User): String {
         return jwtService.generateToken(CustomUserDetails(user))
+    }
+
+    private fun stringIsEquals(someString: String, otherString: String): Boolean {
+        return someString.lowercase() == otherString.lowercase()
     }
 }
