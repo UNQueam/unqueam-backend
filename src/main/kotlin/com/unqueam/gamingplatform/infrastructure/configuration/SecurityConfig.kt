@@ -34,6 +34,8 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf()
             .disable()
+            .cors()
+            .and()
             .authorizeHttpRequests()
             .requestMatchers("/api/games", "/api/auth/signIn", "/api/auth/signUp")
             .permitAll()
