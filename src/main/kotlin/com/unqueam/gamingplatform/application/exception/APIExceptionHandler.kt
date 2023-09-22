@@ -1,10 +1,13 @@
 package com.unqueam.gamingplatform.application.exception
 
+import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -12,20 +15,35 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 class APIExceptionHandler {
 
     @ExceptionHandler(RuntimeException::class)
-    fun handleAllUncaughtException(exception: RuntimeException, httpRequest: HttpServletRequest): ResponseEntity<ErrorAPIResponse> {
+    fun handleAllUncaughtException(exception: RuntimeException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception, httpRequest)
     }
 
     @ExceptionHandler(EntityNotFoundException::class)
-    fun handleEntityNotFound(exception: EntityNotFoundException, httpRequest: HttpServletRequest): ResponseEntity<ErrorAPIResponse> {
+    fun handleEntityNotFound(exception: EntityNotFoundException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.NOT_FOUND, exception, httpRequest)
     }
 
-    private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest) : ResponseEntity<ErrorAPIResponse> {
+    @ExceptionHandler(UsernameNotFoundException::class)
+    fun handleUsernameNotFoundException(exception: UsernameNotFoundException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
+    }
+
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleBadCredentialsException(exception: BadCredentialsException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
+    }
+
+    @ExceptionHandler(SignUpFormException::class)
+    fun handleSignUpFormException(exception: SignUpFormException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
+    }
+
+    private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest, errorsMap: Map<String, Any> = mapOf()) : ResponseEntity<Map<String, Any>> {
         return ResponseEntity
             .status(httpStatus)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(ErrorAPIResponse(httpStatus, exception, httpRequest))
+            .body(ErrorAPIResponse(httpStatus, exception, httpRequest, errorsMap).buildBody())
     }
 }
 
