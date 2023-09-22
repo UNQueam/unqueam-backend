@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.infrastructure.configuration
 
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
 import com.unqueam.gamingplatform.core.mapper.GameMapper
+import com.unqueam.gamingplatform.core.mapper.UserMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -18,4 +19,10 @@ class MappersBeans {
     fun authMapper(passwordEncoder: PasswordEncoder): AuthMapper {
         return AuthMapper(passwordEncoder)
     }
+
+    @Bean
+    fun userMapper(): UserMapper {
+        return UserMapper()
+    }
+
 }
