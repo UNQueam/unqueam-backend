@@ -68,6 +68,9 @@ data class GameImageOutput(
 )
 
 data class GenreOutput(
-    val id: Long,
-    val name: String
+    val enum: String,
+    @JsonProperty (value = "spanish_name")
+    val spanishName: String,
+    @JsonProperty (value = "english_name")
+    val englishName: String
 )
