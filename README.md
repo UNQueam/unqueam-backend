@@ -21,14 +21,21 @@ Follow these steps to configure and run the project:
     cd unqueam-backend
     ```
 
-2. **Configure the database:** Open the `src/main/resources/application.properties` file and configure the connection properties for your MySQL database:
+2. **Configure the database:** Open the `src/main/resources/application.properties` file. Database configuration:
 
-    ```properties
-    spring.datasource.url=jdbc:mysql://localhost:3306/your_database
-    spring.datasource.username=user
-    spring.datasource.password=password
-    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-    ```
+   ```properties
+   spring.datasource.url=${MYSQL_URL}
+   spring.datasource.username= ${MYSQL_USERNAME}
+   spring.datasource.password=${MYSQL_PASSWORD}
+   ```
+   
+   You **must** configure the Environment Variables.
+   Example:
+   ```properties
+   MYSQL_USERNAME=root
+   MYSQL_PASSWORD=password
+   MYSQL_URL=jdbc:mysql://localhost:3306/unqueam-db
+   ```
 
 3. **Run the application:** From your IDE, find the main class (usually annotated with `@SpringBootApplication`) and run it as a Kotlin application.
 
