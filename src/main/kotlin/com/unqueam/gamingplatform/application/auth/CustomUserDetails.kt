@@ -1,20 +1,20 @@
 package com.unqueam.gamingplatform.application.auth
 
-import com.unqueam.gamingplatform.core.domain.User
+import com.unqueam.gamingplatform.core.domain.PlatformUser
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-class CustomUserDetails(private val user: User) : UserDetails {
+class CustomUserDetails(private val platformUser: PlatformUser) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<GrantedAuthority> {
-        val role = user.getRole()
+        val role = platformUser.getRole()
         return mutableListOf(SimpleGrantedAuthority("ROLE_$role"))
     }
 
-    override fun getPassword(): String = user.getPassword()
+    override fun getPassword(): String = platformUser.getPassword()
 
-    override fun getUsername(): String = user.getUsername()
+    override fun getUsername(): String = platformUser.getUsername()
 
     override fun isAccountNonExpired(): Boolean = true
 
@@ -24,5 +24,5 @@ class CustomUserDetails(private val user: User) : UserDetails {
 
     override fun isEnabled(): Boolean = true
 
-    fun getUser(): User = user
+    fun getUser(): PlatformUser = platformUser
 }
