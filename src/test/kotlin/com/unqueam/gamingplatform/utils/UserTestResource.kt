@@ -1,12 +1,12 @@
 package com.unqueam.gamingplatform.utils
 
 import com.unqueam.gamingplatform.core.domain.Role
-import com.unqueam.gamingplatform.core.domain.User
+import com.unqueam.gamingplatform.core.domain.PlatformUser
 
 object UserTestResource {
 
-    fun buildUser(): User {
-        return User(1, "username", "Password", "user@gmail.com", Role.USER)
+    fun buildUser(): PlatformUser {
+        return PlatformUser(1, "username", "Password", "user@gmail.com", Role.USER)
     }
 
 }

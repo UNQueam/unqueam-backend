@@ -4,13 +4,13 @@ import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperOutput
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperRequest
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloper
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus
-import com.unqueam.gamingplatform.core.domain.User
+import com.unqueam.gamingplatform.core.domain.PlatformUser
 import org.apache.commons.lang3.StringUtils
 import java.time.LocalDateTime
 
 class RequestToBeDeveloperMapper {
 
-    fun mapToInput(becomeDeveloperRequest: BecomeDeveloperRequest, user: User): RequestToBeDeveloper {
+    fun mapToInput(becomeDeveloperRequest: BecomeDeveloperRequest, user: PlatformUser): RequestToBeDeveloper {
         return RequestToBeDeveloper(
             null,
             user,
