@@ -1,5 +1,6 @@
 package com.unqueam.gamingplatform.application.exception
 
+import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlreadyInProcessException
 import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
@@ -37,6 +38,11 @@ class APIExceptionHandler {
     @ExceptionHandler(SignUpFormException::class)
     fun handleSignUpFormException(exception: SignUpFormException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
+    }
+
+    @ExceptionHandler(ARequestToBeDeveloperIsAlreadyInProcessException::class)
+    fun handleRequestToBeDeveloperIsAlreadyInProcessException(exception: ARequestToBeDeveloperIsAlreadyInProcessException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
     }
 
     private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest, errorsMap: Map<String, Any> = mapOf()) : ResponseEntity<Map<String, Any>> {
