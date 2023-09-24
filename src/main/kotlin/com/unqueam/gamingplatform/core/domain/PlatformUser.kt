@@ -3,7 +3,8 @@ package com.unqueam.gamingplatform.core.domain
 import jakarta.persistence.*
 
 @Entity
-class User {
+@Table (name = "platform_user")
+class PlatformUser {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)

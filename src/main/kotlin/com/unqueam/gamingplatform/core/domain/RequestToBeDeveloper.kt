@@ -10,14 +10,14 @@ class RequestToBeDeveloper {
     @GeneratedValue (strategy = GenerationType.AUTO)
     var id: Long? = null
     @ManyToOne
-    private val issuer: User
+    private val issuer: PlatformUser
     private val dateTime: LocalDateTime
     @Enumerated (EnumType.STRING)
     private val requestStatus: RequestToBeDeveloperStatus
     private val reason: String
     private val rejectionReason: String
 
-    constructor(id: Long?, issuer: User, dateTime: LocalDateTime, requestStatus: RequestToBeDeveloperStatus, reason: String, rejectionReason: String) {
+    constructor(id: Long?, issuer: PlatformUser, dateTime: LocalDateTime, requestStatus: RequestToBeDeveloperStatus, reason: String, rejectionReason: String) {
         this.id = id
         this.issuer = issuer
         this.dateTime = dateTime
