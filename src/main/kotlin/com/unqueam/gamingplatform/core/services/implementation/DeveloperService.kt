@@ -3,6 +3,7 @@ package com.unqueam.gamingplatform.core.services.implementation
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperOutput
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperRequest
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus
+import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus.PENDING
 import com.unqueam.gamingplatform.core.domain.User
 import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlreadyInProcessException
 import com.unqueam.gamingplatform.core.mapper.RequestToBeDeveloperMapper
@@ -30,7 +31,8 @@ class DeveloperService : IDeveloperService {
      * Un usuario no puede enviar una solicitud para convertirse en desarrollador si ya tiene una solicitud PENDIENTE
      */
     private fun validateThatTheUserDoesNotHaveARequestInProgress(user: User) {
-        if (requestToBeDeveloperRepository.existsByIssuerAndRequestStatus(user, RequestToBeDeveloperStatus.PENDING))
+        val inProcessStatuses = listOf(PENDING, RequestToBeDeveloperStatus.APPROVED)
+        if (requestToBeDeveloperRepository.existsByIssuerAndRequestStatusIn(user, inProcessStatuses))
             throw ARequestToBeDeveloperIsAlreadyInProcessException()
     }
 }

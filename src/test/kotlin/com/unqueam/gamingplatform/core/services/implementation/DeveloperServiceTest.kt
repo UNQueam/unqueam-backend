@@ -2,7 +2,8 @@ package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperRequest
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloper
-import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus
+import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus.APPROVED
+import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus.PENDING
 import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlreadyInProcessException
 import com.unqueam.gamingplatform.core.mapper.RequestToBeDeveloperMapper
 import com.unqueam.gamingplatform.core.services.IDeveloperService
@@ -41,7 +42,7 @@ class DeveloperServiceTest {
             null // Devolver null ya que save generalmente retorna void (Unit)
         }.`when`(requestToBeDeveloperRepository).save(captor.capture())
 
-        `when`(requestToBeDeveloperRepository.existsByIssuerAndRequestStatus(user, RequestToBeDeveloperStatus.PENDING))
+        `when`(requestToBeDeveloperRepository.existsByIssuerAndRequestStatusIn(user, listOf(PENDING, APPROVED)))
             .thenReturn(false)
 
         // Act
@@ -49,7 +50,7 @@ class DeveloperServiceTest {
 
         // Assert
         assertThat(response.issuerId).isEqualTo(user.id)
-        assertThat(response.status).isEqualTo(RequestToBeDeveloperStatus.PENDING)
+        assertThat(response.status).isEqualTo(PENDING)
         verify(requestToBeDeveloperRepository, atMostOnce()).save(any(RequestToBeDeveloper::class.java))
     }
 
@@ -59,7 +60,7 @@ class DeveloperServiceTest {
         val user = UserTestResource.buildUser()
         val request = BecomeDeveloperRequest("reason")
 
-        `when`(requestToBeDeveloperRepository.existsByIssuerAndRequestStatus(user, RequestToBeDeveloperStatus.PENDING))
+        `when`(requestToBeDeveloperRepository.existsByIssuerAndRequestStatusIn(user, listOf(PENDING, APPROVED)))
             .thenReturn(true)
 
         // Act & Assert

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface RequestToBeDeveloperRepository : JpaRepository<RequestToBeDeveloper, Long> {
 
-    fun existsByIssuerAndRequestStatus(issuer: User, requestStatus: RequestToBeDeveloperStatus): Boolean
+    fun existsByIssuerAndRequestStatusIn(issuer: User, statuses: List<RequestToBeDeveloperStatus>): Boolean
 }
