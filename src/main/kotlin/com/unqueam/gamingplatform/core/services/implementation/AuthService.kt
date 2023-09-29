@@ -7,7 +7,7 @@ import com.unqueam.gamingplatform.application.dtos.SignInRequest
 import com.unqueam.gamingplatform.application.dtos.SignUpRequest
 import com.unqueam.gamingplatform.core.exceptions.Exceptions
 import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
-import com.unqueam.gamingplatform.core.domain.User
+import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
 import com.unqueam.gamingplatform.core.services.IAuthenticationService
@@ -37,20 +37,20 @@ class AuthService : IAuthenticationService {
     override fun signUp(request: SignUpRequest): AuthenticationOutput {
         executeSignUpValidations(request)
 
-        val user: User = authMapper.mapToInput(request)
-        userService.save(user)
-        val authToken = generateAuthToken(user)
+        val platformUser: PlatformUser = authMapper.mapToInput(request)
+        userService.save(platformUser)
+        val authToken = generateAuthToken(platformUser)
 
-        return authMapper.mapToOutput(user, authToken)
+        return authMapper.mapToOutput(platformUser, authToken)
     }
 
     override fun signIn(request: SignInRequest, httpRequest: HttpServletRequest): AuthenticationOutput {
         try {
-            val user: User = userService.findUserByUsername(request.username)
+            val platformUser: PlatformUser = userService.findUserByUsername(request.username)
 
-            if (passwordEncoder.matches(request.password, user.getPassword())) {
-                val authToken = generateAuthToken(user)
-                return authMapper.mapToOutput(user, authToken)
+            if (passwordEncoder.matches(request.password, platformUser.getPassword())) {
+                val authToken = generateAuthToken(platformUser)
+                return authMapper.mapToOutput(platformUser, authToken)
             }
             throw BadCredentialsException(Exceptions.USER_OR_PASSWORD_ARE_INCORRECT)
         } catch (usernameNotFoundException: UsernameNotFoundException) {
@@ -79,8 +79,8 @@ class AuthService : IAuthenticationService {
             }
     }
 
-    private fun generateAuthToken(user: User): String {
-        return jwtService.generateToken(CustomUserDetails(user))
+    private fun generateAuthToken(platformUser: PlatformUser): String {
+        return jwtService.generateToken(CustomUserDetails(platformUser))
     }
 
     private fun stringIsEquals(someString: String, otherString: String): Boolean {

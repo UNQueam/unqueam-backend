@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
+    jacoco
 }
 
 group = "com.unqueam"
@@ -44,6 +45,21 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.withType<Test> {
+tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
+    reports {
+        xml.required.set(false)
+        csv.required.set(false)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.9"
+    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }

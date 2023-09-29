@@ -4,6 +4,7 @@ import com.unqueam.gamingplatform.application.dtos.DeveloperGameInput
 import com.unqueam.gamingplatform.application.dtos.GameImageInput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.dtos.GenreInput
+import com.unqueam.gamingplatform.core.domain.Genre
 import com.unqueam.gamingplatform.core.services.IGameService
 import jakarta.transaction.Transactional
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
@@ -53,7 +54,7 @@ class DatabaseSeeder {
                     GameImageInput("https://media.discordapp.net/attachments/1016812465859866667/1148765153127579788/image.png?width=1162&height=670"),
                     GameImageInput("https://cdn.discordapp.com/attachments/1016812465859866667/1148765252318658680/image.png")
                 ),
-                setOf(GenreInput("Accion"), GenreInput("Plataformas")),
+                setOf(GenreInput(Genre.ARCADE.name), GenreInput(Genre.PLATFORMER.name)),
                 "Delta software"
             ),
             createGame(
@@ -67,7 +68,7 @@ class DatabaseSeeder {
                 setOf(
                     GameImageInput("https://raw.githubusercontent.com/IntroPV/IntroPV.github.io/master/docs/proyectos_previos/imagenes/2020s2-grupoD-2.png"),
                 ),
-                setOf(GenreInput("Puzzle"), GenreInput("Plataformas")),
+                setOf(GenreInput(Genre.PUZZLE.name), GenreInput(Genre.PLATFORMER.name)),
                 "Anonymous"
             ),
             createGame(
@@ -81,7 +82,7 @@ class DatabaseSeeder {
                     GameImageInput("https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/ss_c73bc54415178c07fef85f54ee26621728c77504.1920x1080.jpg?t=1692294127") ,
                     GameImageInput("https://oyster.ignimgs.com/mediawiki/apis.ign.com/baldurs-gate-3/e/e5/BG3_Combat_Guide_-_Initiative.png"),
                 ),
-                setOf(GenreInput("RPG"), GenreInput("Combate por turnos"), GenreInput("Accion"), GenreInput("Toma de decisiones")),
+                setOf(GenreInput(Genre.RPG.name), GenreInput(Genre.ACTION.name)),
                 "Larian Studios"
             ),
             createGame(
@@ -96,7 +97,7 @@ class DatabaseSeeder {
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
-                setOf(GenreInput("PVP"), GenreInput("Shooter"), GenreInput("Accion"), GenreInput("Juego en equipo")),
+                setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard"
             ),
             createGame(
@@ -111,7 +112,7 @@ class DatabaseSeeder {
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
-                setOf(GenreInput("PVP"), GenreInput("Shooter"), GenreInput("Accion"), GenreInput("Juego en equipo")),
+                setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard"
             ),
             createGame(
@@ -126,7 +127,7 @@ class DatabaseSeeder {
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
-                setOf(GenreInput("PVP"), GenreInput("Shooter"), GenreInput("Accion"), GenreInput("Juego en equipo")),
+                setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard"
             ),
             createGame(
@@ -141,7 +142,7 @@ class DatabaseSeeder {
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
-                setOf(GenreInput("PVP"), GenreInput("Shooter"), GenreInput("Accion"), GenreInput("Juego en equipo")),
+                setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard"
             ),
             createGame(
@@ -156,7 +157,7 @@ class DatabaseSeeder {
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
-                setOf(GenreInput("PVP"), GenreInput("Shooter"), GenreInput("Accion"), GenreInput("Juego en equipo")),
+                setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard"
             ),
             createGame(
@@ -171,7 +172,7 @@ class DatabaseSeeder {
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
-                setOf(GenreInput("PVP"), GenreInput("Shooter"), GenreInput("Accion"), GenreInput("Juego en equipo")),
+                setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard"
             ),
             createGame(
@@ -186,7 +187,7 @@ class DatabaseSeeder {
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
-                setOf(GenreInput("PVP"), GenreInput("Shooter"), GenreInput("Accion"), GenreInput("Juego en equipo")),
+                setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard"
             ),
             createGame(
@@ -201,7 +202,7 @@ class DatabaseSeeder {
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
-                setOf(GenreInput("PVP"), GenreInput("Shooter"), GenreInput("Accion"), GenreInput("Juego en equipo")),
+                setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard"
             ),
         )

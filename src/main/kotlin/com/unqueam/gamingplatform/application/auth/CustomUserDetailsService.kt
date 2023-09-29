@@ -1,6 +1,6 @@
 package com.unqueam.gamingplatform.application.auth
 
-import com.unqueam.gamingplatform.core.domain.User
+import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.services.IUserService
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -16,7 +16,7 @@ class CustomUserDetailsService : UserDetailsService {
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val user: User = userService.findUserByUsername(username)
-        return CustomUserDetails(user)
+        val platformUser: PlatformUser = userService.findUserByUsername(username)
+        return CustomUserDetails(platformUser)
     }
 }
