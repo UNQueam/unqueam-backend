@@ -39,6 +39,7 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
             .authorizeHttpRequests()
             .requestMatchers("/api/games", "/api/auth/signIn", "/api/auth/signUp")
             .permitAll()
+                .requestMatchers("/api/users").hasRole("ADMIN")
             .requestMatchers("/api/developers").hasAnyRole("USER")
             .requestMatchers("/api/auth/logout").authenticated()
             .anyRequest()
