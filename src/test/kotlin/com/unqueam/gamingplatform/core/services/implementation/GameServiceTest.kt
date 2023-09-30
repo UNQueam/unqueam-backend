@@ -66,11 +66,11 @@ class GameServiceTest {
     @Test
     fun `should fetch an exception when game was not found`() {
         val id = 1L
-        `when`(gameRepository.findById(id)).thenThrow(EntityNotFoundException("There is no game with ID: 1"))
+        `when`(gameRepository.findById(id)).thenThrow(EntityNotFoundException("No se encontró un juego con el ID: 1"))
 
         assertThatThrownBy { gameService.fetchGameById(id) }
             .isInstanceOf(EntityNotFoundException::class.java)
-            .hasMessage("There is no game with ID: 1")
+            .hasMessage("No se encontró un juego con el ID: 1")
     }
 
     @Test

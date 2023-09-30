@@ -30,6 +30,7 @@ class RequestToBeDeveloper {
     fun getIssuerId(): Long = issuer.id!!
     fun getDateTime(): LocalDateTime = dateTime
     fun status(): RequestToBeDeveloperStatus = requestStatus
+    fun issuer(): PlatformUser = issuer
 
     fun approve() {
         requestStatus = RequestToBeDeveloperStatus.APPROVED
