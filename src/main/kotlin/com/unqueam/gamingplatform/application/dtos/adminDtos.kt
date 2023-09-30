@@ -13,3 +13,7 @@ data class UserOutput(
         @JsonProperty("created_at")
         val createdAt: LocalDateTime
 )
+
+data class RejectedMessage(
+        val reason: String
+)

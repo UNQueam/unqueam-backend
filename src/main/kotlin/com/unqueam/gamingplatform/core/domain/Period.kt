@@ -7,7 +7,9 @@ class Period {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column (name = "period_id")
     val id: Long?
+    @Column (name = "period_year")
     val year: Int
     @Enumerated (EnumType.STRING)
     val semester: Semester

@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
+import com.unqueam.gamingplatform.core.exceptions.Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.ITrackingService
@@ -9,8 +10,6 @@ import com.unqueam.gamingplatform.core.tracking.TrackingEntity
 import com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import jakarta.persistence.EntityNotFoundException
-
-private const val GAME_NOT_FOUND_ERROR_MESSAGE = "There is no game with ID: %s"
 
 class GameService : IGameService {
 
