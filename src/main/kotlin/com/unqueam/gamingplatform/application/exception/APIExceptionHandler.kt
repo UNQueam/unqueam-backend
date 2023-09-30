@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.application.exception
 
 import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlreadyInProcessException
+import com.unqueam.gamingplatform.core.exceptions.CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException
 import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
@@ -18,6 +19,11 @@ class APIExceptionHandler {
     @ExceptionHandler(RuntimeException::class)
     fun handleAllUncaughtException(exception: RuntimeException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception, httpRequest)
+    }
+
+    @ExceptionHandler(CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException::class)
+    fun handleChangedRequestToBeDeveloper(exception: CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
     }
 
     @ExceptionHandler(EntityNotFoundException::class)

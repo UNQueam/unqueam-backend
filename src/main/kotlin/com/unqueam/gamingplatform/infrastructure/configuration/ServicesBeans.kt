@@ -54,7 +54,7 @@ class ServicesBeans {
     }
 
     @Bean
-    fun developerService(requestToBeDeveloperRepository: RequestToBeDeveloperRepository, mapper: RequestToBeDeveloperMapper): IDeveloperService {
-        return DeveloperService(requestToBeDeveloperRepository, mapper)
+    fun developerService(requestToBeDeveloperRepository: RequestToBeDeveloperRepository, mapper: RequestToBeDeveloperMapper, userRepository: UserRepository): IDeveloperService {
+        return DeveloperService(requestToBeDeveloperRepository, mapper, userRepository)
     }
 }

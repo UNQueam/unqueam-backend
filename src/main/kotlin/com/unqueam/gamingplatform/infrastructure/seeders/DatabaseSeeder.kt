@@ -5,13 +5,18 @@ import com.unqueam.gamingplatform.application.dtos.GameImageInput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.dtos.GenreInput
 import com.unqueam.gamingplatform.core.domain.Genre
+import com.unqueam.gamingplatform.core.domain.PlatformUser
+import com.unqueam.gamingplatform.core.domain.Role
 import com.unqueam.gamingplatform.core.services.IGameService
+import com.unqueam.gamingplatform.core.services.implementation.UserService
+import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import jakarta.transaction.Transactional
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.hibernate.internal.util.collections.CollectionHelper.setOf
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
@@ -20,10 +25,14 @@ import java.time.LocalDate
 class DatabaseSeeder {
 
     private final val gameService: IGameService
+    private final val userRepository: UserRepository
+    private final val passwordEncoder: PasswordEncoder
 
     @Autowired
-    constructor(aGameService: IGameService) {
+    constructor(aGameService: IGameService, userRepository : UserRepository, passwordEncoder: PasswordEncoder) {
         this.gameService = aGameService
+        this.userRepository = userRepository
+        this.passwordEncoder = passwordEncoder
     }
 
     @Transactional
@@ -37,6 +46,19 @@ class DatabaseSeeder {
             loadViewsForGameWithId(5, 110)
             loadViewsForGameWithId(6, 14)
         }
+
+        loadUsers()
+    }
+
+    private fun loadUsers() {
+        val admin: PlatformUser = PlatformUser(null, "admin", passwordEncoder.encode("admin"), "nico@gmail.com", Role.ADMIN)
+
+        val user1: PlatformUser = PlatformUser(null, "hulk", passwordEncoder.encode("hulk123"), "hulk@gmail.com", Role.USER)
+        val user2: PlatformUser = PlatformUser(null, "spider_man", passwordEncoder.encode("spider_man123"), "spider_man@gmail.com", Role.USER)
+        val user3: PlatformUser = PlatformUser(null, "ant_man", passwordEncoder.encode("ant_man123"), "ant_man@gmail.com", Role.USER)
+        val user4: PlatformUser = PlatformUser(null, "falcon", passwordEncoder.encode("falcon123"), "falcon@gmail.com", Role.DEVELOPER)
+
+        userRepository.saveAll(mutableListOf(admin, user1, user2, user3, user4))
     }
 
     private fun createGames(): List<GameRequest> {

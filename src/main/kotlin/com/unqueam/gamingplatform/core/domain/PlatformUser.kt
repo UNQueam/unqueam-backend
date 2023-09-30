@@ -14,7 +14,7 @@ class PlatformUser {
     private val password: String
     private val email: String
     @Enumerated (EnumType.STRING)
-    private val role: Role
+    private var role: Role
     private val createdAt: LocalDateTime
 
     constructor(id: Long?, username: String, password: String, email: String, role: Role) {
@@ -32,4 +32,8 @@ class PlatformUser {
     fun getUsername(): String = username
     fun getEmail(): String = email
     fun getCreatedAt(): LocalDateTime = createdAt
+
+    fun changeRoleTo(anotherRole: Role) {
+        role = anotherRole
+    }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.unqueam.gamingplatform.UnqueamApplication
 import com.unqueam.gamingplatform.application.http.API
 import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtAuthenticationFilter
+import org.apache.commons.lang3.StringUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,6 +54,16 @@ abstract class AbstractIntegrationTest {
             .perform(
                 MockMvcRequestBuilders
                     .post(endpoint)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(bodyContent)
+            )
+    }
+
+    fun putTo(endpoint: String, bodyContent: String = StringUtils.EMPTY): ResultActions {
+        return mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .put(endpoint)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(bodyContent)
             )
