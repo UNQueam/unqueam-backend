@@ -4,13 +4,13 @@ import com.unqueam.gamingplatform.application.dtos.DeveloperGameInput
 import com.unqueam.gamingplatform.application.dtos.GameImageInput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.dtos.GenreInput
-import com.unqueam.gamingplatform.core.domain.Genre
-import com.unqueam.gamingplatform.core.domain.PlatformUser
-import com.unqueam.gamingplatform.core.domain.Role
+import com.unqueam.gamingplatform.core.domain.*
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.implementation.UserService
+import com.unqueam.gamingplatform.infrastructure.persistence.RequestToBeDeveloperRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import jakarta.transaction.Transactional
+import org.apache.coyote.Request
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.hibernate.internal.util.collections.CollectionHelper.setOf
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,6 +19,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 @Component
@@ -27,12 +28,15 @@ class DatabaseSeeder {
     private final val gameService: IGameService
     private final val userRepository: UserRepository
     private final val passwordEncoder: PasswordEncoder
+    private final val requestToBeDeveloperRepository: RequestToBeDeveloperRepository
 
     @Autowired
-    constructor(aGameService: IGameService, userRepository : UserRepository, passwordEncoder: PasswordEncoder) {
+    constructor(aGameService: IGameService, userRepository : UserRepository, passwordEncoder: PasswordEncoder,
+                requestToBeDeveloperRepository: RequestToBeDeveloperRepository) {
         this.gameService = aGameService
         this.userRepository = userRepository
         this.passwordEncoder = passwordEncoder
+        this.requestToBeDeveloperRepository = requestToBeDeveloperRepository
     }
 
     @Transactional
@@ -58,7 +62,12 @@ class DatabaseSeeder {
         val user3: PlatformUser = PlatformUser(null, "ant_man", passwordEncoder.encode("ant_man123"), "ant_man@gmail.com", Role.USER)
         val user4: PlatformUser = PlatformUser(null, "falcon", passwordEncoder.encode("falcon123"), "falcon@gmail.com", Role.DEVELOPER)
 
+        val pendingRequest: RequestToBeDeveloper = RequestToBeDeveloper(null,user1, LocalDateTime.now(), RequestToBeDeveloperStatus.PENDING, "I wanna be king", "")
+        val approvedRequest: RequestToBeDeveloper = RequestToBeDeveloper(null,user2, LocalDateTime.now(), RequestToBeDeveloperStatus.APPROVED, "I wanna be king", "")
+        val rejectedRequest: RequestToBeDeveloper = RequestToBeDeveloper(null,user3, LocalDateTime.now(), RequestToBeDeveloperStatus.REJECTED, "I wanna be king", "")
+
         userRepository.saveAll(mutableListOf(admin, user1, user2, user3, user4))
+        requestToBeDeveloperRepository.saveAll(mutableListOf(pendingRequest, approvedRequest, rejectedRequest))
     }
 
     private fun createGames(): List<GameRequest> {

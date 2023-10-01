@@ -6,7 +6,7 @@ import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus.APPROVE
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus.PENDING
 import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlreadyInProcessException
 import com.unqueam.gamingplatform.core.mapper.RequestToBeDeveloperMapper
-import com.unqueam.gamingplatform.core.services.IDeveloperService
+import com.unqueam.gamingplatform.core.services.IDeveloperRequestService
 import com.unqueam.gamingplatform.infrastructure.persistence.RequestToBeDeveloperRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import com.unqueam.gamingplatform.utils.UserTestResource
@@ -20,7 +20,7 @@ import org.mockito.Mockito.*
 
 class DeveloperServiceTest {
 
-    private lateinit var developerService: IDeveloperService
+    private lateinit var developerService: IDeveloperRequestService
     private lateinit var requestToBeDeveloperRepository: RequestToBeDeveloperRepository
     private lateinit var userRepository: UserRepository
 
@@ -28,7 +28,7 @@ class DeveloperServiceTest {
     fun setup() {
         requestToBeDeveloperRepository = Mockito.mock(RequestToBeDeveloperRepository::class.java)
         userRepository = Mockito.mock(UserRepository::class.java)
-        developerService = DeveloperService(requestToBeDeveloperRepository, RequestToBeDeveloperMapper(), userRepository)
+        developerService = DeveloperRequestService(requestToBeDeveloperRepository, RequestToBeDeveloperMapper(), userRepository)
     }
 
     @Test

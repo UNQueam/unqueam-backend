@@ -8,8 +8,6 @@ import com.unqueam.gamingplatform.core.mapper.RequestToBeDeveloperMapper
 import com.unqueam.gamingplatform.core.services.*
 import com.unqueam.gamingplatform.core.services.implementation.*
 import com.unqueam.gamingplatform.core.mapper.UserMapper
-import com.unqueam.gamingplatform.core.services.*
-import com.unqueam.gamingplatform.core.services.implementation.*
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.RequestToBeDeveloperRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.TrackingEventsRepository
@@ -54,7 +52,7 @@ class ServicesBeans {
     }
 
     @Bean
-    fun developerService(requestToBeDeveloperRepository: RequestToBeDeveloperRepository, mapper: RequestToBeDeveloperMapper, userRepository: UserRepository): IDeveloperService {
-        return DeveloperService(requestToBeDeveloperRepository, mapper, userRepository)
+    fun developerService(requestToBeDeveloperRepository: RequestToBeDeveloperRepository, mapper: RequestToBeDeveloperMapper, userRepository: UserRepository): IDeveloperRequestService {
+        return DeveloperRequestService(requestToBeDeveloperRepository, mapper, userRepository)
     }
 }

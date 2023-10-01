@@ -4,27 +4,29 @@ import com.unqueam.gamingplatform.application.auth.CustomUserDetails
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperOutput
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperRequest
 import com.unqueam.gamingplatform.application.dtos.RejectedMessage
-import com.unqueam.gamingplatform.core.services.IDeveloperService
+import com.unqueam.gamingplatform.application.dtos.RequestOutput
+import com.unqueam.gamingplatform.core.services.IDeveloperRequestService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping(API.ENDPOINT_DEVELOPERS)
-class DeveloperController {
+@RequestMapping(API.ENDPOINT_REQUESTS)
+class DeveloperRequestController {
 
-    private final val developerService: IDeveloperService
+    private final val developerService: IDeveloperRequestService
 
     @Autowired
-    constructor(developerService: IDeveloperService) {
+    constructor(developerService: IDeveloperRequestService) {
         this.developerService = developerService
+    }
+
+    @GetMapping
+    fun fetchRequests(): ResponseEntity<List<RequestOutput>> {
+        val request: List<RequestOutput> = developerService.fetchRequests()
+        return ResponseEntity.status(HttpStatus.OK).body(request)
     }
 
     @PostMapping
