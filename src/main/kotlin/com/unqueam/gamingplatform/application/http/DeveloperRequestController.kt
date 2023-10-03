@@ -43,7 +43,7 @@ class DeveloperRequestController {
     }
 
     @PutMapping ("/{requestId}/approve")
-    fun rejectRequest(@PathVariable requestId: Long) : ResponseEntity<Any> {
+    fun approveRequest(@PathVariable requestId: Long) : ResponseEntity<Any> {
         developerService.approveRequestToBeDeveloperWithId(requestId)
         return ResponseEntity.noContent().build()
     }
