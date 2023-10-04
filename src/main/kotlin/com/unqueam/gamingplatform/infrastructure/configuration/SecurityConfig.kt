@@ -5,6 +5,7 @@ import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtAuthentica
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -39,9 +40,9 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
             .authorizeHttpRequests()
             .requestMatchers("/api/games", "/api/games/**", "/api/auth/signIn", "/api/auth/signUp")
             .permitAll()
-                .requestMatchers("/api/users").hasRole("ADMIN")
-            .requestMatchers("/api/developers").hasAnyRole("USER")
-            .requestMatchers("/api/developers/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/requests").hasAnyRole("USER")
+            .requestMatchers(HttpMethod.GET, "/api/requests/**").hasAnyRole("ADMIN")
             .requestMatchers("/api/auth/logout").authenticated()
             .anyRequest()
             .authenticated()

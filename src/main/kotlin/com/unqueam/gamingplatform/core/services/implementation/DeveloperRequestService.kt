@@ -3,6 +3,7 @@ package com.unqueam.gamingplatform.core.services.implementation
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperOutput
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperRequest
 import com.unqueam.gamingplatform.application.dtos.RejectedMessage
+import com.unqueam.gamingplatform.application.dtos.RequestOutput
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloper
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus
@@ -11,12 +12,12 @@ import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlready
 import com.unqueam.gamingplatform.core.exceptions.CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.REQUEST_TO_BE_DEVELOPER_NOT_FOUND_ERROR_MESSAGE
 import com.unqueam.gamingplatform.core.mapper.RequestToBeDeveloperMapper
-import com.unqueam.gamingplatform.core.services.IDeveloperService
+import com.unqueam.gamingplatform.core.services.IDeveloperRequestService
 import com.unqueam.gamingplatform.infrastructure.persistence.RequestToBeDeveloperRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import jakarta.persistence.EntityNotFoundException
 
-class DeveloperService : IDeveloperService {
+class DeveloperRequestService : IDeveloperRequestService {
 
     private val requestToBeDeveloperRepository: RequestToBeDeveloperRepository
     private val requestToBeDeveloperMapper: RequestToBeDeveloperMapper
@@ -29,6 +30,10 @@ class DeveloperService : IDeveloperService {
         this.requestToBeDeveloperRepository = requestToBeDeveloperRepository
         this.requestToBeDeveloperMapper = requestToBeDeveloperMapper
         this.userRepository = userRepository
+    }
+
+    override fun fetchRequests(): List<RequestOutput> {
+        return requestToBeDeveloperRepository.findAll().map { requestToBeDeveloperMapper.mapToAdminOutput(it) }
     }
 
     override fun becomeDeveloper(becomeDeveloperRequest: BecomeDeveloperRequest, user: PlatformUser): BecomeDeveloperOutput {

@@ -4,13 +4,13 @@ import com.unqueam.gamingplatform.application.dtos.DeveloperGameInput
 import com.unqueam.gamingplatform.application.dtos.GameImageInput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.dtos.GenreInput
-import com.unqueam.gamingplatform.core.domain.Genre
-import com.unqueam.gamingplatform.core.domain.PlatformUser
-import com.unqueam.gamingplatform.core.domain.Role
+import com.unqueam.gamingplatform.core.domain.*
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.implementation.UserService
+import com.unqueam.gamingplatform.infrastructure.persistence.RequestToBeDeveloperRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import jakarta.transaction.Transactional
+import org.apache.coyote.Request
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.hibernate.internal.util.collections.CollectionHelper.setOf
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,6 +19,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 @Component

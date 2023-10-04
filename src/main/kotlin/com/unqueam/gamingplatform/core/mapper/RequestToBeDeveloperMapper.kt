@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.core.mapper
 
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperOutput
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperRequest
+import com.unqueam.gamingplatform.application.dtos.RequestOutput
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloper
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus
 import com.unqueam.gamingplatform.core.domain.PlatformUser
@@ -28,6 +29,16 @@ class RequestToBeDeveloperMapper {
             "¡Solicitud enviada con éxito! Un administrador la revisará pronto.",
             requestToBeDeveloper.getDateTime(),
             requestToBeDeveloper.status()
+        )
+    }
+
+    fun mapToAdminOutput(requestToBeDeveloper: RequestToBeDeveloper): RequestOutput {
+        return RequestOutput(
+                requestToBeDeveloper.getId(),
+                requestToBeDeveloper.getIssuerUsername(),
+                requestToBeDeveloper.reason(),
+                requestToBeDeveloper.getDateTime(),
+                requestToBeDeveloper.status()
         )
     }
 
