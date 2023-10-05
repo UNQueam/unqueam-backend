@@ -6,11 +6,12 @@ import com.unqueam.gamingplatform.integration_tests.data_loader.RequestToBeDevel
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 private const val REQUEST_ID = 1
 
-class DeveloperIT : AbstractIntegrationTest() {
+class DeveloperRequestIT : AbstractIntegrationTest() {
 
     private lateinit var requestToBeDeveloperDataLoader: RequestToBeDeveloperDataLoader
 
@@ -27,6 +28,7 @@ class DeveloperIT : AbstractIntegrationTest() {
     4. Approve a request to be developer - 201 no content
     5. Approve a request that has been modified - 400 Bad request
     6. Approve a request with ID that not exists - 404 Not found
+    7. Fetch requests to be developer - 200 Ok success
      */
 
     @Test
@@ -36,7 +38,7 @@ class DeveloperIT : AbstractIntegrationTest() {
         val requestBody = asJson(RejectedMessage("Tu no puedes ser developer."))
 
         putTo(API.ENDPOINT_REQUESTS + "/${loadedRequest.requestId}/reject", requestBody)
-            .andExpect(MockMvcResultMatchers.status().isNoContent())
+            .andExpect(status().isNoContent())
     }
 
     @Test
@@ -48,7 +50,7 @@ class DeveloperIT : AbstractIntegrationTest() {
         putTo(API.ENDPOINT_REQUESTS + "/${loadedRequest.requestId}/reject", requestBody)
 
         putTo(API.ENDPOINT_REQUESTS + "/${loadedRequest.requestId}/reject", requestBody)
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(status().isBadRequest())
     }
 
     @Test
@@ -56,7 +58,7 @@ class DeveloperIT : AbstractIntegrationTest() {
         val requestBody = asJson(RejectedMessage("Tu no puedes ser developer."))
 
         putTo(API.ENDPOINT_REQUESTS + "/${REQUEST_ID}/reject", requestBody)
-            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andExpect(status().isNotFound())
     }
 
     @Test
@@ -64,7 +66,7 @@ class DeveloperIT : AbstractIntegrationTest() {
         val loadedRequest = requestToBeDeveloperDataLoader.loadRequest()
 
         putTo(API.ENDPOINT_REQUESTS + "/${loadedRequest.requestId}/approve")
-            .andExpect(MockMvcResultMatchers.status().isNoContent())
+            .andExpect(status().isNoContent())
     }
 
     @Test
@@ -74,12 +76,23 @@ class DeveloperIT : AbstractIntegrationTest() {
         putTo(API.ENDPOINT_REQUESTS + "/${loadedRequest.requestId}/approve")
 
         putTo(API.ENDPOINT_REQUESTS + "/${loadedRequest.requestId}/approve")
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(status().isBadRequest())
     }
 
     @Test
     fun `6 - Approve a request with ID that not exists - 404 Not found`() {
         putTo(API.ENDPOINT_REQUESTS + "/${REQUEST_ID}/approve")
-            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andExpect(status().isNotFound())
+    }
+
+    @Test
+    fun `7 - Fetch requests to be developer - 200 Ok success`() {
+        val username = "pedro"
+        val loadedRequest = requestToBeDeveloperDataLoader.loadRequest(username)
+
+        getTo(API.ENDPOINT_REQUESTS).andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].request_id").value(loadedRequest.requestId))
+            .andExpect(jsonPath("$[0].issuer_username").value(username))
+
     }
 }
