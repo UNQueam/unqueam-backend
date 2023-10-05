@@ -3,7 +3,6 @@ package com.unqueam.gamingplatform.integration_tests
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.unqueam.gamingplatform.UnqueamApplication
-import com.unqueam.gamingplatform.application.http.API
 import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtAuthenticationFilter
 import org.apache.commons.lang3.StringUtils
 import org.junit.jupiter.api.BeforeEach
@@ -73,7 +72,7 @@ abstract class AbstractIntegrationTest {
         return mockMvc
             .perform(
                 MockMvcRequestBuilders
-                    .get(API.ENDPOINT_AUTH + "/logout")
+                    .get(endpoint)
                     .headers(HttpHeaders(headers))
             )
     }
