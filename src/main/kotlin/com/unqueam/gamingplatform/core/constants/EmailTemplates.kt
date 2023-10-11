@@ -6,5 +6,5 @@ object EmailTemplates {
     const val NEW_REQUEST_TO_BE_DEVELOPER_TEMPLATE = "request_to_be_developer_template"
 
     // Emails
-    const val ADMIN_EMAIL = "nicolas.demaio19@gmail.com"
+    const val ADMIN_EMAIL = "unqueam.platform@gmail.com"
 }

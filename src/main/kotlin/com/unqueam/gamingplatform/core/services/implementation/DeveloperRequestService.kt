@@ -94,7 +94,7 @@ class DeveloperRequestService : IDeveloperRequestService {
      */
     private fun sendEmailNotificationToAdministrators(requestToBeDeveloper: RequestToBeDeveloper) {
         val issuer = requestToBeDeveloper.getIssuerUsername()
-        //DESCOMENTAR: val adminEmails = userRepository.findAdminEmails().toTypedArray()
+        val adminEmails = userRepository.findAdminEmails().toTypedArray()
         val content = mutableMapOf<String, Any>(
             Pair("username", issuer),
             Pair("time_stamp", requestToBeDeveloper.getDateTime().format(getFormatter())),
@@ -108,7 +108,7 @@ class DeveloperRequestService : IDeveloperRequestService {
         emailService.sendEmail(
             subject = "[Admin] Solicitud para ser desarrollador - Usuario: $issuer",
             from = EmailTemplates.ADMIN_EMAIL,
-            to = listOf("trejojulian998@gmail.com", "nicolas.demaio19@gmail.com").toTypedArray(), //adminEmails, Descomentar!!
+            to = adminEmails,
             content = content,
             templateName = EmailTemplates.NEW_REQUEST_TO_BE_DEVELOPER_TEMPLATE,
             helperInlineContent = inlineContent
