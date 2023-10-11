@@ -1,5 +1,6 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
+import EmailService
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperRequest
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloper
 import com.unqueam.gamingplatform.core.domain.RequestToBeDeveloperStatus.APPROVED
@@ -23,12 +24,14 @@ class DeveloperServiceTest {
     private lateinit var developerService: IDeveloperRequestService
     private lateinit var requestToBeDeveloperRepository: RequestToBeDeveloperRepository
     private lateinit var userRepository: UserRepository
+    private lateinit var emailService: EmailService
 
     @BeforeEach
     fun setup() {
-        requestToBeDeveloperRepository = Mockito.mock(RequestToBeDeveloperRepository::class.java)
-        userRepository = Mockito.mock(UserRepository::class.java)
-        developerService = DeveloperRequestService(requestToBeDeveloperRepository, RequestToBeDeveloperMapper(), userRepository)
+        requestToBeDeveloperRepository = mock(RequestToBeDeveloperRepository::class.java)
+        userRepository = mock(UserRepository::class.java)
+        emailService = mock(EmailService::class.java)
+        developerService = DeveloperRequestService(requestToBeDeveloperRepository, RequestToBeDeveloperMapper(), userRepository, emailService)
     }
 
     @Test
