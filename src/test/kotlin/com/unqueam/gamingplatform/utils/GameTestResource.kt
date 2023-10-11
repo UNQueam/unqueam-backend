@@ -20,7 +20,8 @@ object GameTestResource {
             setOf(),
             RankBadge.UNRANKED,
             setOf(),
-            "developmentTeam"
+            "developmentTeam",
+            UserTestResource.buildUser()
         )
     }
 

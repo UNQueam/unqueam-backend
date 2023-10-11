@@ -1,12 +1,14 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.core.domain.Game
+import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.tracking.TrackingEntity
 import com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import com.unqueam.gamingplatform.utils.GameRequestTestResource
 import com.unqueam.gamingplatform.utils.GameTestResource
+import com.unqueam.gamingplatform.utils.UserTestResource
 import jakarta.persistence.EntityNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -20,12 +22,14 @@ class GameServiceTest {
     private lateinit var gameService: GameService
     private lateinit var gameRepository: GameRepository
     private lateinit var trackingService: TrackingService
+    private lateinit var publisher: PlatformUser
 
     @BeforeEach
     fun setup() {
         gameRepository = mock(GameRepository::class.java)
         trackingService = mock(TrackingService::class.java)
         gameService = GameService(gameRepository, GameMapper(), trackingService)
+        publisher = UserTestResource.buildUser()
     }
 
     @Test
@@ -35,7 +39,7 @@ class GameServiceTest {
 
         `when`(gameRepository.save(game)).thenReturn(game)
 
-        gameService.publishGame(gameRequest)
+        gameService.publishGame(gameRequest, publisher)
 
         verify(gameRepository, atMostOnce()).save(game)
     }
@@ -45,7 +49,7 @@ class GameServiceTest {
         val games = listOf<Game>()
         `when`(gameRepository.findAll()).thenReturn(games)
 
-        val retrievedGames = gameService.fetchGames()
+        val retrievedGames = gameService.fetchGames(Optional.empty())
 
         assertThat(retrievedGames).isEqualTo(games)
     }
@@ -91,7 +95,7 @@ class GameServiceTest {
 
         `when`(gameRepository.findById(gameId)).thenReturn(optionalGame)
 
-        gameService.updateGameById(gameId, gameRequest)
+        gameService.updateGameById(gameId, gameRequest, publisher)
 
         verify(gameRepository).save(any(Game::class.java))
     }
