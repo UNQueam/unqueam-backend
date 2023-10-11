@@ -16,15 +16,17 @@ class PlatformUser {
     @Enumerated (EnumType.STRING)
     private var role: Role
     private val createdAt: LocalDateTime
+    @OneToMany (fetch = FetchType.LAZY)
+    private val publishedGames: List<Game>
 
-    constructor(id: Long?, username: String, password: String, email: String, role: Role) {
+    constructor(id: Long?, username: String, password: String, email: String, role: Role, publishedGames: List<Game> = mutableListOf()) {
         this.id = id
         this.username = username
         this.password = password
         this.email = email
         this.role = role
         this.createdAt = LocalDateTime.now()
-
+        this.publishedGames = publishedGames
     }
 
     fun getRole(): Role = role

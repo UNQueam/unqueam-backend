@@ -34,6 +34,11 @@ class ServicesBeans {
     }
 
     @Bean
+    fun genreService(): IGenreService {
+        return GenreService()
+    }
+
+    @Bean
     fun userService(userRepository: UserRepository): IUserService {
         return UserService(userRepository)
     }

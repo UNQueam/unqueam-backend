@@ -15,12 +15,15 @@ class Game(
     images: Set<GameImage>,
     rankBadge: RankBadge,
     genres: Set<Genre>,
-    developmentTeam: String
+    developmentTeam: String,
+    publisher: PlatformUser
 ) {
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     val id: Long? = anId
+    @ManyToOne
+    val publisher: PlatformUser = publisher
     var name: String = aName
     var logoUrl: String = aLogoUrl
     var description: String = aDescription
@@ -50,7 +53,8 @@ class Game(
             updatedGame.images,
             this.rankBadge,
             updatedGame.genres,
-            updatedGame.developmentTeam
+            updatedGame.developmentTeam,
+            this.publisher
         )
     }
 

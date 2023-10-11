@@ -1,5 +1,6 @@
 package com.unqueam.gamingplatform.core.domain
 
+import com.unqueam.gamingplatform.utils.UserTestResource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -15,6 +16,7 @@ class GameBuilderTest {
             .describedAs("description")
             .releasedAt(LocalDate.now())
             .withDevelopmentTeam("devTeam")
+            .publishedBy(UserTestResource.buildUser())
             .build()
 
         assertThat(game.developers).isEmpty()
@@ -24,6 +26,7 @@ class GameBuilderTest {
 
     @Test
     fun `build game`() {
+        val publisher = UserTestResource.buildUser()
         val releaseDate: LocalDate = LocalDate.now()
         val game: Game = Game.builder()
             .withLinkToGame("link")
@@ -35,6 +38,7 @@ class GameBuilderTest {
             .developedBy(setOf())
             .named("name")
             .withDevelopmentTeam("devTeam")
+            .publishedBy(publisher)
             .build()
 
         assertThat(game.developers).isEmpty()
@@ -46,5 +50,6 @@ class GameBuilderTest {
         assertThat(game.logoUrl).isEqualTo("logo")
         assertThat(game.linkToGame).isEqualTo("link")
         assertThat(game.developmentTeam).isEqualTo("devTeam")
+        assertThat(game.publisher).isEqualTo(publisher)
     }
 }
