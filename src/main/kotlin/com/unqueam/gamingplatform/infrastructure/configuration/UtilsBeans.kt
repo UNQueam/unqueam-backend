@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.mail.javamail.JavaMailSender
@@ -13,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 
 @Configuration
 class UtilsBeans {
+
+    @Value("\${EMAIL_PASSWORD}")
+    private lateinit var emailPassword: String
 
     @Bean
     fun objectMapper() : ObjectMapper {
@@ -34,8 +38,7 @@ class UtilsBeans {
         val mailSender = JavaMailSenderImpl()
         mailSender.host = "smtp.gmail.com"
         mailSender.port = 587
-        mailSender.username = "nicolas.demaio19@gmail.com"
-        mailSender.password = "" // Esto es una 'contraseña de aplicacion' (Se llama asi). Se crea una vez unica por cuenta. Hay que leerlo de un archivo
+        mailSender.username = "unqueam.platform@gmail.com"
         mailSender.password = emailPassword
         val props = mailSender.javaMailProperties
         props["mail.transport.protocol"] = "smtp"
