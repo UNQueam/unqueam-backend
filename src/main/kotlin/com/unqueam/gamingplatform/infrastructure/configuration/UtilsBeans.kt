@@ -35,7 +35,7 @@ class UtilsBeans {
         mailSender.host = "smtp.gmail.com"
         mailSender.port = 587
         mailSender.username = "nicolas.demaio19@gmail.com"
-        mailSender.password = "pfzo dmhu jnth fvmt" // Esto es una 'contraseña de aplicacion' (Se llama asi). Se crea una vez unica por cuenta.
+        mailSender.password = "" // Esto es una 'contraseña de aplicacion' (Se llama asi). Se crea una vez unica por cuenta. Hay que leerlo de un archivo
         val props = mailSender.javaMailProperties
         props["mail.transport.protocol"] = "smtp"
         props["mail.smtp.auth"] = "true"
