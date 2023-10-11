@@ -15,6 +15,7 @@ import com.unqueam.gamingplatform.infrastructure.persistence.TrackingEventsRepos
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -49,8 +50,15 @@ class ServicesBeans {
     }
 
     @Bean
-    fun emailService(javaMailSender: JavaMailSender, templateEngine: TemplateEngine): IEmailService {
+    @Profile("prod")
+    fun prodEmailService(javaMailSender: JavaMailSender, templateEngine: TemplateEngine): IEmailService {
         return EmailService(javaMailSender, templateEngine)
+    }
+
+    @Bean
+    @Profile("test")
+    fun testEmailService(): IEmailService {
+        return FixedEmailService()
     }
 
     @Bean

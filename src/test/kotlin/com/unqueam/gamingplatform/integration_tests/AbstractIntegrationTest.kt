@@ -8,10 +8,10 @@ import org.apache.commons.lang3.StringUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext
 @WebAppConfiguration
 @TestPropertySource(locations = ["classpath:application-test.properties"])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@Profile("test")
+@ActiveProfiles("test")
 abstract class AbstractIntegrationTest {
 
     @Autowired

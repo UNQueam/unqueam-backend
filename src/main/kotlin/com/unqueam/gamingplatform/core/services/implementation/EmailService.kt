@@ -1,6 +1,7 @@
 import com.unqueam.gamingplatform.core.services.IEmailService
 import jakarta.mail.MessagingException
 import jakarta.mail.internet.MimeMessage
+import org.springframework.context.annotation.Profile
 import org.springframework.core.io.Resource
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -9,6 +10,7 @@ import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import org.thymeleaf.context.IContext
 
+@Profile ("prod")
 open class EmailService : IEmailService {
 
     private val javaMailSender: JavaMailSender
