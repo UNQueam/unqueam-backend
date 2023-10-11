@@ -5,7 +5,7 @@ import com.unqueam.gamingplatform.core.domain.*
 
 class GameMapper {
 
-    fun mapToInput(aGameRequest: GameRequest): Game {
+    fun mapToInput(aGameRequest: GameRequest, publisher: PlatformUser): Game {
         return Game.builder()
             .named(aGameRequest.name)
             .developedBy(mapToSet(aGameRequest.developers) { Developer(null, it.firstName, it.lastName) })
@@ -16,6 +16,7 @@ class GameMapper {
             .withImages(mapToSet(aGameRequest.images) { GameImage(null, it.url) })
             .withLogoUrl(aGameRequest.logoUrl)
             .withDevelopmentTeam(aGameRequest.developmentTeam)
+            .publishedBy(publisher)
             .build()
     }
 
@@ -31,7 +32,8 @@ class GameMapper {
             mapToSet(aGame.images) { GameImageOutput(it.id!!, it.url) },
             mapToSet(aGame.genres) { GenreOutput(it.name, it.spanishName, it.englishName) },
             aGame.developmentTeam,
-            aGame.rankBadge.name
+            aGame.rankBadge.name,
+            PublisherOutput(aGame.publisher.id!!, aGame.publisher.getUsername())
         )
     }
 

@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
+import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
@@ -10,6 +11,7 @@ import com.unqueam.gamingplatform.core.tracking.TrackingEntity
 import com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import jakarta.persistence.EntityNotFoundException
+import java.util.*
 
 class GameService : IGameService {
 
@@ -23,13 +25,16 @@ class GameService : IGameService {
         this.trackingService = trackingService
     }
 
-    override fun publishGame(gameRequest: GameRequest) {
-        val game = gameMapper.mapToInput(gameRequest)
+    override fun publishGame(gameRequest: GameRequest, publisher: PlatformUser) {
+        val game = gameMapper.mapToInput(gameRequest, publisher)
         gameRepository.save(game)
     }
 
-    override fun fetchGames(): List<GameOutput> {
-        return gameRepository.findAll().map { gameMapper.mapToOutput(it) }
+    override fun fetchGames(username: Optional<String>): List<GameOutput> {
+        val games = username
+            .map { gameRepository.findGamesByUsername(it) }
+            .orElseGet { gameRepository.findAll() }
+        return games.map { gameMapper.mapToOutput(it) }
     }
 
     override fun fetchGameById(id: Long): GameOutput {
@@ -53,8 +58,8 @@ class GameService : IGameService {
         gameRepository.deleteById(id)
     }
 
-    override fun updateGameById(id: Long, updatedGameRequest: GameRequest) {
-        val updatedGameFromRequest = gameMapper.mapToInput(updatedGameRequest)
+    override fun updateGameById(id: Long, updatedGameRequest: GameRequest, publisher: PlatformUser) {
+        val updatedGameFromRequest = gameMapper.mapToInput(updatedGameRequest, publisher)
 
         val storedGame = gameRepository
             .findById(id)

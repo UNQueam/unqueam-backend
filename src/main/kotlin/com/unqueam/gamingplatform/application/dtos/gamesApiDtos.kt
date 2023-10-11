@@ -1,7 +1,9 @@
 package com.unqueam.gamingplatform.application.dtos
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.unqueam.gamingplatform.core.domain.Role
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class GameRequest(
     val name: String,
@@ -50,7 +52,14 @@ data class GameOutput(
     @JsonProperty (value = "development_team")
     val developmentTeam: String,
     @JsonProperty (value = "rank_badge")
-    val rankBadge: String
+    val rankBadge: String,
+    val publisher: PublisherOutput
+)
+
+data class PublisherOutput(
+    @JsonProperty("publisher_id")
+    val publisherId: Long,
+    val username: String
 )
 
 data class DeveloperGameOutput(

@@ -1,6 +1,6 @@
 package com.unqueam.gamingplatform.application.http
 
-import com.unqueam.gamingplatform.application.auth.CustomUserDetails
+import com.unqueam.gamingplatform.application.auth.AuthContextHelper
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperOutput
 import com.unqueam.gamingplatform.application.dtos.BecomeDeveloperRequest
 import com.unqueam.gamingplatform.application.dtos.RejectedMessage
@@ -31,7 +31,7 @@ class DeveloperRequestController {
 
     @PostMapping
     fun becomeDeveloper(@RequestBody becomeDeveloperRequest: BecomeDeveloperRequest, authentication: Authentication) : ResponseEntity<BecomeDeveloperOutput> {
-        val authenticatedUser = (authentication.principal as CustomUserDetails).getUser()
+        val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
         val output = developerService.becomeDeveloper(becomeDeveloperRequest, authenticatedUser)
         return ResponseEntity.status(HttpStatus.CREATED).body(output)
     }

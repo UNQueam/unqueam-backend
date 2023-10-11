@@ -1,5 +1,6 @@
 package com.unqueam.gamingplatform.application.http
 
+import com.unqueam.gamingplatform.application.auth.AuthContextHelper
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.core.services.IGameService
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
 @RequestMapping (API.ENDPOINT_GAMES)
@@ -28,13 +31,15 @@ class GameController {
 
     @PostMapping
     fun publishGame(@RequestBody gameRequest: GameRequest) : ResponseEntity<Any> {
-        gameService.publishGame(gameRequest)
+        val publisher = AuthContextHelper.getAuthenticatedUser()
+        gameService.publishGame(gameRequest, publisher)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @GetMapping
-    fun fetchGames(): ResponseEntity<List<GameOutput>> {
-        val games: List<GameOutput> = gameService.fetchGames()
+    fun fetchGames(@RequestParam (required = false) username: String?): ResponseEntity<List<GameOutput>> {
+        val usernameParam = Optional.ofNullable(username)
+        val games: List<GameOutput> = gameService.fetchGames(usernameParam)
         return ResponseEntity.status(HttpStatus.OK).body(games)
     }
 
@@ -52,7 +57,8 @@ class GameController {
 
     @PutMapping (API.ID_PATH_VARIABLE)
     fun updateGameById(@PathVariable id: Long, @RequestBody updatedGame: GameRequest) : ResponseEntity<Any> {
-        gameService.updateGameById(id, updatedGame)
+        val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
+        gameService.updateGameById(id, updatedGame, authenticatedUser)
         return ResponseEntity.status(HttpStatus.OK).build()
     }
 
