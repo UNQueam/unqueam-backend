@@ -1,5 +1,6 @@
 package com.unqueam.gamingplatform.infrastructure.configuration
 
+import EmailService
 import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtService
 import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
@@ -14,8 +15,10 @@ import com.unqueam.gamingplatform.infrastructure.persistence.TrackingEventsRepos
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.thymeleaf.TemplateEngine
 
 @Configuration
 class ServicesBeans {
@@ -41,6 +44,11 @@ class ServicesBeans {
     }
 
     @Bean
+    fun emailService(javaMailSender: JavaMailSender, templateEngine: TemplateEngine): IEmailService {
+        return EmailService(javaMailSender, templateEngine)
+    }
+
+    @Bean
     fun authenticationService(
         userService: IUserService,
         authMapper: AuthMapper,
@@ -52,7 +60,11 @@ class ServicesBeans {
     }
 
     @Bean
-    fun developerService(requestToBeDeveloperRepository: RequestToBeDeveloperRepository, mapper: RequestToBeDeveloperMapper, userRepository: UserRepository): IDeveloperRequestService {
-        return DeveloperRequestService(requestToBeDeveloperRepository, mapper, userRepository)
+    fun developerService(
+        requestToBeDeveloperRepository: RequestToBeDeveloperRepository,
+        mapper: RequestToBeDeveloperMapper,
+        userRepository: UserRepository,
+        emailService: IEmailService): IDeveloperRequestService {
+        return DeveloperRequestService(requestToBeDeveloperRepository, mapper, userRepository, emailService)
     }
 }

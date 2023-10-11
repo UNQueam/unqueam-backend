@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -25,5 +27,20 @@ class UtilsBeans {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun javaMailSender(): JavaMailSender {
+        val mailSender = JavaMailSenderImpl()
+        mailSender.host = "smtp.gmail.com"
+        mailSender.port = 587
+        mailSender.username = "nicolas.demaio19@gmail.com"
+        mailSender.password = "pfzo dmhu jnth fvmt" // Esto es una 'contraseña de aplicacion' (Se llama asi). Se crea una vez unica por cuenta.
+        val props = mailSender.javaMailProperties
+        props["mail.transport.protocol"] = "smtp"
+        props["mail.smtp.auth"] = "true"
+        props["mail.smtp.starttls.enable"] = "true"
+        props["mail.debug"] = "true"
+        return mailSender
     }
 }

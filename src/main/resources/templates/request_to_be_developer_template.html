@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es_ES">
+<head>
+    <title>Correo para Administradores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main {
+            max-width: 600px;
+            margin: 1rem auto;
+        }
+
+        .container {
+            background-color: #f3f3f3;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 5px;
+            border: 1px solid #a9a9a9;
+        }
+
+        .header {
+            font-weight: bold;
+            padding: 0.5rem;
+            text-align: center;
+            background-color: #c1272d;
+            color: #ffffff;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+            padding: 0 1rem;
+        }
+
+        hr {
+            border-color: #e1e1e1; /* Puedes cambiar "rojo" al color que desees */
+            border-style: solid; /* Puedes cambiar a "dotted", "dashed", etc. según el estilo deseado */
+            border-width: 1px; /* Establece el ancho de la línea según tus preferencias */
+        }
+
+        #go_to_home_href {
+            align-self: end;
+            margin-bottom: 0.5rem;
+            color: #a9a9a9;
+        }
+        .main-header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .gotorequests {
+            margin: 0.5rem 0.5rem 0 0;
+            padding: 1rem;
+            background-color: #c1272d;
+            font-weight: bold;
+            color: #d9d9d9;
+            border: none;
+            border-radius: 8px;
+            float: right;
+            transition: 0.5s;
+        }
+
+        #go_to_requests_href {
+            text-decoration: none;
+            color: #d9d9d9;
+        }
+
+        .gotorequests:hover {
+            cursor: pointer;
+            color: #ffffff;
+            background-color: #ef5057;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="main-header">
+<img src="cid:icon" alt="icon-unqueam"
+     width="100"
+     />
+        <a id="go_to_home_href" th:href="${unqueam_url_home}" target="_blank">Acceder a Unqueam</a>
+    </div>
+<div class="container">
+    <div class="header">
+        <p>Nueva solicitud para ser desarrollador</p>
+    </div>
+    <div class="content">
+
+        <div class="row">
+            <p>Usuario: </p>
+            <p style="margin-left: 0.5rem" th:text="${username}"></p>
+        </div>
+        <hr>
+        <div class="row">
+            <p>Identificador: </p>
+            <p style="margin-left: 0.5rem" th:text="${request_id}"></p>
+        </div>
+        <hr>
+        <div class="row">
+            <p>Fecha y hora: </p>
+            <p style="margin-left: 0.5rem" th:text="${time_stamp}"></p>
+        </div>
+        <hr>
+        <p style="margin-bottom: 0; padding-bottom: 0; padding: 0 1rem;">Motivo para ser desarrollador:</p>
+        <p style="margin-top: 0.5rem; padding-top: 0; padding: 0 1rem;" th:text="${reason}"></p>
+    </div>
+
+</div>
+    <div>
+        <button class="gotorequests"><a id="go_to_requests_href" th:href="${unqueam_url_requests}" target="_blank">Ir a Solicitudes</a></button>
+    </div>
+</div>
+</body>
+</html>
