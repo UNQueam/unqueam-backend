@@ -22,7 +22,7 @@ class Game(
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
-    val id: Long? = anId
+    var id: Long? = anId
     @ManyToOne
     val publisher: PlatformUser = publisher
     var name: String = aName

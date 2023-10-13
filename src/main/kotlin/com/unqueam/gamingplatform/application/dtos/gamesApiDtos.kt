@@ -20,7 +20,7 @@ data class GameRequest(
     @JsonProperty (value = "development_team")
     val developmentTeam: String,
     @JsonProperty (value = "is_hidden")
-    val isHidden: Boolean
+    val isHidden: Boolean?
 )
 
 data class DeveloperGameInput(

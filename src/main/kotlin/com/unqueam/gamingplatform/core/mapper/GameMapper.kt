@@ -17,7 +17,7 @@ class GameMapper {
             .withLogoUrl(aGameRequest.logoUrl)
             .withDevelopmentTeam(aGameRequest.developmentTeam)
             .publishedBy(publisher)
-            .isHidden(aGameRequest.isHidden)
+            .isHidden(aGameRequest.isHidden ?: false)
             .build()
     }
 

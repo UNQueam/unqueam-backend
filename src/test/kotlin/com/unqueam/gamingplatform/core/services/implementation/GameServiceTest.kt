@@ -1,5 +1,6 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
+import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.mapper.GameMapper
@@ -49,7 +50,7 @@ class GameServiceTest {
         val games = listOf<Game>()
         `when`(gameRepository.findAll()).thenReturn(games)
 
-        val retrievedGames = gameService.fetchGames(Optional.empty())
+        val retrievedGames = gameService.fetchGames(Optional.empty(), GetHiddenGamesParam(true))
 
         assertThat(retrievedGames).isEqualTo(games)
     }
