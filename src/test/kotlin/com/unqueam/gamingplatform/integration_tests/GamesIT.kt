@@ -13,6 +13,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 
+private const val HULK_USERNAME = "hulk"
+
 class GamesIT : AbstractIntegrationTest() {
 
     private lateinit var userDataLoader: UserDataLoader
@@ -34,6 +36,11 @@ class GamesIT : AbstractIntegrationTest() {
      * 6. Delete game by no registered ID - 404 not found
      * 7. Update game by id - 200 ok
      * 8. Update game by no registered id - 404 not found
+     * 9. A game cannot be update by user other than its publisher
+     * 10. User can hide a game if he is the publisher
+     * 11. User can expose a game if he is the publisher
+     * 12. User cannot hide a game if he is not the publisher
+     * 13. User cannot expose a game if he is not the publisher
      */
 
     @Test
@@ -49,15 +56,13 @@ class GamesIT : AbstractIntegrationTest() {
 
     @Test
     fun `2 Fetch no hidden games published by username - 200 ok`() {
-        val usernameToFind = "hulk"
-
         val queryParams: MultiValueMap<String, String> = LinkedMultiValueMap()
-        queryParams.put("username", mutableListOf(usernameToFind))
+        queryParams.put("username", mutableListOf(HULK_USERNAME))
         queryParams.put("hidden", mutableListOf("false"))
 
         getTo(API.ENDPOINT_GAMES, LinkedMultiValueMap(), queryParams)
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].publisher.username").value(usernameToFind))
+            .andExpect(jsonPath("$[0].publisher.username").value(HULK_USERNAME))
     }
 
     @Test
@@ -66,7 +71,7 @@ class GamesIT : AbstractIntegrationTest() {
 
         getTo(API.ENDPOINT_GAMES + "/$gameId")
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.publisher.username").value("hulk"))
+            .andExpect(jsonPath("$.publisher.username").value(HULK_USERNAME))
     }
 
     @Test
@@ -95,14 +100,14 @@ class GamesIT : AbstractIntegrationTest() {
 
     @Test
     fun `7 Update game by id - 200 ok`() {
-        val gameId = 1
+        val user = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), user)
 
-        mockAuthenticatedUser(buildUser())
+        mockAuthenticatedUser(user)
 
-        val gameRequestToUpdate = GameRequestTestResource.buildGameRequest()
-        val body = objectMapper.writeValueAsString(gameRequestToUpdate)
+        val body = objectMapper.writeValueAsString(GameRequestTestResource.buildGameRequest())
 
-        putTo(API.ENDPOINT_GAMES + "/$gameId", body)
+        putTo(API.ENDPOINT_GAMES + "/${game.id}", body)
             .andExpect(status().isOk)
     }
 
@@ -117,5 +122,64 @@ class GamesIT : AbstractIntegrationTest() {
 
         putTo(API.ENDPOINT_GAMES + "/$gameId", body)
             .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `9 A game cannot be updated by a user other than its publisher`() {
+        val gameId = 1
+
+        mockAuthenticatedUser(buildUser())
+
+        val gameRequestToUpdate = GameRequestTestResource.buildGameRequest()
+        val body = objectMapper.writeValueAsString(gameRequestToUpdate)
+
+        putTo(API.ENDPOINT_GAMES + "/$gameId", body)
+            .andExpect(status().isUnauthorized)
+    }
+
+    @Test
+    fun `10 User can hide a game if he is the publisher`() {
+        val user = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), user)
+
+        mockAuthenticatedUser(user)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/hide")
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `11 User can expose a game if he is the publisher`() {
+        val user = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), user)
+
+        mockAuthenticatedUser(user)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/expose")
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `12 User cannot hide a game if he is not the publisher`() {
+        val publisher = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser("spider_man")
+        mockAuthenticatedUser(anotherUser)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/hide")
+            .andExpect(status().isUnauthorized)
+    }
+
+    @Test
+    fun `13 User cannot expose a game if he is not the publisher`() {
+        val publisher = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser("spider_man")
+        mockAuthenticatedUser(anotherUser)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/expose")
+            .andExpect(status().isUnauthorized)
     }
 }

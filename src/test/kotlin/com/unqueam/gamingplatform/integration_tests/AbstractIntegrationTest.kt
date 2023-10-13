@@ -36,7 +36,7 @@ import org.springframework.web.context.WebApplicationContext
 @ContextConfiguration(classes = [UnqueamApplication::class, JwtAuthenticationFilter::class])
 @WebAppConfiguration
 @TestPropertySource(locations = ["classpath:application-test.properties"])
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 abstract class AbstractIntegrationTest {
 
@@ -50,6 +50,7 @@ abstract class AbstractIntegrationTest {
     fun setup(@Autowired objectMapper: ObjectMapper) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext!!).build()
         this.objectMapper = objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false)
+        SecurityContextHolder.clearContext();
     }
 
     @AfterEach

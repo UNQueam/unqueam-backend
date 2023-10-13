@@ -17,4 +17,8 @@ class UserDataLoader(@Autowired private val userService: IUserService, @Autowire
         userService.save(platformUser)
         return platformUser
     }
+
+    fun fetchLoadedUser(username: String): PlatformUser {
+        return userService.findUserByUsername(username)
+    }
 }

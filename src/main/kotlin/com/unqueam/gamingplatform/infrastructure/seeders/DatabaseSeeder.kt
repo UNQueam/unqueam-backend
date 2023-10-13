@@ -52,7 +52,7 @@ class DatabaseSeeder {
         val adminj: PlatformUser = PlatformUser(null, "admin.j", passwordEncoder.encode("admin"), "trejojulian998@gmail.com", Role.ADMIN)
 
         val user1: PlatformUser = PlatformUser(null, "hulk", passwordEncoder.encode("hulk123"), "hulk@gmail.com", Role.DEVELOPER)
-        val user2: PlatformUser = PlatformUser(null, "spider_man", passwordEncoder.encode("spider_man123"), "spider_man@gmail.com", Role.USER)
+        val user2: PlatformUser = PlatformUser(null, "spider_man", passwordEncoder.encode("spider_man123"), "spider_man@gmail.com", Role.DEVELOPER)
         val user3: PlatformUser = PlatformUser(null, "ant_man", passwordEncoder.encode("ant_man123"), "ant_man@gmail.com", Role.USER)
         val user4: PlatformUser = PlatformUser(null, "falcon", passwordEncoder.encode("falcon123"), "falcon@gmail.com", Role.USER)
 

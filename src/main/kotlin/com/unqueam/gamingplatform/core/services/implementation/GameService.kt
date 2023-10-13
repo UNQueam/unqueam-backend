@@ -28,9 +28,9 @@ class GameService : IGameService {
         this.trackingService = trackingService
     }
 
-    override fun publishGame(gameRequest: GameRequest, publisher: PlatformUser) {
+    override fun publishGame(gameRequest: GameRequest, publisher: PlatformUser): Game {
         val game = gameMapper.mapToInput(gameRequest, publisher)
-        gameRepository.save(game)
+        return gameRepository.save(game)
     }
 
     override fun fetchGames(username: Optional<String>, getHiddenGamesParam: GetHiddenGamesParam): List<GameOutput> {
@@ -73,7 +73,7 @@ class GameService : IGameService {
 
         val storedGame = getStoredGame(id)
 
-        //verifyIfIsPublisherFromGame(publisher, storedGame)
+        verifyIfIsPublisherFromGame(publisher, storedGame)
 
         val updatedGame = storedGame.syncWith(updatedGameFromRequest)
 

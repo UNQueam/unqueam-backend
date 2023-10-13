@@ -15,6 +15,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.*
 import java.util.*
 
@@ -38,11 +39,13 @@ class GameServiceTest {
         val game = GameTestResource.buildGameWithId(1L)
         val gameRequest = GameRequestTestResource.buildGameRequest()
 
-        `when`(gameRepository.save(game)).thenReturn(game)
+        val gameCaptor = ArgumentCaptor.forClass(Game::class.java)
+
+        `when`(gameRepository.save(gameCaptor.capture())).thenReturn(game)
 
         gameService.publishGame(gameRequest, publisher)
 
-        verify(gameRepository, atMostOnce()).save(game)
+        verify(gameRepository, atMostOnce()).save(gameCaptor.value)
     }
 
     @Test
