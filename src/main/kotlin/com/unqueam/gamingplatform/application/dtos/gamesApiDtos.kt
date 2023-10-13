@@ -1,5 +1,6 @@
 package com.unqueam.gamingplatform.application.dtos
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.unqueam.gamingplatform.core.domain.Role
 import java.time.LocalDate
@@ -13,10 +14,11 @@ data class GameRequest(
     @JsonProperty (value = "link_to_game")
     val linkToGame: String,
     @JsonProperty (value = "release_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     val releaseDate: LocalDate,
-    val developers: Set<DeveloperGameInput>,
-    val images: Set<GameImageInput>,
-    val genres: Set<GenreInput>,
+    val developers: Set<DeveloperGameInput> = setOf(),
+    val images: Set<GameImageInput> = setOf(),
+    val genres: Set<GenreInput> = setOf(),
     @JsonProperty (value = "development_team")
     val developmentTeam: String,
     @JsonProperty (value = "is_hidden")
