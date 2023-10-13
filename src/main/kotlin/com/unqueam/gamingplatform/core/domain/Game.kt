@@ -16,12 +16,13 @@ class Game(
     rankBadge: RankBadge,
     genres: Set<Genre>,
     developmentTeam: String,
-    publisher: PlatformUser
+    publisher: PlatformUser,
+    isHidden: Boolean
 ) {
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
-    val id: Long? = anId
+    var id: Long? = anId
     @ManyToOne
     val publisher: PlatformUser = publisher
     var name: String = aName
@@ -40,6 +41,7 @@ class Game(
     @Enumerated(EnumType.STRING)
     val genres: Set<Genre> = genres
     val developmentTeam: String = developmentTeam
+    val isHidden: Boolean = isHidden
 
     fun syncWith(updatedGame: Game): Game {
         return Game(
@@ -54,7 +56,8 @@ class Game(
             this.rankBadge,
             updatedGame.genres,
             updatedGame.developmentTeam,
-            this.publisher
+            this.publisher,
+            updatedGame.isHidden
         )
     }
 

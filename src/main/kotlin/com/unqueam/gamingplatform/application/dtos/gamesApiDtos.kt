@@ -18,7 +18,9 @@ data class GameRequest(
     val images: Set<GameImageInput>,
     val genres: Set<GenreInput>,
     @JsonProperty (value = "development_team")
-    val developmentTeam: String
+    val developmentTeam: String,
+    @JsonProperty (value = "is_hidden")
+    val isHidden: Boolean?
 )
 
 data class DeveloperGameInput(
@@ -53,7 +55,9 @@ data class GameOutput(
     val developmentTeam: String,
     @JsonProperty (value = "rank_badge")
     val rankBadge: String,
-    val publisher: PublisherOutput
+    val publisher: PublisherOutput,
+    @JsonProperty (value = "is_hidden")
+    val isHidden: Boolean
 )
 
 data class PublisherOutput(

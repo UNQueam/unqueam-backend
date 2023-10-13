@@ -4,6 +4,7 @@ import com.unqueam.gamingplatform.application.dtos.DeveloperGameInput
 import com.unqueam.gamingplatform.application.dtos.GameImageInput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.dtos.GenreInput
+import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
 import com.unqueam.gamingplatform.core.domain.*
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
@@ -35,8 +36,8 @@ class DatabaseSeeder {
     @Transactional
     @EventListener
     fun seed(event: ContextRefreshedEvent) {
-        val userHulk: PlatformUser = loadUsers().get(1)
-        if (gameService.fetchGames(Optional.empty()).isEmpty()) {
+        val userHulk: PlatformUser = loadUsers().get(2)
+        if (gameService.fetchGames(Optional.empty(), GetHiddenGamesParam(true)).isEmpty()) {
             createGames().forEach { gameService.publishGame(it, userHulk) }
             loadViewsForGameWithId(3, 18)
             loadViewsForGameWithId(4, 70)
@@ -47,14 +48,15 @@ class DatabaseSeeder {
     }
 
     private fun loadUsers(): List<PlatformUser> {
-        val admin: PlatformUser = PlatformUser(null, "admin", passwordEncoder.encode("admin"), "nico@gmail.com", Role.ADMIN)
+        val adminn: PlatformUser = PlatformUser(null, "admin.n", passwordEncoder.encode("admin"), "nicolas.demaio19@gmail.com", Role.ADMIN)
+        val adminj: PlatformUser = PlatformUser(null, "admin.j", passwordEncoder.encode("admin"), "trejojulian998@gmail.com", Role.ADMIN)
 
         val user1: PlatformUser = PlatformUser(null, "hulk", passwordEncoder.encode("hulk123"), "hulk@gmail.com", Role.DEVELOPER)
         val user2: PlatformUser = PlatformUser(null, "spider_man", passwordEncoder.encode("spider_man123"), "spider_man@gmail.com", Role.USER)
         val user3: PlatformUser = PlatformUser(null, "ant_man", passwordEncoder.encode("ant_man123"), "ant_man@gmail.com", Role.USER)
         val user4: PlatformUser = PlatformUser(null, "falcon", passwordEncoder.encode("falcon123"), "falcon@gmail.com", Role.USER)
 
-        return userRepository.saveAll(mutableListOf(admin, user1, user2, user3, user4))
+        return userRepository.saveAll(mutableListOf(adminn, adminj, user1, user2, user3, user4))
     }
 
     private fun createGames(): List<GameRequest> {
@@ -206,7 +208,8 @@ class DatabaseSeeder {
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
-                "Blizzard"
+                "Blizzard",
+                true
             ),
             createGame(
                 "KOTOR 2",
@@ -221,7 +224,8 @@ class DatabaseSeeder {
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
-                "Blizzard"
+                "Blizzard",
+                true
             ),
         )
     }
@@ -235,7 +239,8 @@ class DatabaseSeeder {
         developers: Set<DeveloperGameInput>,
         images: Set<GameImageInput>,
         genres: Set<GenreInput>,
-        developmentTeam: String
+        developmentTeam: String,
+        isHidden: Boolean? = false
     ): GameRequest {
         return GameRequest(
             name,
@@ -246,7 +251,8 @@ class DatabaseSeeder {
             developers,
             images,
             genres,
-            developmentTeam
+            developmentTeam,
+            isHidden!!
         )
     }
 

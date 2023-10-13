@@ -17,6 +17,7 @@ class GameMapper {
             .withLogoUrl(aGameRequest.logoUrl)
             .withDevelopmentTeam(aGameRequest.developmentTeam)
             .publishedBy(publisher)
+            .isHidden(aGameRequest.isHidden ?: false)
             .build()
     }
 
@@ -33,7 +34,8 @@ class GameMapper {
             mapToSet(aGame.genres) { GenreOutput(it.name, it.spanishName, it.englishName) },
             aGame.developmentTeam,
             aGame.rankBadge.name,
-            PublisherOutput(aGame.publisher.id!!, aGame.publisher.getUsername())
+            PublisherOutput(aGame.publisher.id!!, aGame.publisher.getUsername()),
+            aGame.isHidden
         )
     }
 
