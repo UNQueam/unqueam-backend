@@ -8,10 +8,12 @@ import com.unqueam.gamingplatform.core.services.IDeveloperRequestService
 import com.unqueam.gamingplatform.core.services.IUserService
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Profile
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component
+@Profile("test")
 class RequestToBeDeveloperDataLoader(
     @Autowired private val userService: IUserService,
     @Autowired private val passwordEncoder: PasswordEncoder,

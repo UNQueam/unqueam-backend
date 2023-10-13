@@ -2,14 +2,22 @@ package com.unqueam.gamingplatform.integration_tests
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.unqueam.gamingplatform.UnqueamApplication
+import com.unqueam.gamingplatform.application.auth.CustomUserDetails
+import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtAuthenticationFilter
+import com.unqueam.gamingplatform.utils.UserTestResource
 import org.apache.commons.lang3.StringUtils
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
@@ -39,9 +47,14 @@ abstract class AbstractIntegrationTest {
     protected lateinit var objectMapper: ObjectMapper
 
     @BeforeEach
-    fun setup() {
+    fun setup(@Autowired objectMapper: ObjectMapper) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext!!).build()
-        objectMapper = ObjectMapper().configure(SerializationFeature.WRAP_ROOT_VALUE, false)
+        this.objectMapper = objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        SecurityContextHolder.clearContext()
     }
 
     fun asJson(anObject: Any): String {
@@ -68,12 +81,29 @@ abstract class AbstractIntegrationTest {
             )
     }
 
-    fun getTo(endpoint: String, headers: MultiValueMap<String, String> = LinkedMultiValueMap(), queryParams: Map<String, Any> = mapOf()): ResultActions {
+    fun getTo(endpoint: String, headers: MultiValueMap<String, String> = LinkedMultiValueMap(), queryParams: MultiValueMap<String, String> = LinkedMultiValueMap()): ResultActions {
         return mockMvc
             .perform(
                 MockMvcRequestBuilders
                     .get(endpoint)
                     .headers(HttpHeaders(headers))
+                    .params(queryParams)
             )
+    }
+
+    fun deleteTo(endpoint: String, headers: MultiValueMap<String, String> = LinkedMultiValueMap(), queryParams: MultiValueMap<String, String> = LinkedMultiValueMap()): ResultActions {
+        return mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .delete(endpoint)
+                    .headers(HttpHeaders(headers))
+                    .params(queryParams)
+            )
+    }
+
+    fun mockAuthenticatedUser(user: PlatformUser) {
+        val userDetails = CustomUserDetails(user)
+        val authentication: Authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+        SecurityContextHolder.getContext().authentication = authentication
     }
 }
