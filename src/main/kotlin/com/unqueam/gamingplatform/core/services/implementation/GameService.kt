@@ -6,6 +6,7 @@ import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE
+import com.unqueam.gamingplatform.core.exceptions.UserIsNotThePublisherOfTheGameException
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.ITrackingService
@@ -70,13 +71,45 @@ class GameService : IGameService {
     override fun updateGameById(id: Long, updatedGameRequest: GameRequest, publisher: PlatformUser) {
         val updatedGameFromRequest = gameMapper.mapToInput(updatedGameRequest, publisher)
 
-        val storedGame = gameRepository
-            .findById(id)
-            .orElseThrow { EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE.format(id)) }
+        val storedGame = getStoredGame(id)
+
+        //verifyIfIsPublisherFromGame(publisher, storedGame)
 
         val updatedGame = storedGame.syncWith(updatedGameFromRequest)
 
         gameRepository.save(updatedGame)
+    }
+
+    override fun hideGameById(id: Long, publisher: PlatformUser) {
+
+        val storedGame = getStoredGame(id)
+
+        verifyIfIsPublisherFromGame(publisher, storedGame)
+
+        storedGame.isHidden = true
+
+        gameRepository.save(storedGame)
+    }
+
+    override fun exposeGameById(id: Long, publisher: PlatformUser) {
+
+        val storedGame = getStoredGame(id)
+
+        verifyIfIsPublisherFromGame(publisher, storedGame)
+
+        storedGame.isHidden = false
+
+        gameRepository.save(storedGame)
+    }
+
+    private fun getStoredGame(id: Long): Game {
+        return gameRepository
+                .findById(id)
+                .orElseThrow { EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE.format(id)) }
+    }
+
+    private fun verifyIfIsPublisherFromGame(publisher: PlatformUser, game: Game) {
+        if (publisher.id != game.publisher.id) throw UserIsNotThePublisherOfTheGameException()
     }
 
 }

@@ -63,4 +63,18 @@ class GameController {
         return ResponseEntity.status(HttpStatus.OK).build()
     }
 
+    @PutMapping ("/{gameId}/hide")
+    fun hideGame(@PathVariable gameId: Long) : ResponseEntity<Any> {
+        val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
+        gameService.hideGameById(gameId, authenticatedUser)
+        return ResponseEntity.status(HttpStatus.OK).build()
+    }
+
+    @PutMapping ("/{gameId}/expose")
+    fun exposeGame(@PathVariable gameId: Long) : ResponseEntity<Any> {
+        val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
+        gameService.exposeGameById(gameId, authenticatedUser)
+        return ResponseEntity.status(HttpStatus.OK).build()
+    }
+
 }

@@ -45,4 +45,12 @@ class InMemoryGameService : IGameService {
         storedGame.syncWith(updatedGameFromRequest)
     }
 
+    override fun hideGameById(id: Long, publisher: PlatformUser) {
+        TODO("Not yet implemented")
+    }
+
+    override fun exposeGameById(id: Long, publisher: PlatformUser) {
+        TODO("Not yet implemented")
+    }
+
 }

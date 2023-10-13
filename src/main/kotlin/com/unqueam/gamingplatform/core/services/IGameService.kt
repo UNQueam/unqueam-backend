@@ -13,4 +13,6 @@ interface IGameService {
     fun fetchGameById(id: Long): GameOutput
     fun deleteGameById(id: Long)
     fun updateGameById(id: Long, updatedGameRequest: GameRequest, publisher: PlatformUser)
+    fun hideGameById(id: Long, publisher: PlatformUser)
+    fun exposeGameById(id: Long, publisher: PlatformUser)
 }
