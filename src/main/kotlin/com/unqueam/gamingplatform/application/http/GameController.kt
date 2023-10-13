@@ -37,9 +37,10 @@ class GameController {
     }
 
     @GetMapping
-    fun fetchGames(@RequestParam (required = false) username: String?): ResponseEntity<List<GameOutput>> {
+    fun fetchGames(@RequestParam (required = false) username: String?, @RequestParam (value = "hidden", required = false) hidden: Boolean?): ResponseEntity<List<GameOutput>> {
+        val getHiddenGamesParam = GetHiddenGamesParam(hidden)
         val usernameParam = Optional.ofNullable(username)
-        val games: List<GameOutput> = gameService.fetchGames(usernameParam)
+        val games: List<GameOutput> = gameService.fetchGames(usernameParam, getHiddenGamesParam)
         return ResponseEntity.status(HttpStatus.OK).body(games)
     }
 

@@ -2,6 +2,8 @@ package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
+import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
+import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE
 import com.unqueam.gamingplatform.core.mapper.GameMapper
@@ -30,10 +32,17 @@ class GameService : IGameService {
         gameRepository.save(game)
     }
 
-    override fun fetchGames(username: Optional<String>): List<GameOutput> {
-        val games = username
-            .map { gameRepository.findGamesByUsername(it) }
-            .orElseGet { gameRepository.findAll() }
+    override fun fetchGames(username: Optional<String>, getHiddenGamesParam: GetHiddenGamesParam): List<GameOutput> {
+        lateinit var games: List<Game>
+        if (getHiddenGamesParam.shouldFetchAllGames()) {
+            games = username
+                .map { gameRepository.findGamesByUsername(it) }
+                .orElseGet { gameRepository.findAll() }
+        } else {
+            games = username
+                .map { gameRepository.findNoHiddenGamesByUsername(it) }
+                .orElseGet { gameRepository.findNoHiddenGames() }
+        }
         return games.map { gameMapper.mapToOutput(it) }
     }
 

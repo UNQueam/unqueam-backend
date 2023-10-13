@@ -27,5 +27,13 @@ interface GameRepository : JpaRepository<Game, Long> {
     @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
     @Query("from Game game where game.publisher.username = :username")
     fun findGamesByUsername(@Param("username") username: String): List<Game>
+
+    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
+    @Query("from Game game where game.publisher.username = :username and game.isHidden = false")
+    fun findNoHiddenGamesByUsername(username: String): List<Game>
+
+    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
+    @Query("from Game game where game.isHidden = false")
+    fun findNoHiddenGames(): List<Game>
 }
 

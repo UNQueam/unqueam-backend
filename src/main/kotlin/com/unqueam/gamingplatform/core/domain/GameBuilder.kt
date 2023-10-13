@@ -14,6 +14,7 @@ class GameBuilder {
     private var genres: Set<Genre> = setOf()
     private lateinit var developmentTeam: String
     private lateinit var publisher: PlatformUser
+    private var isHidden: Boolean = false
 
     fun developedBy(developers: Set<Developer>) : GameBuilder {
         this.developers = developers
@@ -22,6 +23,11 @@ class GameBuilder {
 
     fun publishedBy(publisher: PlatformUser) : GameBuilder {
         this.publisher = publisher
+        return this
+    }
+
+    fun isHidden(isHiddenValue: Boolean) : GameBuilder {
+        this.isHidden = isHiddenValue
         return this
     }
 
@@ -78,7 +84,8 @@ class GameBuilder {
             RankBadge.UNRANKED,
             genres,
             developmentTeam,
-            publisher
+            publisher,
+            isHidden
         )
     }
 }
