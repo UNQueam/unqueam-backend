@@ -2,11 +2,14 @@ package com.unqueam.gamingplatform.integration_tests
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.unqueam.gamingplatform.application.auth.AuthContextHelper
 import com.unqueam.gamingplatform.application.auth.CustomUserDetails
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtHelper
 import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtService
 import com.unqueam.gamingplatform.integration_tests.data_loader.UserDataLoader
+import io.mockk.every
+import io.mockk.mockkObject
 import jakarta.persistence.EntityManager
 import org.apache.commons.lang3.StringUtils
 import org.junit.jupiter.api.AfterEach
@@ -108,6 +111,8 @@ abstract class AbstractIntegrationTest {
     }
 
     fun buildJwtTokenForUser(user: PlatformUser): String {
+        mockkObject(AuthContextHelper)
+        every { AuthContextHelper.getAuthenticatedUser() } returns user
         return "Bearer " + jwtService.generateToken(CustomUserDetails(user))
     }
 }
