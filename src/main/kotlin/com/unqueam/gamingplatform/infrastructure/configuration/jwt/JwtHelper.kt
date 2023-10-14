@@ -8,7 +8,7 @@ object JwtHelper {
 
     const val TOKEN_TTL_MS = (25 * 60 * 1000)
 
-    private const val AUTH_HEADER_KEY = "Authorization"
+    const val AUTH_HEADER_KEY = "Authorization"
     private const val BEARER_PREFIX = "Bearer "
 
     fun getJwtTokenFromHeader(authHeaderValue: String): String {
