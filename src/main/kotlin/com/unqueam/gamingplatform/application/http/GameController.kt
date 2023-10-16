@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.application.http
 
 import com.unqueam.gamingplatform.application.auth.AuthContextHelper
+import com.unqueam.gamingplatform.application.dtos.CommentInput
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.core.services.IGameService
@@ -74,6 +75,27 @@ class GameController {
     fun exposeGame(@PathVariable gameId: Long) : ResponseEntity<Any> {
         val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
         gameService.exposeGameById(gameId, authenticatedUser)
+        return ResponseEntity.status(HttpStatus.OK).build()
+    }
+
+    @PostMapping("/{gameId}/comments")
+    fun publishComment(@PathVariable gameId: Long, @RequestBody commentInput: CommentInput) : ResponseEntity<Any> {
+        val publisher = AuthContextHelper.getAuthenticatedUser()
+        gameService.publishComment(gameId, commentInput, publisher)
+        return ResponseEntity.status(HttpStatus.CREATED).build()
+    }
+
+    @PutMapping("/{gameId}/comments/{commentId}")
+    fun updateComment(@PathVariable gameId: Long, @PathVariable commentId: Long,  @RequestBody commentInput: CommentInput) : ResponseEntity<Any> {
+        val publisher = AuthContextHelper.getAuthenticatedUser()
+        gameService.updateComment(commentId, commentInput, publisher)
+        return ResponseEntity.status(HttpStatus.OK).build()
+    }
+
+    @DeleteMapping("/{gameId}/comments/{commentId}")
+    fun deleteComment(@PathVariable gameId: Long, @PathVariable commentId: Long) : ResponseEntity<Any> {
+        val publisher = AuthContextHelper.getAuthenticatedUser()
+        gameService.deleteComment(commentId, publisher)
         return ResponseEntity.status(HttpStatus.OK).build()
     }
 

@@ -22,7 +22,8 @@ object GameTestResource {
             setOf(),
             "developmentTeam",
             UserTestResource.buildUser(),
-            false
+            false,
+             setOf()
         )
     }
 

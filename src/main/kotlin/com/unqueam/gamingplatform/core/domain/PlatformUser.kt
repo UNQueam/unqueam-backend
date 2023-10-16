@@ -18,8 +18,11 @@ class PlatformUser {
     private val createdAt: LocalDateTime
     @OneToMany (fetch = FetchType.LAZY)
     private val publishedGames: List<Game>
+    @OneToMany (fetch = FetchType.LAZY)
+    private val comments: List<Comment>
 
-    constructor(id: Long?, username: String, password: String, email: String, role: Role, publishedGames: List<Game> = mutableListOf()) {
+    constructor(id: Long?, username: String, password: String, email: String, role: Role, publishedGames: List<Game> = mutableListOf(),
+    comments: List<Comment> = mutableListOf()) {
         this.id = id
         this.username = username
         this.password = password
@@ -27,6 +30,7 @@ class PlatformUser {
         this.role = role
         this.createdAt = LocalDateTime.now()
         this.publishedGames = publishedGames
+        this.comments = comments
     }
 
     fun getRole(): Role = role

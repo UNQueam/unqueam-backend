@@ -1,6 +1,8 @@
 package com.unqueam.gamingplatform.integration_tests.data_loader
 
+import com.unqueam.gamingplatform.application.dtos.CommentInput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
+import com.unqueam.gamingplatform.core.domain.Comment
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.services.IGameService
@@ -14,5 +16,9 @@ class GameDataLoader(@Autowired private val gameService: IGameService) {
 
     fun loadNewGame(gameRequest: GameRequest, user: PlatformUser): Game {
         return gameService.publishGame(gameRequest, user)
+    }
+
+    fun loadNewComment(gameId: Long, commentInput: CommentInput, publisher: PlatformUser) : Comment {
+        return gameService.publishComment(gameId, commentInput, publisher)
     }
 }

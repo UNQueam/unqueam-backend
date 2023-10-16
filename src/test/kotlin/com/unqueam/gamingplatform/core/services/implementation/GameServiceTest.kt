@@ -3,8 +3,10 @@ package com.unqueam.gamingplatform.core.services.implementation
 import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
 import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.domain.PlatformUser
+import com.unqueam.gamingplatform.core.mapper.CommentMapper
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.tracking.TrackingEntity
+import com.unqueam.gamingplatform.infrastructure.persistence.CommentRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import com.unqueam.gamingplatform.utils.GameRequestTestResource
@@ -22,6 +24,7 @@ import java.util.*
 class GameServiceTest {
 
     private lateinit var gameService: GameService
+    private lateinit var commentRepository: CommentRepository
     private lateinit var gameRepository: GameRepository
     private lateinit var trackingService: TrackingService
     private lateinit var publisher: PlatformUser
@@ -30,7 +33,8 @@ class GameServiceTest {
     fun setup() {
         gameRepository = mock(GameRepository::class.java)
         trackingService = mock(TrackingService::class.java)
-        gameService = GameService(gameRepository, GameMapper(), trackingService)
+        commentRepository = mock(CommentRepository::class.java)
+        gameService = GameService(gameRepository, GameMapper(), trackingService, CommentMapper(), commentRepository)
         publisher = UserTestResource.buildUser()
     }
 
