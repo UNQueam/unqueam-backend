@@ -13,7 +13,9 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 
 private const val HULK_USERNAME = "hulk"
+
 private const val ADMIN_USERNAME = "admin.j"
+
 
 class GamesIT : AbstractIntegrationTest() {
 
@@ -207,6 +209,7 @@ class GamesIT : AbstractIntegrationTest() {
         putTo(API.ENDPOINT_GAMES + "/${game.id}/expose", "", token)
             .andExpect(status().isUnauthorized)
             .andReturn()
+
     }
 
     @Test

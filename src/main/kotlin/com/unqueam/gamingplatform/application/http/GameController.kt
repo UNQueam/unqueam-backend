@@ -78,6 +78,7 @@ class GameController {
         return ResponseEntity.status(HttpStatus.OK).build()
     }
 
+
     @PostMapping("/{gameId}/comments")
     fun publishComment(@PathVariable gameId: Long, @RequestBody commentInput: CommentInput) : ResponseEntity<Any> {
         val publisher = AuthContextHelper.getAuthenticatedUser()
