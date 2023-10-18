@@ -4,10 +4,8 @@ import com.unqueam.gamingplatform.application.dtos.SignInRequest
 import com.unqueam.gamingplatform.application.dtos.SignUpRequest
 import com.unqueam.gamingplatform.application.http.API
 import com.unqueam.gamingplatform.core.exceptions.Exceptions
-import com.unqueam.gamingplatform.integration_tests.data_loader.UserDataLoader
-import org.junit.jupiter.api.BeforeEach
+import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtHelper
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
@@ -33,13 +31,6 @@ class AuthenticationIT : AbstractIntegrationTest() {
     8. logout - 200 ok success
      */
 
-    private lateinit var userDataLoader: UserDataLoader
-
-    @BeforeEach
-    fun setup(@Autowired userDataLoader: UserDataLoader) {
-        this.userDataLoader = userDataLoader
-    }
-
     @Test
     fun `1 - User sign-in with valid requests, Success 200`() {
         userDataLoader.loadNewUser(USERNAME, PASSWORD)
@@ -50,6 +41,7 @@ class AuthenticationIT : AbstractIntegrationTest() {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.username").value(USERNAME))
             .andExpect(jsonPath("$.auth_token").isNotEmpty())
+            .andReturn()
     }
 
     @Test
@@ -59,6 +51,7 @@ class AuthenticationIT : AbstractIntegrationTest() {
         postTo(API.ENDPOINT_AUTH + "/signIn", signInRequest)
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(Exceptions.USER_OR_PASSWORD_ARE_INCORRECT))
+            .andReturn()
     }
 
     @Test
@@ -70,6 +63,7 @@ class AuthenticationIT : AbstractIntegrationTest() {
         postTo(API.ENDPOINT_AUTH + "/signIn", signInRequest)
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(Exceptions.USER_OR_PASSWORD_ARE_INCORRECT))
+            .andReturn()
     }
 
     @Test
@@ -80,6 +74,7 @@ class AuthenticationIT : AbstractIntegrationTest() {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.username").value(USERNAME))
             .andExpect(jsonPath("$.auth_token").isNotEmpty())
+            .andReturn()
     }
 
     @Test
@@ -91,6 +86,7 @@ class AuthenticationIT : AbstractIntegrationTest() {
         postTo(API.ENDPOINT_AUTH + "/signUp", signUpRequest)
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors.username").value(Exceptions.THE_USERNAME_IS_ALREADY_IN_USE))
+            .andReturn()
     }
 
     @Test
@@ -102,6 +98,7 @@ class AuthenticationIT : AbstractIntegrationTest() {
         postTo(API.ENDPOINT_AUTH + "/signUp", signUpRequest)
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors.email").value(Exceptions.THE_EMAIL_ADDRESS_IS_ALREADY_IN_USE))
+            .andReturn()
     }
 
     @Test
@@ -111,14 +108,21 @@ class AuthenticationIT : AbstractIntegrationTest() {
         postTo(API.ENDPOINT_AUTH + "/signUp", signUpRequest)
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors.password").value(Exceptions.PASSWORD_MUST_HAVE_AT_LEAST_8_CHARACTERS_AND_A_CAPITAL_LETTER))
+            .andReturn()
     }
 
     @Test
-    fun `8 - User logout, Success 200`() {
+    fun `8 - User logout, Success 200`() { // fix
+        val user = userDataLoader.loadNewUser(USERNAME, PASSWORD)
+
+        val body = objectMapper.writeValueAsString(SignInRequest(USERNAME, PASSWORD))
+        postTo(API.ENDPOINT_AUTH + "/signIn", body, "")
+
         val headersMap: MultiValueMap<String, String> = LinkedMultiValueMap()
-        headersMap.add("Authorization", "Bearer sometoken12334123")
+        headersMap.add(JwtHelper.AUTH_HEADER_KEY, buildJwtTokenForUser(user))
 
         getTo(API.ENDPOINT_AUTH + "/logout", headersMap)
             .andExpect(status().isOk())
+            .andReturn()
     }
 }

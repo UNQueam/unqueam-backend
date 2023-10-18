@@ -41,7 +41,7 @@ class Game(
     @Enumerated(EnumType.STRING)
     val genres: Set<Genre> = genres
     val developmentTeam: String = developmentTeam
-    val isHidden: Boolean = isHidden
+    var isHidden: Boolean = isHidden
 
     fun syncWith(updatedGame: Game): Game {
         return Game(

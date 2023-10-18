@@ -3,6 +3,7 @@ package com.unqueam.gamingplatform.application.exception
 import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlreadyInProcessException
 import com.unqueam.gamingplatform.core.exceptions.CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException
 import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
+import com.unqueam.gamingplatform.core.exceptions.UserIsNotThePublisherOfTheGameException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -49,6 +50,11 @@ class APIExceptionHandler {
     @ExceptionHandler(ARequestToBeDeveloperIsAlreadyInProcessException::class)
     fun handleRequestToBeDeveloperIsAlreadyInProcessException(exception: ARequestToBeDeveloperIsAlreadyInProcessException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
+    }
+
+    @ExceptionHandler(UserIsNotThePublisherOfTheGameException::class)
+    fun handleUserIsNotThePublisherOfTheGame(exception: UserIsNotThePublisherOfTheGameException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, exception, httpRequest)
     }
 
     private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest, errorsMap: Map<String, Any> = mapOf()) : ResponseEntity<Map<String, Any>> {
