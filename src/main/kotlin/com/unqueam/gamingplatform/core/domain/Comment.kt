@@ -11,6 +11,7 @@ class Comment {
     var rating: Int
     var content: String
     @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id")
     val game: Game
     @ManyToOne (fetch = FetchType.LAZY)
     val publisher: PlatformUser

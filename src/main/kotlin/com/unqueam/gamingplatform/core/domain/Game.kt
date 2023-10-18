@@ -43,7 +43,7 @@ class Game(
     val genres: Set<Genre> = genres
     val developmentTeam: String = developmentTeam
     var isHidden: Boolean = isHidden
-    @OneToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "game")
     val comments: Set<Comment> = comments
 
     fun syncWith(updatedGame: Game): Game {

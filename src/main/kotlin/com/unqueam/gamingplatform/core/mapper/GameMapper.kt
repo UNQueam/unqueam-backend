@@ -37,7 +37,7 @@ class GameMapper {
             aGame.rankBadge.name,
             publisherOutput,
             aGame.isHidden,
-            mapToSet(aGame.comments) { CommentOutput(publisherOutput, it.rating, it.content, it.creationTime, it.lastModification) }
+            mapToSet(aGame.comments) { CommentOutput(PublisherOutput(it.getPublisherId(), it.publisher.getUsername()), it.rating, it.content, it.creationTime, it.lastModification) }
         )
     }
 

@@ -47,7 +47,7 @@ class InMemoryGameService : IGameService {
     }
 
     override fun deleteGameById(id: Long) {
-        gameRepository = gameRepository.filter { it -> it.id != id }.toMutableList()
+        gameRepository = gameRepository.filter { it.id != id }.toMutableList()
     }
 
     override fun updateGameById(id: Long, updatedGameRequest: GameRequest, publisher: PlatformUser) {
