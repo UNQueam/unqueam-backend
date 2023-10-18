@@ -1,16 +1,26 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
+import com.unqueam.gamingplatform.application.dtos.CommentInput
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
-import com.unqueam.gamingplatform.core.domain.Game
-import com.unqueam.gamingplatform.core.domain.PlatformUser
+import com.unqueam.gamingplatform.core.domain.*
+import com.unqueam.gamingplatform.core.exceptions.*
+import com.unqueam.gamingplatform.core.exceptions.Exceptions.COMMENT_NOT_FOUND_ERROR_MESSAGE
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE
+
+import com.unqueam.gamingplatform.core.exceptions.comments.CanNotDeleteCommentException
+import com.unqueam.gamingplatform.core.exceptions.comments.CanNotPublishCommentException
+import com.unqueam.gamingplatform.core.exceptions.comments.CanNotUpdateCommentException
+import com.unqueam.gamingplatform.core.exceptions.comments.InvalidCommentContentException
+import com.unqueam.gamingplatform.core.mapper.CommentMapper
 import com.unqueam.gamingplatform.core.exceptions.UserIsNotThePublisherOfTheGameException
+
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.ITrackingService
 import com.unqueam.gamingplatform.core.tracking.TrackingEntity
+import com.unqueam.gamingplatform.infrastructure.persistence.CommentRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import jakarta.persistence.EntityNotFoundException
@@ -21,11 +31,16 @@ class GameService : IGameService {
     private val gameRepository: GameRepository
     private val gameMapper: GameMapper
     private val trackingService: ITrackingService
+    private val commentMapper: CommentMapper
+    private val commentRepository: CommentRepository
 
-    constructor(aGameRepository: GameRepository, aGameMapper: GameMapper, trackingService: ITrackingService) {
+    constructor(aGameRepository: GameRepository, aGameMapper: GameMapper, trackingService: ITrackingService, aCommentMapper: CommentMapper,
+            aCommentRepository: CommentRepository) {
         this.gameRepository = aGameRepository
         this.gameMapper = aGameMapper
         this.trackingService = trackingService
+        this.commentMapper = aCommentMapper
+        this.commentRepository = aCommentRepository
     }
 
     override fun publishGame(gameRequest: GameRequest, publisher: PlatformUser): Game {
@@ -108,8 +123,70 @@ class GameService : IGameService {
                 .orElseThrow { EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE.format(id)) }
     }
 
+
+    private fun getStoredComment(id: Long): Comment {
+        return commentRepository
+                .findById(id)
+                .orElseThrow { EntityNotFoundException(COMMENT_NOT_FOUND_ERROR_MESSAGE.format(id)) }
+    }
+
+
+
     private fun verifyIfIsPublisherFromGame(publisher: PlatformUser, game: Game) {
         if (publisher.id != game.publisher.id) throw UserIsNotThePublisherOfTheGameException()
+    }
+
+
+    override fun publishComment(gameId: Long, commentInput: CommentInput, publisher: PlatformUser): Comment {
+        val storedGame = getStoredGame(gameId)
+
+        verifyIfCanPublishComment(publisher, storedGame)
+        verifyCommentValidity(commentInput.rating,commentInput.content)
+
+        val comment = this.commentMapper.mapToInput(commentInput, publisher, storedGame)
+
+        return commentRepository.save(comment)
+    }
+
+    override fun updateComment(commentId: Long,  commentInput: CommentInput, publisher: PlatformUser) {
+
+        val storedComment = getStoredComment(commentId)
+
+        verifyIfCanUpdateComment(publisher, storedComment)
+        verifyCommentValidity(commentInput.rating,commentInput.content)
+
+        storedComment.update(commentInput.content, commentInput.rating)
+
+        commentRepository.save(storedComment)
+    }
+
+    override fun deleteComment(commentId: Long, publisher: PlatformUser) {
+
+        val storedComment = getStoredComment(commentId)
+        verifyIfCanDeleteComment(publisher, storedComment)
+
+        commentRepository.deleteById(commentId)
+    }
+
+    private fun verifyIfCanPublishComment(publisher: PlatformUser, game: Game) {
+        if (publisher.id === game.publisher.id) throw CanNotPublishCommentException()
+    }
+
+    private fun verifyIfCanUpdateComment(publisher: PlatformUser, comment: Comment) {
+        if (comment.getPublisherId() != publisher.id) throw CanNotUpdateCommentException()
+    }
+
+    private fun verifyIfCanDeleteComment(publisher: PlatformUser, comment: Comment) {
+        if (publisher.getRole() != Role.ADMIN && comment.getPublisherId() != publisher.id) throw CanNotDeleteCommentException()
+    }
+
+    private fun verifyCommentValidity(rating: Int, content: String) {
+        val errors: MutableMap<String, List<String>> = mutableMapOf()
+
+        if (rating !in 1..5) errors["rating"] = listOf(Exceptions.INVALID_COMMENT_RATING)
+        if (content.length > 250)  errors["comments"] = listOf(Exceptions.INVALID_COMMENT_CONTENT)
+
+        if (errors.isNotEmpty()) throw InvalidCommentContentException(errors)
     }
 
 }

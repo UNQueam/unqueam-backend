@@ -15,6 +15,7 @@ class GameBuilder {
     private lateinit var developmentTeam: String
     private lateinit var publisher: PlatformUser
     private var isHidden: Boolean = false
+    private var comments: Set<Comment> = setOf()
 
     fun developedBy(developers: Set<Developer>) : GameBuilder {
         this.developers = developers
@@ -38,6 +39,11 @@ class GameBuilder {
 
     fun withGenres(genres: Set<Genre>) : GameBuilder {
         this.genres = genres
+        return this
+    }
+
+    fun withComments(comments: Set<Comment>) : GameBuilder {
+        this.comments = comments
         return this
     }
 
@@ -85,7 +91,8 @@ class GameBuilder {
             genres,
             developmentTeam,
             publisher,
-            isHidden
+            isHidden,
+            comments
         )
     }
 }

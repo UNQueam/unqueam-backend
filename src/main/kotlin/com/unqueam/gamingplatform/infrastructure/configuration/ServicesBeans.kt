@@ -3,16 +3,10 @@ package com.unqueam.gamingplatform.infrastructure.configuration
 import EmailService
 import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtService
 import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
-import com.unqueam.gamingplatform.core.mapper.AuthMapper
-import com.unqueam.gamingplatform.core.mapper.GameMapper
-import com.unqueam.gamingplatform.core.mapper.RequestToBeDeveloperMapper
+import com.unqueam.gamingplatform.core.mapper.*
 import com.unqueam.gamingplatform.core.services.*
 import com.unqueam.gamingplatform.core.services.implementation.*
-import com.unqueam.gamingplatform.core.mapper.UserMapper
-import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
-import com.unqueam.gamingplatform.infrastructure.persistence.RequestToBeDeveloperRepository
-import com.unqueam.gamingplatform.infrastructure.persistence.TrackingEventsRepository
-import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
+import com.unqueam.gamingplatform.infrastructure.persistence.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -25,8 +19,9 @@ import org.thymeleaf.TemplateEngine
 class ServicesBeans {
 
     @Bean
-    fun gameService(gameRepository: GameRepository, gameMapper: GameMapper, trackingService: ITrackingService): IGameService {
-        return GameService(gameRepository, gameMapper, trackingService)
+    fun gameService(gameRepository: GameRepository, gameMapper: GameMapper, trackingService: ITrackingService,
+                    commentMapper: CommentMapper, commentRepository: CommentRepository): IGameService {
+        return GameService(gameRepository, gameMapper, trackingService, commentMapper, commentRepository)
     }
 
     @Bean

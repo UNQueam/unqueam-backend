@@ -2,9 +2,7 @@ package com.unqueam.gamingplatform.application.dtos
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.unqueam.gamingplatform.core.domain.Role
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 data class GameRequest(
     val name: String,
@@ -59,7 +57,8 @@ data class GameOutput(
     val rankBadge: String,
     val publisher: PublisherOutput,
     @JsonProperty (value = "is_hidden")
-    val isHidden: Boolean
+    val isHidden: Boolean,
+    val comments: Set<CommentOutput>
 )
 
 data class PublisherOutput(
@@ -88,4 +87,19 @@ data class GenreOutput(
     val spanishName: String,
     @JsonProperty (value = "english_name")
     val englishName: String
+)
+
+data class CommentInput (
+        val rating: Int,
+        val content: String
+)
+
+data class CommentOutput (
+        val publisher: PublisherOutput,
+        val rating: Int,
+        val content: String,
+        @JsonProperty("creation_date")
+        val creationDate: LocalDate,
+        @JsonProperty("last_modification")
+        val lastModification: LocalDate
 )

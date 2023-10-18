@@ -14,6 +14,9 @@ import org.springframework.util.MultiValueMap
 
 private const val HULK_USERNAME = "hulk"
 
+private const val ADMIN_USERNAME = "admin.j"
+
+
 class GamesIT : AbstractIntegrationTest() {
 
     private lateinit var gameDataLoader: GameDataLoader
@@ -38,6 +41,19 @@ class GamesIT : AbstractIntegrationTest() {
      * 11. User can expose a game if he is the publisher
      * 12. User cannot hide a game if he is not the publisher
      * 13. User cannot expose a game if he is not the publisher
+     * 14. User can comment on a game if he is not the publisher of the game
+     * 15. User can not comment on a game if he is the publisher of the game
+     * 16. User can update his own comment
+     * 17. User can delete his own comment
+     * 18. Admin can delete any comment
+     * 19. User can not delete a comment if he is not admin nor is its owner
+     * 20. User can not modify a comment if he is not its owner
+     * 21. Update comment with invalid rating results in 400 Bad request
+     * 22. Update comment with invalid content results in 400 Bad request
+     * 23. Publish comment with invalid rating results in 400 Bad request
+     * 24. Publish comment with invalid content results in 400 Bad request
+     * 25. Update comment by no registered id - 404 not found
+     * 26. Delete comment by no registered id - 404 not found
      */
 
     @Test
@@ -193,5 +209,245 @@ class GamesIT : AbstractIntegrationTest() {
         putTo(API.ENDPOINT_GAMES + "/${game.id}/expose", "", token)
             .andExpect(status().isUnauthorized)
             .andReturn()
+
+    }
+
+    @Test
+    fun `14 User can comment on a game if he is not the publisher of the game`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+        val comment = GameRequestTestResource.buildCommentRequest()
+        val commentContent = objectMapper.writeValueAsString(comment)
+
+        postTo(API.ENDPOINT_GAMES + "/${game.id}/comments", commentContent, token)
+                .andExpect(status().isCreated)
+                .andReturn()
+    }
+
+    @Test
+    fun `15 User can not comment on a game if he is the publisher of the game`() { //CAMBIAR
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val token = buildJwtTokenForUser(publisher)
+
+        val comment = GameRequestTestResource.buildCommentRequest()
+        val commentContent = objectMapper.writeValueAsString(comment)
+
+        postTo(API.ENDPOINT_GAMES + "/${game.id}/comments", commentContent, token)
+                .andExpect(status().isUnauthorized)
+                .andReturn()
+    }
+
+    @Test
+    fun `16 User can update its own comment`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+        val comment = gameDataLoader.loadNewComment(game.id!!,GameRequestTestResource.buildCommentRequest(),anotherUser)
+        val newCommentValues = GameRequestTestResource.buildCommentRequest()
+
+        val commentContent = objectMapper.writeValueAsString(newCommentValues)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${comment.id}", commentContent, token)
+                .andExpect(status().isOk)
+                .andReturn()
+    }
+
+    @Test
+    fun `17 User can delete his own comment`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+        val comment = gameDataLoader.loadNewComment(game.id!!,GameRequestTestResource.buildCommentRequest(),anotherUser)
+
+        val headers: MultiValueMap<String, String> = LinkedMultiValueMap()
+        headers.add("Authorization", token)
+
+        deleteTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${comment.id}", headers)
+                .andExpect(status().isOk)
+                .andReturn()
+    }
+
+    @Test
+    fun `18 An admin can delete any comment`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+
+        val comment = gameDataLoader.loadNewComment(game.id!!,GameRequestTestResource.buildCommentRequest(),anotherUser)
+
+        val admin = userDataLoader.fetchLoadedUser(ADMIN_USERNAME)
+        val adminToken = buildJwtTokenForUser(admin)
+
+        val headers: MultiValueMap<String, String> = LinkedMultiValueMap()
+        headers.add("Authorization", adminToken)
+
+        deleteTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${comment.id}", headers)
+                .andExpect(status().isOk)
+                .andReturn()
+    }
+
+    @Test
+    fun `19 User can not delete a comment if he is not admin nor is his owner`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+
+        val comment = gameDataLoader.loadNewComment(game.id!!,GameRequestTestResource.buildCommentRequest(),anotherUser)
+
+        val anotherUserToken = buildJwtTokenForUser(publisher)
+
+        val headers: MultiValueMap<String, String> = LinkedMultiValueMap()
+        headers.add("Authorization", anotherUserToken)
+
+        deleteTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${comment.id}", headers)
+                .andExpect(status().isUnauthorized)
+                .andReturn()
+    }
+
+    @Test
+    fun `20 User can not modify a comment if he is not its owner`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+        val token = buildJwtTokenForUser(publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+
+        val comment = gameDataLoader.loadNewComment(game.id!!,GameRequestTestResource.buildCommentRequest(),anotherUser)
+        val newCommentValues = GameRequestTestResource.buildCommentRequest()
+
+        val commentContent = objectMapper.writeValueAsString(newCommentValues)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${comment.id}", commentContent, token)
+                .andExpect(status().isUnauthorized)
+                .andReturn()
+    }
+
+    @Test
+    fun `21 Update comment with invalid rating results in 400 Bad request`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+
+        val comment = gameDataLoader.loadNewComment(game.id!!,GameRequestTestResource.buildCommentRequest(),anotherUser)
+        val invalidRating = 7
+        val newCommentValues = GameRequestTestResource.buildCommentRequest(invalidRating)
+
+        val commentContent = objectMapper.writeValueAsString(newCommentValues)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${comment.id}", commentContent, token)
+                .andExpect(status().isBadRequest)
+                .andReturn()
+    }
+
+    @Test
+    fun `22 Update comment with invalid content results in 400 Bad request`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+
+        val comment = gameDataLoader.loadNewComment(game.id!!,GameRequestTestResource.buildCommentRequest(),anotherUser)
+        val invalidContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dapibus nulla nec ex cursus, ut volutpat purus tristique. Vivamus euismod nibh nec hendrerit convallis. Integer tincidunt dolor nec felis viverra, sit amet congue tortor tempor. Phasellus id metus at justo feugiat dapibus ac in quam. In vehicula sed justo id dignissim. Sed congue, est nec pellentesque iaculis, erat nulla rhoncus arcu, a viverra risus urna eget nisl. Donec non ligula in sapien sodales interdum. Nam eu lectus metus. Curabitur ut neque ut augue venenatis tincidunt. Fusce posuere dolor ac est tincidunt, sit amet venenatis nulla consectetur. Aenean placerat justo vel laoreet congue. Sed dignissim volutpat nibh, eu cursus odio."
+        val newCommentValues = GameRequestTestResource.buildCommentRequest(5, invalidContent)
+
+        val commentContent = objectMapper.writeValueAsString(newCommentValues)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${comment.id}", commentContent, token)
+                .andExpect(status().isBadRequest)
+                .andReturn()
+    }
+
+    @Test
+    fun `23 publish comment with invalid rating results in 400 Bad request`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+        val invalidRating = 7
+        val comment = GameRequestTestResource.buildCommentRequest(invalidRating)
+        val commentContent = objectMapper.writeValueAsString(comment)
+
+        postTo(API.ENDPOINT_GAMES + "/${game.id}/comments", commentContent, token)
+                .andExpect(status().isBadRequest)
+                .andReturn()
+    }
+
+    @Test
+    fun `24 publish comment with invalid content results in 400 Bad request`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+        val invalidContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dapibus nulla nec ex cursus, ut volutpat purus tristique. Vivamus euismod nibh nec hendrerit convallis. Integer tincidunt dolor nec felis viverra, sit amet congue tortor tempor. Phasellus id metus at justo feugiat dapibus ac in quam. In vehicula sed justo id dignissim. Sed congue, est nec pellentesque iaculis, erat nulla rhoncus arcu, a viverra risus urna eget nisl. Donec non ligula in sapien sodales interdum. Nam eu lectus metus. Curabitur ut neque ut augue venenatis tincidunt. Fusce posuere dolor ac est tincidunt, sit amet venenatis nulla consectetur. Aenean placerat justo vel laoreet congue. Sed dignissim volutpat nibh, eu cursus odio."
+        val comment = GameRequestTestResource.buildCommentRequest(4, invalidContent)
+        val commentContent = objectMapper.writeValueAsString(comment)
+
+        postTo(API.ENDPOINT_GAMES + "/${game.id}/comments", commentContent, token)
+                .andExpect(status().isBadRequest)
+                .andReturn()
+    }
+
+    @Test
+    fun `25 Update comment by no registered id - 404 not found`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+        val invalidId = 9999
+
+        val comment = GameRequestTestResource.buildCommentRequest()
+
+        val commentContent = objectMapper.writeValueAsString(comment)
+
+        putTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${invalidId}", commentContent, token)
+                .andExpect(status().isNotFound)
+                .andReturn()
+    }
+
+    @Test
+    fun `26 Delete comment by no registered id - 404 not found`() {
+        val publisher = userDataLoader.fetchLoadedUser("spider_man")
+        val game = gameDataLoader.loadNewGame(GameRequestTestResource.buildGameRequest(), publisher)
+
+        val anotherUser = userDataLoader.fetchLoadedUser(HULK_USERNAME)
+        val token = buildJwtTokenForUser(anotherUser)
+
+        val invalidId = 9999
+
+        val headers: MultiValueMap<String, String> = LinkedMultiValueMap()
+        headers.add("Authorization", token)
+
+        deleteTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${invalidId}", headers)
+                .andExpect(status().isNotFound)
+                .andReturn()
     }
 }

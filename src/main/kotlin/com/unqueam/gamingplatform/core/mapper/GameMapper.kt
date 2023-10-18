@@ -22,6 +22,7 @@ class GameMapper {
     }
 
     fun mapToOutput(aGame: Game): GameOutput {
+        val publisherOutput = PublisherOutput(aGame.publisher.id!!, aGame.publisher.getUsername())
         return GameOutput(
             aGame.id!!,
             aGame.name,
@@ -34,8 +35,9 @@ class GameMapper {
             mapToSet(aGame.genres) { GenreOutput(it.name, it.spanishName, it.englishName) },
             aGame.developmentTeam,
             aGame.rankBadge.name,
-            PublisherOutput(aGame.publisher.id!!, aGame.publisher.getUsername()),
-            aGame.isHidden
+            publisherOutput,
+            aGame.isHidden,
+            mapToSet(aGame.comments) { CommentOutput(PublisherOutput(it.getPublisherId(), it.publisher.getUsername()), it.rating, it.content, it.creationTime, it.lastModification) }
         )
     }
 

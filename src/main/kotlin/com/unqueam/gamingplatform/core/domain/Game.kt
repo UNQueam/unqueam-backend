@@ -17,7 +17,8 @@ class Game(
     genres: Set<Genre>,
     developmentTeam: String,
     publisher: PlatformUser,
-    isHidden: Boolean
+    isHidden: Boolean,
+    comments: Set<Comment>
 ) {
 
     @Id
@@ -43,6 +44,10 @@ class Game(
     val developmentTeam: String = developmentTeam
     var isHidden: Boolean = isHidden
 
+    @OneToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "game")
+    val comments: Set<Comment> = comments
+
+
     fun syncWith(updatedGame: Game): Game {
         return Game(
             id,
@@ -57,7 +62,8 @@ class Game(
             updatedGame.genres,
             updatedGame.developmentTeam,
             this.publisher,
-            updatedGame.isHidden
+            updatedGame.isHidden,
+            this.comments
         )
     }
 
