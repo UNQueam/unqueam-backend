@@ -1,7 +1,6 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.CommentInput
-import com.unqueam.gamingplatform.application.dtos.CommentOutput
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
@@ -9,11 +8,14 @@ import com.unqueam.gamingplatform.core.domain.*
 import com.unqueam.gamingplatform.core.exceptions.*
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.COMMENT_NOT_FOUND_ERROR_MESSAGE
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE
+
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotDeleteCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotPublishCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotUpdateCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.InvalidCommentContentException
 import com.unqueam.gamingplatform.core.mapper.CommentMapper
+import com.unqueam.gamingplatform.core.exceptions.UserIsNotThePublisherOfTheGameException
+
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
 import com.unqueam.gamingplatform.core.services.ITrackingService

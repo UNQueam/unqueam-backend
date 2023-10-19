@@ -4,10 +4,12 @@ import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlready
 import com.unqueam.gamingplatform.core.exceptions.CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException
 import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
 import com.unqueam.gamingplatform.core.exceptions.UserIsNotThePublisherOfTheGameException
+
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotDeleteCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotPublishCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotUpdateCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.InvalidCommentContentException
+
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -61,11 +63,12 @@ class APIExceptionHandler {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, exception, httpRequest)
     }
 
+
     @ExceptionHandler(CanNotPublishCommentException::class)
     fun handleCanNotPublishCommentException(exception: CanNotPublishCommentException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, exception, httpRequest)
     }
-    
+
     @ExceptionHandler(CanNotDeleteCommentException::class)
     fun handleCanNotDeleteCommentException(exception: CanNotDeleteCommentException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, exception, httpRequest)
@@ -80,6 +83,7 @@ class APIExceptionHandler {
     fun handleInvalidCommentContentException(exception: InvalidCommentContentException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
     }
+
 
     private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest, errorsMap: Map<String, Any> = mapOf()) : ResponseEntity<Map<String, Any>> {
         return ResponseEntity

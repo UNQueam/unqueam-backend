@@ -20,5 +20,6 @@ class GameDataLoader(@Autowired private val gameService: IGameService) {
 
     fun loadNewComment(gameId: Long, commentInput: CommentInput, publisher: PlatformUser) : Comment {
         return gameService.publishComment(gameId, commentInput, publisher)
+
     }
 }
