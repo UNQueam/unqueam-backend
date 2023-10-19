@@ -68,7 +68,7 @@ class APIExceptionHandler {
     fun handleCanNotPublishCommentException(exception: CanNotPublishCommentException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, exception, httpRequest)
     }
-    
+
     @ExceptionHandler(CanNotDeleteCommentException::class)
     fun handleCanNotDeleteCommentException(exception: CanNotDeleteCommentException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, exception, httpRequest)
