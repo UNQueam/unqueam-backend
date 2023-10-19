@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.CommentInput
+import com.unqueam.gamingplatform.application.dtos.CommentOutput
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
