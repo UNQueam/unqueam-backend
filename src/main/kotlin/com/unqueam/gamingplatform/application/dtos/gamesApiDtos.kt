@@ -95,6 +95,10 @@ data class CommentInput (
 )
 
 data class CommentOutput (
+        @JsonProperty("comment_id")
+        val commentId: Long,
+        @JsonProperty("game_id")
+        val gameId: Long,
         val publisher: PublisherOutput,
         val rating: Int,
         val content: String,

@@ -22,6 +22,8 @@ class CommentMapper {
 
     fun mapToOutput(comment: Comment): CommentOutput {
         return CommentOutput(
+                comment.id!!,
+                comment.gameId(),
                 PublisherOutput(comment.publisher.id!!, comment.publisher.getUsername()),
                 comment.rating,
                 comment.content,

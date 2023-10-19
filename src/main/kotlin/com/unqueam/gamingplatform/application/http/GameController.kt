@@ -81,15 +81,15 @@ class GameController {
     @PostMapping("/{gameId}/comments")
     fun publishComment(@PathVariable gameId: Long, @RequestBody commentInput: CommentInput) : ResponseEntity<Any> {
         val publisher = AuthContextHelper.getAuthenticatedUser()
-        gameService.publishComment(gameId, commentInput, publisher)
-        return ResponseEntity.status(HttpStatus.CREATED).build()
+        val createdComment = gameService.publishComment(gameId, commentInput, publisher)
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment)
     }
 
     @PutMapping("/{gameId}/comments/{commentId}")
     fun updateComment(@PathVariable gameId: Long, @PathVariable commentId: Long,  @RequestBody commentInput: CommentInput) : ResponseEntity<Any> {
         val publisher = AuthContextHelper.getAuthenticatedUser()
-        gameService.updateComment(commentId, commentInput, publisher)
-        return ResponseEntity.status(HttpStatus.OK).build()
+        val updatedComment = gameService.updateComment(commentId, commentInput, publisher)
+        return ResponseEntity.status(HttpStatus.OK).body(updatedComment)
     }
 
     @DeleteMapping("/{gameId}/comments/{commentId}")

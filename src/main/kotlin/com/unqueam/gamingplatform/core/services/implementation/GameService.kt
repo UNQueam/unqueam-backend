@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.CommentInput
+import com.unqueam.gamingplatform.application.dtos.CommentOutput
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
@@ -131,7 +132,7 @@ class GameService : IGameService {
         if (publisher.id != game.publisher.id) throw UserIsNotThePublisherOfTheGameException()
     }
 
-    override fun publishComment(gameId: Long, commentInput: CommentInput, publisher: PlatformUser): Comment {
+    override fun publishComment(gameId: Long, commentInput: CommentInput, publisher: PlatformUser): CommentOutput {
         val storedGame = getStoredGame(gameId)
 
         verifyIfCanPublishComment(publisher, storedGame)
@@ -139,10 +140,10 @@ class GameService : IGameService {
 
         val comment = this.commentMapper.mapToInput(commentInput, publisher, storedGame)
 
-        return commentRepository.save(comment)
+        return commentMapper.mapToOutput(commentRepository.save(comment))
     }
 
-    override fun updateComment(commentId: Long,  commentInput: CommentInput, publisher: PlatformUser) {
+    override fun updateComment(commentId: Long,  commentInput: CommentInput, publisher: PlatformUser) : CommentOutput {
 
         val storedComment = getStoredComment(commentId)
 
@@ -151,7 +152,7 @@ class GameService : IGameService {
 
         storedComment.update(commentInput.content, commentInput.rating)
 
-        commentRepository.save(storedComment)
+        return commentMapper.mapToOutput(commentRepository.save(storedComment))
     }
 
     override fun deleteComment(commentId: Long, publisher: PlatformUser) {

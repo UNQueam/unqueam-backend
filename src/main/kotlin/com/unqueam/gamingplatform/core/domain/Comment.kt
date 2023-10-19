@@ -42,4 +42,5 @@ class Comment {
         this.rating = newRating
     }
 
+    fun gameId() : Long = game.id!!
 }
