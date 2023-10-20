@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.application.dtos
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.unqueam.gamingplatform.core.domain.Role
+import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtHelper.TOKEN_TTL_MS
 import java.time.LocalDateTime
 
 data class SignInRequest (
@@ -23,5 +24,7 @@ data class AuthenticationOutput(
     @JsonProperty ("auth_token")
     val authToken: String,
     @JsonProperty ("time_stamp")
-    val timeStamp: LocalDateTime
+    val timeStamp: LocalDateTime,
+    @JsonProperty ("token_ttl_ms")
+    val tokenTtlMs: Int = TOKEN_TTL_MS
 )
