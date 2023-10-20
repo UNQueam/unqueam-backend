@@ -135,7 +135,7 @@ class GameService : IGameService {
         if (publisher.id != game.publisher.id) throw UserIsNotThePublisherOfTheGameException()
     }
 
-    override fun publishComment(gameId: Long, commentInput: CommentInput, publisher: PlatformUser): CommentOutput {
+    override fun publishComment(gameId: Long, commentInput: CommentInput, publisher: PlatformUser): Comment {
         val storedGame = getStoredGame(gameId)
 
         verifyIfCanPublishComment(publisher, storedGame)
@@ -143,7 +143,7 @@ class GameService : IGameService {
 
         val comment = this.commentMapper.mapToInput(commentInput, publisher, storedGame)
 
-        return commentMapper.mapToOutput(commentRepository.save(comment))
+        return commentRepository.save(comment)
     }
 
     override fun updateComment(commentId: Long,  commentInput: CommentInput, publisher: PlatformUser) : CommentOutput {

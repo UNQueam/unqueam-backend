@@ -4,6 +4,7 @@ import com.unqueam.gamingplatform.application.auth.AuthContextHelper
 import com.unqueam.gamingplatform.application.dtos.CommentInput
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
+import com.unqueam.gamingplatform.core.mapper.CommentMapper
 import com.unqueam.gamingplatform.core.services.IGameService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -81,7 +82,7 @@ class GameController {
     @PostMapping("/{gameId}/comments")
     fun publishComment(@PathVariable gameId: Long, @RequestBody commentInput: CommentInput) : ResponseEntity<Any> {
         val publisher = AuthContextHelper.getAuthenticatedUser()
-        val createdComment = gameService.publishComment(gameId, commentInput, publisher)
+        val createdComment = CommentMapper().mapToOutput(gameService.publishComment(gameId, commentInput, publisher))
         return ResponseEntity.status(HttpStatus.CREATED).body(createdComment)
     }
 

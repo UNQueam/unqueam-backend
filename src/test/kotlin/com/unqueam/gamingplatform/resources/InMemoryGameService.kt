@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.resources
 
 import com.unqueam.gamingplatform.application.dtos.CommentInput
+import com.unqueam.gamingplatform.application.dtos.CommentOutput
 import com.unqueam.gamingplatform.application.dtos.GameOutput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
 import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
@@ -84,7 +85,7 @@ class InMemoryGameService : IGameService {
         return comment // A CAMBIAR.
     }
 
-    override fun updateComment(commentId: Long, commentInput: CommentInput, publisher: PlatformUser) {
+    override fun updateComment(commentId: Long, commentInput: CommentInput, publisher: PlatformUser): CommentOutput {
         TODO("Not yet implemented")
     }
 
