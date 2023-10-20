@@ -12,12 +12,10 @@ class Developer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long?
-    val firstName: String
-    val lastName: String
+    val name: String
 
-    constructor(anId: Long?, aFirstName: String, aLastName: String) {
+    constructor(anId: Long?, name: String) {
         this.id = anId
-        this.firstName = notBlank(aFirstName, "A Developer must have a first name.")
-        this.lastName = notBlank(aLastName, "A Developer must have a last name.")
+        this.name = notBlank(name, "A Developer must have a name.")
     }
 }

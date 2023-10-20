@@ -69,7 +69,7 @@ class DatabaseSeeder {
                         "al desarrollo de videojuegos. Eres una niña que intenta escapar de un bosque muy peligroso.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.now(),
-                setOf(DeveloperGameInput("Julian", "Trejo")),
+                setOf(DeveloperGameInput("Julian")),
                 setOf(
                     GameImageInput("https://media.discordapp.net/attachments/1016812465859866667/1148765153127579788/image.png?width=1162&height=670"),
                     GameImageInput("https://cdn.discordapp.com/attachments/1016812465859866667/1148765252318658680/image.png")
@@ -84,7 +84,7 @@ class DatabaseSeeder {
                         "ante las peligrosas cavernas.",
                 "https://mendezigna.github.io/klaus-mision-rescate/",
                 LocalDate.now(),
-                setOf(DeveloperGameInput("Anonymous", "Anon"), DeveloperGameInput("Anonymous", "Anon"), DeveloperGameInput("Anonymous", "Anon")),
+                setOf(DeveloperGameInput("Anonymous"), DeveloperGameInput("Anonymous"), DeveloperGameInput("Anonymous")),
                 setOf(
                     GameImageInput("https://raw.githubusercontent.com/IntroPV/IntroPV.github.io/master/docs/proyectos_previos/imagenes/2020s2-grupoD-2.png"),
                 ),
@@ -97,7 +97,7 @@ class DatabaseSeeder {
                 "Representa la tercera entrega principal de la serie Baldur's Gate, basada en el sistema de juego de rol de mesa Dungeons & Dragons.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 8, 3),
-                setOf(DeveloperGameInput("Bert", "Stevens"), DeveloperGameInput("Joachim", "Vleminckx")),
+                setOf(DeveloperGameInput("Bert"), DeveloperGameInput("Joachim")),
                 setOf(
                     GameImageInput("https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/ss_c73bc54415178c07fef85f54ee26621728c77504.1920x1080.jpg?t=1692294127") ,
                     GameImageInput("https://oyster.ignimgs.com/mediawiki/apis.ign.com/baldurs-gate-3/e/e5/BG3_Combat_Guide_-_Initiative.png"),
@@ -111,7 +111,7 @@ class DatabaseSeeder {
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 5, 23),
-                setOf(DeveloperGameInput("Jeff", "Richards"), DeveloperGameInput("Haim", "Rock")),
+                setOf(DeveloperGameInput("Jeff"), DeveloperGameInput("Haim")),
                 setOf(
                     GameImageInput("https://dbknews.s3.amazonaws.com/uploads/2022/05/ow_gp.png"),
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
@@ -126,7 +126,7 @@ class DatabaseSeeder {
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 5, 23),
-                setOf(DeveloperGameInput("Jeff", "Richards"), DeveloperGameInput("Haim", "Rock")),
+                setOf(DeveloperGameInput("Jeff"), DeveloperGameInput("Haim")),
                 setOf(
                     GameImageInput("https://dbknews.s3.amazonaws.com/uploads/2022/05/ow_gp.png"),
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
@@ -141,7 +141,7 @@ class DatabaseSeeder {
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 5, 23),
-                setOf(DeveloperGameInput("Jeff", "Richards"), DeveloperGameInput("Haim", "Rock")),
+                setOf(DeveloperGameInput("Jeff"), DeveloperGameInput("Haim")),
                 setOf(
                     GameImageInput("https://dbknews.s3.amazonaws.com/uploads/2022/05/ow_gp.png"),
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
@@ -156,7 +156,7 @@ class DatabaseSeeder {
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 5, 23),
-                setOf(DeveloperGameInput("Jeff", "Richards"), DeveloperGameInput("Haim", "Rock")),
+                setOf(DeveloperGameInput("Jeff"), DeveloperGameInput("Haim")),
                 setOf(
                     GameImageInput("https://dbknews.s3.amazonaws.com/uploads/2022/05/ow_gp.png"),
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
@@ -171,7 +171,7 @@ class DatabaseSeeder {
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 5, 23),
-                setOf(DeveloperGameInput("Jeff", "Richards"), DeveloperGameInput("Haim", "Rock")),
+                setOf(DeveloperGameInput("Jeff"), DeveloperGameInput("Haim")),
                 setOf(
                     GameImageInput("https://dbknews.s3.amazonaws.com/uploads/2022/05/ow_gp.png"),
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
@@ -186,7 +186,7 @@ class DatabaseSeeder {
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 5, 23),
-                setOf(DeveloperGameInput("Jeff", "Richards"), DeveloperGameInput("Haim", "Rock")),
+                setOf(DeveloperGameInput("Jeff"), DeveloperGameInput("Haim")),
                 setOf(
                     GameImageInput("https://dbknews.s3.amazonaws.com/uploads/2022/05/ow_gp.png"),
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
@@ -201,7 +201,7 @@ class DatabaseSeeder {
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 5, 23),
-                setOf(DeveloperGameInput("Jeff", "Richards"), DeveloperGameInput("Haim", "Rock")),
+                setOf(DeveloperGameInput("Jeff"), DeveloperGameInput("Haim")),
                 setOf(
                     GameImageInput("https://dbknews.s3.amazonaws.com/uploads/2022/05/ow_gp.png"),
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),
@@ -217,7 +217,7 @@ class DatabaseSeeder {
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
                 LocalDate.of(2023, 5, 23),
-                setOf(DeveloperGameInput("Jeff", "Richards"), DeveloperGameInput("Haim", "Rock")),
+                setOf(DeveloperGameInput("Jeff"), DeveloperGameInput("Haim")),
                 setOf(
                     GameImageInput("https://dbknews.s3.amazonaws.com/uploads/2022/05/ow_gp.png"),
                     GameImageInput("https://images0.persgroep.net/rcs/FkDXAAiEdHTHCboeL_g4LMssSHw/diocontent/221610057/_fitwidth/694/?appId=21791a8992982cd8da851550a453bd7f&quality=0.8"),

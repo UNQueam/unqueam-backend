@@ -24,10 +24,8 @@ data class GameRequest(
 )
 
 data class DeveloperGameInput(
-    @JsonProperty (value = "first_name")
-    val firstName: String,
-    @JsonProperty (value = "last_name")
-    val lastName: String,
+    @JsonProperty (value = "name")
+    val name: String,
 )
 
 data class GameImageInput(
@@ -69,10 +67,8 @@ data class PublisherOutput(
 
 data class DeveloperGameOutput(
     val id: Long,
-    @JsonProperty (value = "first_name")
-    val firstName: String,
-    @JsonProperty (value = "last_name")
-    val lastName: String,
+    @JsonProperty (value = "name")
+    val name: String,
 )
 
 

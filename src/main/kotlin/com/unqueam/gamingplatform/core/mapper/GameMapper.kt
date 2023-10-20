@@ -8,7 +8,7 @@ class GameMapper {
     fun mapToInput(aGameRequest: GameRequest, publisher: PlatformUser): Game {
         return Game.builder()
             .named(aGameRequest.name)
-            .developedBy(mapToSet(aGameRequest.developers) { Developer(null, it.firstName, it.lastName) })
+            .developedBy(mapToSet(aGameRequest.developers) { Developer(null, it.name) })
             .describedAs(aGameRequest.description)
             .withLinkToGame(aGameRequest.linkToGame)
             .releasedAt(aGameRequest.releaseDate)
@@ -30,7 +30,7 @@ class GameMapper {
             aGame.description,
             aGame.linkToGame,
             aGame.releaseDate,
-            mapToSet(aGame.developers) { DeveloperGameOutput(it.id!!, it.firstName, it.lastName) },
+            mapToSet(aGame.developers) { DeveloperGameOutput(it.id!!, it.name) },
             mapToSet(aGame.images) { GameImageOutput(it.id!!, it.url) },
             mapToSet(aGame.genres) { GenreOutput(it.name, it.spanishName, it.englishName) },
             aGame.developmentTeam,
