@@ -39,7 +39,7 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
             .and()
             .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.PUT, "/api/games/{id}/hide", "/api/games/{id}/expose").hasRole("DEVELOPER")
-
+                .requestMatchers(HttpMethod.POST, "/api/games").hasRole("DEVELOPER")
                 .requestMatchers(HttpMethod.POST, "/api/games/{id}/comments").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/games/{id}/comments/{commentId}").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/games/{id}/comments/{commentId}").authenticated()
