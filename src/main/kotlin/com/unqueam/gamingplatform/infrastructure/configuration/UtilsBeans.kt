@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.infrastructure.configuration
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -16,6 +17,7 @@ class UtilsBeans {
     @Bean
     fun objectMapper() : ObjectMapper {
         return ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
