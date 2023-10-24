@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils.startsWith
 
 object JwtHelper {
 
-    const val TOKEN_TTL_MS = (25 * 60 * 1000)
+    const val TOKEN_TTL_MS = (60 * 60 * 1000)
 
     const val AUTH_HEADER_KEY = "Authorization"
     private const val BEARER_PREFIX = "Bearer "
