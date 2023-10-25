@@ -17,7 +17,8 @@ object GameRequestTestResource {
             setOf(),
             setOf(),
             "developmentTeam",
-            null
+            null,
+            "alias"
         )
     }
 

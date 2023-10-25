@@ -18,6 +18,7 @@ class GameMapper {
             .withDevelopmentTeam(aGameRequest.developmentTeam)
             .publishedBy(publisher)
             .isHidden(aGameRequest.isHidden ?: false)
+            .withAlias(aGameRequest.alias)
             .build()
     }
 
@@ -37,7 +38,8 @@ class GameMapper {
             aGame.rankBadge.name,
             publisherOutput,
             aGame.isHidden,
-            mapToSet(aGame.comments) { CommentOutput(it.id!!, aGame.id!!, PublisherOutput(it.getPublisherId(), it.publisher.getUsername()), it.rating, it.content, it.creationTime, it.lastModification) }
+            mapToSet(aGame.comments) { CommentOutput(it.id!!, aGame.id!!, PublisherOutput(it.getPublisherId(), it.publisher.getUsername()), it.rating, it.content, it.creationTime, it.lastModification) },
+            aGame.alias
         )
     }
 

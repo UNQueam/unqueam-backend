@@ -30,8 +30,8 @@ class GamesIT : AbstractIntegrationTest() {
      * Test cases
      * 1. Publish game - 201 created
      * 2. Fetch no hidden games published by username - 200 ok
-     * 3. Fetch game by ID - 200 ok
-     * 4. Fetch game by no registered ID - 404 not found
+     * 3. Fetch game by alias - 200 ok
+     * 4. Fetch game by no registered alias - 404 not found
      * 5. Delete game by ID - 200 ok
      * 6. Delete game by no registered ID - 404 not found
      * 7. Update game by id - 200 ok
@@ -54,6 +54,7 @@ class GamesIT : AbstractIntegrationTest() {
      * 24. Publish comment with invalid content results in 400 Bad request
      * 25. Update comment by no registered id - 404 not found
      * 26. Delete comment by no registered id - 404 not found
+     * 27. Should not be able to create two games with same alias
      */
 
     @Test
@@ -82,20 +83,20 @@ class GamesIT : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `3 Fetch game by ID - 200 ok`() {
-        val gameId = 2
+    fun `3 Fetch game by alias - 200 ok`() {
+        val gameAlias = "girl-in-the-forest"
 
-        getTo(API.ENDPOINT_GAMES + "/$gameId")
+        getTo(API.ENDPOINT_GAMES + "/$gameAlias")
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.publisher.username").value(HULK_USERNAME))
             .andReturn()
     }
 
     @Test
-    fun `4 Fetch game by no registered ID - 404 not found`() {
-        val gameId = 9999999
+    fun `4 Fetch game by no registered alias - 404 not found`() {
+        val gameAlias = "No game like this"
 
-        getTo(API.ENDPOINT_GAMES + "/$gameId")
+        getTo(API.ENDPOINT_GAMES + "/$gameAlias")
             .andExpect(status().isNotFound)
             .andReturn()
     }
@@ -448,6 +449,21 @@ class GamesIT : AbstractIntegrationTest() {
 
         deleteTo(API.ENDPOINT_GAMES + "/${game.id}/comments/${invalidId}", headers)
                 .andExpect(status().isNotFound)
+                .andReturn()
+    }
+
+    @Test
+    fun `27 Should not be able to create two games with same alias`() {
+        val user = userDataLoader.fetchLoadedUser("hulk")
+        val token = buildJwtTokenForUser(user)
+
+        val game = GameRequestTestResource.buildGameRequest()
+        val gameContent = objectMapper.writeValueAsString(game)
+
+        postTo(API.ENDPOINT_GAMES, gameContent, token)
+
+        postTo(API.ENDPOINT_GAMES, gameContent, token)
+                .andExpect(status().isBadRequest)
                 .andReturn()
     }
 }

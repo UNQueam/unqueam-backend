@@ -10,19 +10,21 @@ import java.util.*
 interface GameRepository : JpaRepository<Game, Long> {
 
     @Query(
-        "SELECT new com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow(g, COALESCE(COUNT(te), 0)) " +
-                "FROM Game g " +
-                "LEFT JOIN TrackingEvent te " +
-                "ON g.id = te.entityId " +
-                "AND te.trackingEntity = 'game' " +
-                "AND te.trackingType = 'view' " +
-                "WHERE g.id = :id " +
-                "GROUP BY g"
+            "SELECT new com.unqueam.gamingplatform.infrastructure.persistence.GameAndViewsRow(g, COALESCE(COUNT(te), 0)) " +
+                    "FROM Game g " +
+                    "LEFT JOIN TrackingEvent te " +
+                    "ON g.id = te.entityId " +
+                    "AND te.trackingEntity = 'game' " +
+                    "AND te.trackingType = 'view' " +
+                    "WHERE g.alias = :alias " +
+                    "GROUP BY g"
     )
-    fun findGameAndCountViews(@Param("id") id: Long?): Optional<GameAndViewsRow>
+    fun findGameAndCountViewsWithAlias(@Param("alias") alias: String?): Optional<GameAndViewsRow>
 
     @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
     override fun findAll(): List<Game>
+
+    fun existsByAlias(alias: String): Boolean
 
     @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
     @Query("from Game game where game.publisher.username = :username")

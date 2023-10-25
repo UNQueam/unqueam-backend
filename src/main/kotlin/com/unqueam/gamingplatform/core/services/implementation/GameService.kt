@@ -9,6 +9,8 @@ import com.unqueam.gamingplatform.core.domain.*
 import com.unqueam.gamingplatform.core.exceptions.*
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.COMMENT_NOT_FOUND_ERROR_MESSAGE
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE
+import com.unqueam.gamingplatform.core.exceptions.Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE_ALIAS
+import com.unqueam.gamingplatform.core.exceptions.Exceptions.THE_ALIAS_IS_ALREADY_IN_USE
 
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotDeleteCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotPublishCommentException
@@ -16,6 +18,7 @@ import com.unqueam.gamingplatform.core.exceptions.comments.CanNotUpdateCommentEx
 import com.unqueam.gamingplatform.core.exceptions.comments.InvalidCommentContentException
 import com.unqueam.gamingplatform.core.mapper.CommentMapper
 import com.unqueam.gamingplatform.core.exceptions.UserIsNotThePublisherOfTheGameException
+import com.unqueam.gamingplatform.core.helper.KebabConverter.toKebabCase
 
 import com.unqueam.gamingplatform.core.mapper.GameMapper
 import com.unqueam.gamingplatform.core.services.IGameService
@@ -45,6 +48,7 @@ class GameService : IGameService {
     }
 
     override fun publishGame(gameRequest: GameRequest, publisher: PlatformUser): Game {
+        validateRequest(gameRequest)
         val game = gameMapper.mapToInput(gameRequest, publisher)
         return gameRepository.save(game)
     }
@@ -63,11 +67,15 @@ class GameService : IGameService {
         return games.map { gameMapper.mapToOutput(it) }
     }
 
-    override fun fetchGameById(id: Long): GameOutput {
+    override fun fetchGameByAlias(alias: String): GameOutput {
         val gameAndViewsRow: GameAndViewsRow = gameRepository
-            .findGameAndCountViews(id)
-            .orElseThrow { EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE.format(id)) }
+                .findGameAndCountViewsWithAlias(alias)
+                .orElseThrow { EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE_ALIAS.format(alias)) }
 
+        return handleViewsTrackingAndGetUpdatedGameIfNeeded(gameAndViewsRow)
+    }
+
+    private fun handleViewsTrackingAndGetUpdatedGameIfNeeded(gameAndViewsRow: GameAndViewsRow): GameOutput {
         trackingService.trackViewEvent(TrackingEntity.GAME, gameAndViewsRow.game.id!!)
 
         val gameViewsEvents: Long = gameAndViewsRow.views + 1
@@ -85,6 +93,7 @@ class GameService : IGameService {
     }
 
     override fun updateGameById(id: Long, updatedGameRequest: GameRequest, publisher: PlatformUser) {
+        validateRequest(updatedGameRequest)
         val updatedGameFromRequest = gameMapper.mapToInput(updatedGameRequest, publisher)
 
         val storedGame = getStoredGame(id)
@@ -116,6 +125,16 @@ class GameService : IGameService {
         storedGame.isHidden = false
 
         gameRepository.save(storedGame)
+    }
+
+    private fun validateRequest(gameRequest: GameRequest) {
+        val errors: MutableMap<String, List<String>> = mutableMapOf()
+
+        if (gameRepository.existsByAlias(toKebabCase(gameRequest.alias)))
+            errors["alias"] = listOf(THE_ALIAS_IS_ALREADY_IN_USE)
+
+
+        if (errors.isNotEmpty()) throw GameFormException(errors)
     }
 
     private fun getStoredGame(id: Long): Game {

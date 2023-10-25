@@ -43,8 +43,8 @@ class InMemoryGameService : IGameService {
         return gameRepository.map { gameMapper.mapToOutput(it) }
     }
 
-    override fun fetchGameById(id: Long): GameOutput {
-        val game = gameRepository.find { it.id == id } ?: throw EntityNotFoundException(GAME_NOT_FOUND_ERROR_MESSAGE.format(id))
+    override fun fetchGameByAlias(alias: String): GameOutput {
+        val game = gameRepository.find { it.alias == alias } ?: throw EntityNotFoundException(Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE_ALIAS.format(alias))
         return gameMapper.mapToOutput(game)
     }
 

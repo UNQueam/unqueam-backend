@@ -1,7 +1,9 @@
 package com.unqueam.gamingplatform.core.domain
 
+import com.unqueam.gamingplatform.core.helper.KebabConverter.toKebabCase
 import jakarta.persistence.*
 import java.time.LocalDate
+import java.util.*
 
 @Entity
 class Game(
@@ -18,7 +20,8 @@ class Game(
     developmentTeam: String,
     publisher: PlatformUser,
     isHidden: Boolean,
-    comments: Set<Comment>
+    comments: Set<Comment>,
+    alias: String
 ) {
 
     @Id
@@ -43,6 +46,7 @@ class Game(
     val genres: Set<Genre> = genres
     val developmentTeam: String = developmentTeam
     var isHidden: Boolean = isHidden
+    val alias: String = toKebabCase(alias)
 
     @OneToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "game")
     val comments: Set<Comment> = comments
@@ -63,7 +67,8 @@ class Game(
             updatedGame.developmentTeam,
             this.publisher,
             updatedGame.isHidden,
-            this.comments
+            this.comments,
+            updatedGame.alias
         )
     }
 
