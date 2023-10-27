@@ -17,6 +17,7 @@ class GameBuilderTest {
             .releasedAt(LocalDate.now())
             .withDevelopmentTeam("devTeam")
             .publishedBy(UserTestResource.buildUser())
+            .withAlias("Alias")
             .build()
 
         assertThat(game.developers).isEmpty()
@@ -39,6 +40,7 @@ class GameBuilderTest {
             .named("name")
             .withDevelopmentTeam("devTeam")
             .publishedBy(publisher)
+            .withAlias("alias")
             .build()
 
         assertThat(game.developers).isEmpty()

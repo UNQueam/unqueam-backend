@@ -14,7 +14,7 @@ interface IGameService {
 
     fun publishGame(gameRequest: GameRequest, publisher: PlatformUser): Game
     fun fetchGames(username: Optional<String>, getHiddenGamesParam: GetHiddenGamesParam): List<GameOutput>
-    fun fetchGameById(id: Long): GameOutput
+    fun fetchGameByAlias(alias: String): GameOutput
     fun deleteGameById(id: Long)
     fun updateGameById(id: Long, updatedGameRequest: GameRequest, publisher: PlatformUser)
     fun hideGameById(id: Long, publisher: PlatformUser)

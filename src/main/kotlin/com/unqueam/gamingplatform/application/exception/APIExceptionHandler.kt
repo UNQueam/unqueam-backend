@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.application.exception
 
 import com.unqueam.gamingplatform.core.exceptions.*
+
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotDeleteCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotPublishCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotUpdateCommentException
@@ -47,6 +48,12 @@ class APIExceptionHandler {
     fun handleSignUpFormException(exception: SignUpFormException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
     }
+
+
+    @ExceptionHandler(GameFormException::class)
+    fun handleGameFormException(exception: GameFormException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+       return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
+    }   
 
     @ExceptionHandler(InvalidBannerDataException::class)
     fun handleInvalidBannerData(exception: InvalidBannerDataException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {

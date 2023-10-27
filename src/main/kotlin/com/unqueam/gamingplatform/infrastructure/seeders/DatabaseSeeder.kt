@@ -39,10 +39,10 @@ class DatabaseSeeder {
         val userHulk: PlatformUser = loadUsers().get(2)
         if (gameService.fetchGames(Optional.empty(), GetHiddenGamesParam(true)).isEmpty()) {
             createGames().forEach { gameService.publishGame(it, userHulk) }
-            loadViewsForGameWithId(3, 18)
-            loadViewsForGameWithId(4, 70)
-            loadViewsForGameWithId(5, 110)
-            loadViewsForGameWithId(6, 14)
+            loadViewsForGameWithId("bg-3", 18)
+            loadViewsForGameWithId("ow-1", 70)
+            loadViewsForGameWithId("ow-2", 110)
+            loadViewsForGameWithId("ow-3", 14)
         }
 
     }
@@ -75,7 +75,8 @@ class DatabaseSeeder {
                     GameImageInput("https://cdn.discordapp.com/attachments/1016812465859866667/1148765252318658680/image.png")
                 ),
                 setOf(GenreInput(Genre.ARCADE.name), GenreInput(Genre.PLATFORMER.name)),
-                "Delta software"
+                "Delta software",
+                "Girl in the forest"
             ),
             createGame(
                 "Klaus mision rescate",
@@ -89,7 +90,8 @@ class DatabaseSeeder {
                     GameImageInput("https://raw.githubusercontent.com/IntroPV/IntroPV.github.io/master/docs/proyectos_previos/imagenes/2020s2-grupoD-2.png"),
                 ),
                 setOf(GenreInput(Genre.PUZZLE.name), GenreInput(Genre.PLATFORMER.name)),
-                "Anonymous"
+                "Anonymous",
+                "Klaus"
             ),
             createGame(
                 "Baldurs gate 3",
@@ -103,7 +105,8 @@ class DatabaseSeeder {
                     GameImageInput("https://oyster.ignimgs.com/mediawiki/apis.ign.com/baldurs-gate-3/e/e5/BG3_Combat_Guide_-_Initiative.png"),
                 ),
                 setOf(GenreInput(Genre.RPG.name), GenreInput(Genre.ACTION.name)),
-                "Larian Studios"
+                "Larian Studios",
+                "BG 3"
             ),
             createGame(
                 "Overwatch 2",
@@ -118,7 +121,8 @@ class DatabaseSeeder {
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
-                "Blizzard"
+                "Blizzard",
+                "Ow 1"
             ),
             createGame(
                 "Sea of Stars",
@@ -133,7 +137,8 @@ class DatabaseSeeder {
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
-                "Blizzard"
+                "Blizzard",
+                "Ow 2"
             ),
             createGame(
                 "Rocket League",
@@ -148,7 +153,8 @@ class DatabaseSeeder {
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
-                "Blizzard"
+                "Blizzard",
+                "Ow 3"
             ),
             createGame(
                 "Warcraft 3",
@@ -163,7 +169,8 @@ class DatabaseSeeder {
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
-                "Blizzard"
+                "Blizzard",
+                "Ow 4"
             ),
             createGame(
                 "Portal 2",
@@ -178,7 +185,8 @@ class DatabaseSeeder {
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
-                "Blizzard"
+                "Blizzard",
+                "Ow 5"
             ),
             createGame(
                 "Nier Automata",
@@ -193,7 +201,8 @@ class DatabaseSeeder {
                     GameImageInput("https://blog.latam.playstation.com/tachyon/sites/3/2022/06/3d2d01626430e2ee9117d81b834970fa6242e10f.jpg")
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
-                "Blizzard"
+                "Blizzard",
+                "Ow 6"
             ),
             createGame(
                 "Dark Souls",
@@ -209,6 +218,7 @@ class DatabaseSeeder {
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard",
+                "Ow 7",
                 true
             ),
             createGame(
@@ -225,6 +235,7 @@ class DatabaseSeeder {
                 ),
                 setOf(GenreInput(Genre.ACTION.name)),
                 "Blizzard",
+                    "Kotor",
                 true
             ),
         )
@@ -240,7 +251,9 @@ class DatabaseSeeder {
         images: Set<GameImageInput>,
         genres: Set<GenreInput>,
         developmentTeam: String,
-        isHidden: Boolean? = false
+        alias: String,
+        isHidden: Boolean? = false,
+
     ): GameRequest {
         return GameRequest(
             name,
@@ -252,13 +265,14 @@ class DatabaseSeeder {
             images,
             genres,
             developmentTeam,
-            isHidden!!
+            isHidden!!,
+            alias
         )
     }
 
-    private fun loadViewsForGameWithId(gameId: Long, views: Int) {
+    private fun loadViewsForGameWithId(gameAlias: String, views: Int) {
         for (i in 1..views) {
-            gameService.fetchGameById(gameId)
+            gameService.fetchGameByAlias(gameAlias)
         }
     }
 

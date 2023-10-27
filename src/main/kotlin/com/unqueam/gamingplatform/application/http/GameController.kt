@@ -46,9 +46,9 @@ class GameController {
         return ResponseEntity.status(HttpStatus.OK).body(games)
     }
 
-    @GetMapping (API.ID_PATH_VARIABLE)
-    fun fetchGameById(@PathVariable id: Long) : ResponseEntity<GameOutput> {
-        val game: GameOutput = gameService.fetchGameById(id)
+    @GetMapping ("/{alias}")
+    fun fetchGameByAlias(@PathVariable alias: String) : ResponseEntity<GameOutput> {
+        val game: GameOutput = gameService.fetchGameByAlias(alias)
         return ResponseEntity.status(HttpStatus.OK).body(game)
     }
 

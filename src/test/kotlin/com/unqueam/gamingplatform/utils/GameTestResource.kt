@@ -23,7 +23,8 @@ object GameTestResource {
             "developmentTeam",
             UserTestResource.buildUser(),
             false,
-             setOf()
+             setOf(),
+             "alias"
         )
     }
 

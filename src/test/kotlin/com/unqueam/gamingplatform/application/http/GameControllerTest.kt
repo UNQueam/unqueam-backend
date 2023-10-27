@@ -50,13 +50,13 @@ class GameControllerTest {
     }
 
     @Test
-    fun `should fetch game by id`() {
-        val id = 1L
+    fun `should fetch game by alias`() {
+        val id = "alias"
         val game = GameRequestTestResource.buildGameRequest()
 
         gameController.publishGame(game)
 
-        val response = gameController.fetchGameById(id)
+        val response = gameController.fetchGameByAlias(id)
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body?.name).isEqualTo(game.name)

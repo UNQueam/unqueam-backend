@@ -20,7 +20,8 @@ data class GameRequest(
     @JsonProperty (value = "development_team")
     val developmentTeam: String,
     @JsonProperty (value = "is_hidden")
-    val isHidden: Boolean?
+    val isHidden: Boolean?,
+    val alias: String
 )
 
 data class DeveloperGameInput(
@@ -56,7 +57,8 @@ data class GameOutput(
     val publisher: PublisherOutput,
     @JsonProperty (value = "is_hidden")
     val isHidden: Boolean,
-    val comments: Set<CommentOutput>
+    val comments: Set<CommentOutput>,
+    val alias: String
 )
 
 data class PublisherOutput(
