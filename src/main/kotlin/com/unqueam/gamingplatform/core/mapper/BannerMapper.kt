@@ -4,10 +4,12 @@ import com.unqueam.gamingplatform.application.dtos.*
 import com.unqueam.gamingplatform.core.domain.Banner
 import com.unqueam.gamingplatform.core.domain.File
 import com.unqueam.gamingplatform.core.domain.PlatformUser
+import com.unqueam.gamingplatform.core.helper.BannerInputValidator
 
 class BannerMapper(val fileMapper: FileMapper) {
 
     fun mapToInput(bannerRequest: BannerRequest, publisher: PlatformUser): Banner {
+        BannerInputValidator(bannerRequest).validate()
         return Banner(null, bannerRequest.title, bannerRequest.richText, publisher, mapToFile(bannerRequest.picture))
     }
 

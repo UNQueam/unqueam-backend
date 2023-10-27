@@ -1,9 +1,6 @@
 package com.unqueam.gamingplatform.application.exception
 
-import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlreadyInProcessException
-import com.unqueam.gamingplatform.core.exceptions.CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException
-import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
-import com.unqueam.gamingplatform.core.exceptions.UserIsNotThePublisherOfTheGameException
+import com.unqueam.gamingplatform.core.exceptions.*
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotDeleteCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotPublishCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotUpdateCommentException
@@ -48,6 +45,11 @@ class APIExceptionHandler {
 
     @ExceptionHandler(SignUpFormException::class)
     fun handleSignUpFormException(exception: SignUpFormException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
+    }
+
+    @ExceptionHandler(InvalidBannerDataException::class)
+    fun handleInvalidBannerData(exception: InvalidBannerDataException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
     }
 
