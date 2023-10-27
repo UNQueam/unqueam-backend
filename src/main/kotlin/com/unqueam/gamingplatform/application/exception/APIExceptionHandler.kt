@@ -4,12 +4,10 @@ import com.unqueam.gamingplatform.core.exceptions.ARequestToBeDeveloperIsAlready
 import com.unqueam.gamingplatform.core.exceptions.CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException
 import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
 import com.unqueam.gamingplatform.core.exceptions.UserIsNotThePublisherOfTheGameException
-
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotDeleteCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotPublishCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotUpdateCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.InvalidCommentContentException
-
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -17,8 +15,14 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.validation.FieldError
+import org.springframework.validation.ObjectError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
+import java.util.function.Consumer
+
 
 @ControllerAdvice
 class APIExceptionHandler {
@@ -84,6 +88,21 @@ class APIExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(
+        MethodArgumentNotValidException::class
+    )
+    fun handleValidationExceptions(
+        ex: MethodArgumentNotValidException
+    ): Map<String, String?> {
+        val errors: MutableMap<String, String?> = HashMap()
+        ex.bindingResult.allErrors.forEach(Consumer { error: ObjectError ->
+            val fieldName = (error as FieldError).field
+            val errorMessage = error.getDefaultMessage()
+            errors[fieldName] = errorMessage
+        })
+        return errors
+    }
 
     private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest, errorsMap: Map<String, Any> = mapOf()) : ResponseEntity<Map<String, Any>> {
         return ResponseEntity

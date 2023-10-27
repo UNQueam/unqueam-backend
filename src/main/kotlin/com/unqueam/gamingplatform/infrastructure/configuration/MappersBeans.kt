@@ -19,6 +19,16 @@ class MappersBeans {
     }
 
     @Bean
+    fun fileMapper(): FileMapper {
+        return FileMapper()
+    }
+
+    @Bean
+    fun bannerMapper(fileMapper: FileMapper): BannerMapper {
+        return BannerMapper(fileMapper)
+    }
+
+    @Bean
     fun userMapper(): UserMapper {
         return UserMapper()
     }

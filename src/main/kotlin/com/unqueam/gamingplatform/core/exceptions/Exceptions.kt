@@ -10,4 +10,6 @@ object Exceptions {
     const val REQUEST_TO_BE_DEVELOPER_NOT_FOUND_ERROR_MESSAGE = "No se encontró una peticion para ser desarrollador con el ID: %s"
     const val INVALID_COMMENT_RATING = "El rating debe estar entre 1 y 5"
     const val INVALID_COMMENT_CONTENT = "El comentario puede tener hasta 250 caracteres"
+    const val YOU_ARE_NOT_AUTHORIZED_TO_DO_THIS_ACTION_DUE_TO_YOUR_ROLE = "No puedes realizar esta acción debido a que no eres Admin de la plataforma."
+    const val NOT_EXISTS_BANNER_WITH_ID = "No existe un banner con Id: %s"
 }

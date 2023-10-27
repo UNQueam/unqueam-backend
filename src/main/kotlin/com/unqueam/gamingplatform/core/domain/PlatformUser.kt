@@ -38,6 +38,7 @@ class PlatformUser {
     fun getUsername(): String = username
     fun getEmail(): String = email
     fun getCreatedAt(): LocalDateTime = createdAt
+    fun hasRole(role: Role): Boolean = this.role == role
 
     fun changeRoleTo(anotherRole: Role) {
         role = anotherRole
