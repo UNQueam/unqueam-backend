@@ -25,6 +25,11 @@ class ServicesBeans {
     }
 
     @Bean
+    fun bannerService(bannerRepository: BannerRepository, bannerMapper: BannerMapper): IBannerService {
+        return BannerService(bannerRepository, bannerMapper)
+    }
+
+    @Bean
     fun trackingService(trackingEventsRepository: TrackingEventsRepository): ITrackingService {
         return TrackingService(trackingEventsRepository)
     }

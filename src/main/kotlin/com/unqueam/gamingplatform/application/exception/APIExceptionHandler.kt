@@ -6,7 +6,6 @@ import com.unqueam.gamingplatform.core.exceptions.comments.CanNotDeleteCommentEx
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotPublishCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.CanNotUpdateCommentException
 import com.unqueam.gamingplatform.core.exceptions.comments.InvalidCommentContentException
-
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -50,8 +49,14 @@ class APIExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
     }
 
+
     @ExceptionHandler(GameFormException::class)
     fun handleGameFormException(exception: GameFormException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+       return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
+    }   
+
+    @ExceptionHandler(InvalidBannerDataException::class)
+    fun handleInvalidBannerData(exception: InvalidBannerDataException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
     }
 
@@ -85,7 +90,6 @@ class APIExceptionHandler {
     fun handleInvalidCommentContentException(exception: InvalidCommentContentException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
     }
-
 
     private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest, errorsMap: Map<String, Any> = mapOf()) : ResponseEntity<Map<String, Any>> {
         return ResponseEntity
