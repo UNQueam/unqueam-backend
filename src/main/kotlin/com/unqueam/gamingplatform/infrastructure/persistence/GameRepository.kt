@@ -26,6 +26,8 @@ interface GameRepository : JpaRepository<Game, Long> {
 
     fun existsByAlias(alias: String): Boolean
 
+    fun findByAlias(alias: String): Optional<Game>
+
     @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
     @Query("from Game game where game.publisher.username = :username")
     fun findGamesByUsername(@Param("username") username: String): List<Game>

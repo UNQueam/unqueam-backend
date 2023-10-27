@@ -48,7 +48,7 @@ class GameService : IGameService {
     }
 
     override fun publishGame(gameRequest: GameRequest, publisher: PlatformUser): Game {
-        validateRequest(gameRequest)
+        validateRequest(gameRequest, Optional.empty())
         val game = gameMapper.mapToInput(gameRequest, publisher)
         return gameRepository.save(game)
     }
@@ -93,10 +93,10 @@ class GameService : IGameService {
     }
 
     override fun updateGameById(id: Long, updatedGameRequest: GameRequest, publisher: PlatformUser) {
-        validateRequest(updatedGameRequest)
+        val storedGame = getStoredGame(id)
+        validateRequest(updatedGameRequest, Optional.of(id))
         val updatedGameFromRequest = gameMapper.mapToInput(updatedGameRequest, publisher)
 
-        val storedGame = getStoredGame(id)
 
         verifyIfIsPublisherFromGame(publisher, storedGame)
 
@@ -127,12 +127,12 @@ class GameService : IGameService {
         gameRepository.save(storedGame)
     }
 
-    private fun validateRequest(gameRequest: GameRequest) {
+    private fun validateRequest(gameRequest: GameRequest, gameId: Optional<Long>) {
         val errors: MutableMap<String, List<String>> = mutableMapOf()
+        val game = gameRepository.findByAlias(toKebabCase(gameRequest.alias))
 
-        if (gameRepository.existsByAlias(toKebabCase(gameRequest.alias)))
+        if(game.isPresent && (gameId.isEmpty || (game.get().id!! != gameId.get())))
             errors["alias"] = listOf(THE_ALIAS_IS_ALREADY_IN_USE)
-
 
         if (errors.isNotEmpty()) throw GameFormException(errors)
     }
