@@ -43,6 +43,10 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
                 .requestMatchers(HttpMethod.POST, "/api/games/{id}/comments").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/games/{id}/comments/{commentId}").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/games/{id}/comments/{commentId}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/banners", "/api/banners/{bannerId}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/banners").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/banners/{bannerId}").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/banners/{bannerId}").hasRole("ADMIN")
 
             .requestMatchers("/api/games", "/api/games/**", "/api/genres", "/api/auth/signIn", "/api/auth/signUp")
             .permitAll()
