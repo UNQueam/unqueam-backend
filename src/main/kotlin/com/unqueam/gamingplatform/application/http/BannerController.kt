@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping(API.ENDPOINT_BANNERS)
@@ -40,7 +39,7 @@ class BannerController {
     }
 
     @PostMapping
-    fun postBanner(@Valid @RequestBody bannerRequest: BannerRequest) : ResponseEntity<Any> {
+    fun postBanner(@RequestBody bannerRequest: BannerRequest) : ResponseEntity<Any> {
         val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
         val output = bannerService.postBanner(bannerRequest, authenticatedUser)
         return ResponseEntity.status(HttpStatus.CREATED).body(output)
@@ -53,7 +52,7 @@ class BannerController {
     }
 
     @PutMapping ("/{bannerId}")
-    fun updateBannerById(@PathVariable bannerId: Long, @Valid @RequestBody bannerRequest: BannerRequest) : ResponseEntity<Any> {
+    fun updateBannerById(@PathVariable bannerId: Long, @RequestBody bannerRequest: BannerRequest) : ResponseEntity<Any> {
         val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
         val output = bannerService.updateBannerById(bannerId, bannerRequest, authenticatedUser)
         return ResponseEntity.status(HttpStatus.OK).body(output)
