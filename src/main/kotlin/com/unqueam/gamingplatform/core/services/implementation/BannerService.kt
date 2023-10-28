@@ -5,13 +5,17 @@ import com.unqueam.gamingplatform.application.dtos.BannerRequest
 import com.unqueam.gamingplatform.core.domain.Banner
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.domain.Role
+import com.unqueam.gamingplatform.core.exceptions.Exceptions
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.NOT_EXISTS_BANNER_WITH_ID
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.YOU_ARE_NOT_AUTHORIZED_TO_DO_THIS_ACTION_DUE_TO_YOUR_ROLE
+import com.unqueam.gamingplatform.core.exceptions.InvalidBannerDataException
 import com.unqueam.gamingplatform.core.exceptions.UserNotAuthorizedByRoleException
+import com.unqueam.gamingplatform.core.helper.KebabConverter
 import com.unqueam.gamingplatform.core.mapper.BannerMapper
 import com.unqueam.gamingplatform.core.services.IBannerService
 import com.unqueam.gamingplatform.infrastructure.persistence.BannerRepository
 import jakarta.persistence.EntityNotFoundException
+import java.util.*
 
 class BannerService : IBannerService {
 
@@ -33,10 +37,25 @@ class BannerService : IBannerService {
     }
 
     override fun postBanner(bannerRequest: BannerRequest, publisher: PlatformUser): BannerOutput {
-        validateUserHasRoleAdmin(publisher)
+        validateRequest(bannerRequest, publisher, Optional.empty())
         val banner = bannerMapper.mapToInput(bannerRequest, publisher)
         bannerRepository.save(banner)
         return bannerMapper.mapToOutput(banner)
+    }
+
+    private fun validateRequest(bannerRequest: BannerRequest, publisher: PlatformUser, bannerToUpdate: Optional<Banner>) {
+        validateUserHasRoleAdmin(publisher)
+
+        val errors: MutableMap<String, List<String>> = mutableMapOf()
+        val existsByAlias = bannerRepository.existsByAlias(KebabConverter.toKebabCase(bannerRequest.alias))
+
+        val existsByAliasAndIsPublishingNewBanner = existsByAlias && bannerToUpdate.isEmpty
+        val existsByAliasAndIsEditingAndAliasWasModified = existsByAlias && bannerToUpdate.isPresent && !bannerToUpdate.get().hasAlias(bannerRequest.alias)
+
+        if (existsByAliasAndIsPublishingNewBanner || existsByAliasAndIsEditingAndAliasWasModified)
+            errors["alias"] = listOf(Exceptions.THE_ALIAS_IS_ALREADY_IN_USE)
+
+        if (errors.isNotEmpty()) throw InvalidBannerDataException(errors)
     }
 
     override fun deleteBannerById(bannerId: Long): BannerOutput {
@@ -48,7 +67,7 @@ class BannerService : IBannerService {
     override fun updateBannerById(bannerId: Long, bannerRequest: BannerRequest, publisher: PlatformUser): BannerOutput {
         val bannerToUpdate = searchById(bannerId)
 
-        validateUserHasRoleAdmin(publisher)
+        validateRequest(bannerRequest, publisher, Optional.of(bannerToUpdate))
 
         val bannerFromRequest = bannerMapper.mapToInput(bannerRequest, publisher)
         val updatedBanner = bannerToUpdate.syncWith(bannerFromRequest)
