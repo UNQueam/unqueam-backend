@@ -10,7 +10,8 @@ data class File(
 
     val fileName: String,
     @Lob
-    var file: ByteArray,
-    val type: FileType,
+    @Column(columnDefinition = "LONGBLOB")
+    var byteArray: ByteArray,
+    val type: String,
     val size: Long
 )
