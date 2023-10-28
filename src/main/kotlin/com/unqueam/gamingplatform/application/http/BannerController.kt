@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -33,8 +34,8 @@ class BannerController {
     }
 
     @GetMapping
-    fun findBanners() : ResponseEntity<Any> {
-        val output = bannerService.findBanners()
+    fun findBanners(@RequestParam(value = "alias", required = false) alias: String) : ResponseEntity<Any> {
+        val output = bannerService.findBanners(GetBannersParams(alias))
         return ResponseEntity.ok(output)
     }
 
