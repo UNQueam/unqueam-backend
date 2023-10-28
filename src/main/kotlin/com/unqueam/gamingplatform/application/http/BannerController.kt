@@ -34,7 +34,7 @@ class BannerController {
     }
 
     @GetMapping
-    fun findBanners(@RequestParam(value = "alias", required = false) alias: String) : ResponseEntity<Any> {
+    fun findBanners(@RequestParam(value = "alias", required = false) alias: String?) : ResponseEntity<Any> {
         val output = bannerService.findBanners(GetBannersParams(alias))
         return ResponseEntity.ok(output)
     }
