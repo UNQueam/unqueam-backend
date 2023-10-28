@@ -2,10 +2,12 @@ package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.BannerOutput
 import com.unqueam.gamingplatform.application.dtos.BannerRequest
+import com.unqueam.gamingplatform.application.http.GetBannersParams
 import com.unqueam.gamingplatform.core.domain.Banner
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.domain.Role
 import com.unqueam.gamingplatform.core.exceptions.Exceptions
+import com.unqueam.gamingplatform.core.exceptions.Exceptions.NOT_EXISTS_BANNER_WITH_ALIAS
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.NOT_EXISTS_BANNER_WITH_ID
 import com.unqueam.gamingplatform.core.exceptions.Exceptions.YOU_ARE_NOT_AUTHORIZED_TO_DO_THIS_ACTION_DUE_TO_YOUR_ROLE
 import com.unqueam.gamingplatform.core.exceptions.InvalidBannerDataException
@@ -32,8 +34,16 @@ class BannerService : IBannerService {
         return bannerMapper.mapToOutput(banner)
     }
 
-    override fun findBanners(): List<BannerOutput> {
-        return bannerRepository.findAll().map { bannerMapper.mapToOutput(it) }
+    override fun findBanners(queryParams: GetBannersParams): List<BannerOutput> {
+        val banners: List<Banner>
+        if (queryParams.shouldFilterByAlias()) {
+            val alias = queryParams.alias!!
+            val banner = bannerRepository.findByAlias(alias).orElseThrow { EntityNotFoundException(NOT_EXISTS_BANNER_WITH_ALIAS.format(alias)) }
+            banners = listOf(banner)
+        } else {
+            banners = bannerRepository.findAll()
+        }
+        return banners.map { bannerMapper.mapToOutput(it) }
     }
 
     override fun postBanner(bannerRequest: BannerRequest, publisher: PlatformUser): BannerOutput {
