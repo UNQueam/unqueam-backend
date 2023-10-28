@@ -11,6 +11,8 @@ class Banner {
     private val id: Long?
     private val title: String
     private val alias: String
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private val richText: String
     @ManyToOne (fetch = FetchType.LAZY)
     private val publisher: PlatformUser
