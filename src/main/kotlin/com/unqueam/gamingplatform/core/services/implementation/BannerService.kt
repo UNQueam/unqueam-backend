@@ -35,13 +35,20 @@ class BannerService : IBannerService {
     }
 
     override fun findBanners(queryParams: GetBannersParams): List<BannerOutput> {
-        val banners: List<Banner>
+        var banners: List<Banner>
         if (queryParams.shouldFilterByAlias()) {
             val alias = queryParams.alias!!
             val banner = bannerRepository.findByAlias(alias).orElseThrow { EntityNotFoundException(NOT_EXISTS_BANNER_WITH_ALIAS.format(alias)) }
             banners = listOf(banner)
+            if (queryParams.shouldFilterActiveBannersOnly() && !banner.isActive) {
+                banners = listOf()
+            }
         } else {
-            banners = bannerRepository.findAll()
+            if (queryParams.shouldFilterActiveBannersOnly()) {
+                banners = bannerRepository.findAllActiveBanners()
+            } else {
+                banners = bannerRepository.findAll()
+            }
         }
         return banners.map { bannerMapper.mapToOutput(it) }
     }
@@ -82,6 +89,20 @@ class BannerService : IBannerService {
         val bannerFromRequest = bannerMapper.mapToInput(bannerRequest, publisher)
         val updatedBanner = bannerToUpdate.syncWith(bannerFromRequest)
         return bannerMapper.mapToOutput(bannerRepository.save(updatedBanner))
+    }
+
+    override fun activateBanner(bannerId: Long, authenticatedUser: PlatformUser): BannerOutput {
+        validateUserHasRoleAdmin(authenticatedUser)
+        val banner = searchById(bannerId)
+        banner.activate()
+        return bannerMapper.mapToOutput(bannerRepository.save(banner))
+    }
+
+    override fun deactivateBanner(bannerId: Long, authenticatedUser: PlatformUser): BannerOutput {
+        validateUserHasRoleAdmin(authenticatedUser)
+        val banner = searchById(bannerId)
+        banner.deactivate()
+        return bannerMapper.mapToOutput(bannerRepository.save(banner))
     }
 
     private fun validateUserHasRoleAdmin(user: PlatformUser) {

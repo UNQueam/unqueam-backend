@@ -18,14 +18,16 @@ class Banner {
     private val publisher: PlatformUser
     @OneToOne (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val picture: File
+    var isActive: Boolean
 
-    constructor(id: Long?, title: String, alias: String, richText: String, publisher: PlatformUser, file: File) {
+    constructor(id: Long?, title: String, alias: String, richText: String, publisher: PlatformUser, file: File, isActive: Boolean) {
         this.id = id
         this.title = title
         this.alias = alias
         this.richText = richText
         this.publisher = publisher
         this.picture = file
+        this.isActive = isActive
     }
 
     fun id(): Long = id!!
@@ -38,6 +40,21 @@ class Banner {
     fun hasAlias(someAlias: String): Boolean = toKebabCase(alias) == toKebabCase(someAlias)
 
     fun syncWith(updatedBanner: Banner): Banner {
-        return Banner(id, updatedBanner.title, updatedBanner.alias, updatedBanner.richText, publisher, updatedBanner.picture)
+        return Banner(
+            id,
+            updatedBanner.title,
+            updatedBanner.alias,
+            updatedBanner.richText,
+            publisher,
+            updatedBanner.picture,
+            this.isActive)
+    }
+
+    fun activate() {
+        this.isActive = true
+    }
+
+    fun deactivate() {
+        this.isActive = false
     }
 }

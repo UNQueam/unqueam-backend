@@ -16,8 +16,16 @@ class GetHiddenGamesParam(private val hiddenValue : Boolean?) {
     }
 }
 
-data class GetBannersParams(val alias: String?) {
+data class GetBannersParams(val alias: String?, val deactivated: Boolean?) {
     fun shouldFilterByAlias(): Boolean {
         return StringUtils.isNotBlank(alias)
+    }
+
+    /**
+     * It returns true if parameter is not received, or is received but its value is false.
+     * When 'deactivated' is true => it should return all banners
+     */
+    fun shouldFilterActiveBannersOnly() : Boolean {
+        return deactivated == null || deactivated == false
     }
 }
