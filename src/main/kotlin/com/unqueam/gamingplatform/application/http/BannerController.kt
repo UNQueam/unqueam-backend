@@ -34,8 +34,10 @@ class BannerController {
     }
 
     @GetMapping
-    fun findBanners(@RequestParam(value = "alias", required = false) alias: String?) : ResponseEntity<Any> {
-        val output = bannerService.findBanners(GetBannersParams(alias))
+    fun findBanners(
+        @RequestParam(value = "alias", required = false) alias: String?,
+        @RequestParam(value = "deactivated", required = false) deactivated: Boolean?) : ResponseEntity<Any> {
+        val output = bannerService.findBanners(GetBannersParams(alias, deactivated))
         return ResponseEntity.ok(output)
     }
 
@@ -56,6 +58,20 @@ class BannerController {
     fun updateBannerById(@PathVariable bannerId: Long, @RequestBody bannerRequest: BannerRequest) : ResponseEntity<Any> {
         val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
         val output = bannerService.updateBannerById(bannerId, bannerRequest, authenticatedUser)
+        return ResponseEntity.status(HttpStatus.OK).body(output)
+    }
+
+    @PutMapping ("/{bannerId}/activate")
+    fun putActiveBanner(@PathVariable bannerId: Long) : ResponseEntity<Any> {
+        val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
+        val output = bannerService.activateBanner(bannerId, authenticatedUser)
+        return ResponseEntity.status(HttpStatus.OK).body(output)
+    }
+
+    @PutMapping ("/{bannerId}/deactivate")
+    fun putDeactivateBanner(@PathVariable bannerId: Long) : ResponseEntity<Any> {
+        val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
+        val output = bannerService.deactivateBanner(bannerId, authenticatedUser)
         return ResponseEntity.status(HttpStatus.OK).body(output)
     }
 }

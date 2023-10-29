@@ -18,7 +18,9 @@ data class BannerOutput(
     @JsonProperty ("rich_text")
     val richText: String,
     val publisher: PublisherOutput,
-    val picture: FileOutput
+    val picture: FileOutput,
+    @JsonProperty ("is_active")
+    val isActive: Boolean
 )
 
 data class FileInput(

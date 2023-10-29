@@ -11,4 +11,6 @@ interface IBannerService {
     fun postBanner(bannerRequest: BannerRequest, publisher: PlatformUser): BannerOutput
     fun deleteBannerById(bannerId: Long): BannerOutput
     fun updateBannerById(bannerId: Long, bannerRequest: BannerRequest, publisher: PlatformUser): BannerOutput
+    fun activateBanner(bannerId: Long, authenticatedUser: PlatformUser): BannerOutput
+    fun deactivateBanner(bannerId: Long, authenticatedUser: PlatformUser): BannerOutput
 }
