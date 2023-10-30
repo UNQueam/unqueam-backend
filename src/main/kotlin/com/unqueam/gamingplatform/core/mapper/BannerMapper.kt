@@ -10,7 +10,7 @@ class BannerMapper(val fileMapper: FileMapper) {
 
     fun mapToInput(bannerRequest: BannerRequest, publisher: PlatformUser): Banner {
         BannerInputValidator(bannerRequest).validate()
-        return Banner(null, bannerRequest.title, bannerRequest.alias, bannerRequest.richText, publisher, mapToFile(bannerRequest.picture), true)
+        return Banner(null, bannerRequest.title, bannerRequest.alias, bannerRequest.richText, publisher, mapToFile(bannerRequest.picture), false)
     }
 
     fun mapToOutput(banner: Banner): BannerOutput {
