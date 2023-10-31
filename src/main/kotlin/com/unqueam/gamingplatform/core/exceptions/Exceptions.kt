@@ -1,6 +1,7 @@
 package com.unqueam.gamingplatform.core.exceptions
 
 object Exceptions {
+    const val FAVORITE_GAME_NOT_FOUND = "No se encontro juego favorito"
     const val THE_USERNAME_IS_ALREADY_IN_USE = "El nombre de usuario ya está en uso"
     const val THE_ALIAS_IS_ALREADY_IN_USE = "El alias ya está en uso"
     const val THE_EMAIL_ADDRESS_IS_ALREADY_IN_USE = "El correo electrónico ya está en uso"

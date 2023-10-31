@@ -7,6 +7,7 @@ object API {
     const val ENDPOINT_USERS = "/api/users"
     const val ENDPOINT_REQUESTS = "/api/requests"
     const val ENDPOINT_BANNERS = "/api/banners"
+    const val ENDPOINT_FAVORITE_GAMES = "/games/favorites"
 
     const val ID_PATH_VARIABLE = "/{id}"
 }

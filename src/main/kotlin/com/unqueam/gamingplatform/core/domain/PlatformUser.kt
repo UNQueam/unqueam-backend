@@ -20,9 +20,11 @@ class PlatformUser {
     private val publishedGames: List<Game>
     @OneToMany (fetch = FetchType.LAZY)
     private val comments: List<Comment>
+    @OneToMany (fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    private val favoritesGames: MutableList<FavoriteGame>
 
     constructor(id: Long?, username: String, password: String, email: String, role: Role, publishedGames: List<Game> = mutableListOf(),
-    comments: List<Comment> = mutableListOf()) {
+    comments: List<Comment> = mutableListOf(), favoritesGames: List<FavoriteGame> = mutableListOf()) {
         this.id = id
         this.username = username
         this.password = password
@@ -31,6 +33,7 @@ class PlatformUser {
         this.createdAt = LocalDateTime.now()
         this.publishedGames = publishedGames
         this.comments = comments
+        this.favoritesGames = favoritesGames.toMutableList()
     }
 
     fun getRole(): Role = role
@@ -42,5 +45,11 @@ class PlatformUser {
 
     fun changeRoleTo(anotherRole: Role) {
         role = anotherRole
+    }
+
+    fun addAsFavoriteGame(game: Game): FavoriteGame {
+        val favoriteGame = FavoriteGame(null, game)
+        favoritesGames.add(favoriteGame)
+        return favoriteGame
     }
 }

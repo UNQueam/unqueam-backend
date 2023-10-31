@@ -1,4 +1,6 @@
 package com.unqueam.gamingplatform.application.dtos
 
-class favoritesGamesDtos {
-}
+data class FavoriteGameOutput(
+    val id: Long,
+    val game: GameOutput
+)
