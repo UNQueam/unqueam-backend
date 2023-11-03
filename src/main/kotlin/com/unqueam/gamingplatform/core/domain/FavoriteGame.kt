@@ -16,10 +16,16 @@ class FavoriteGame {
     @ManyToOne
     private val game: Game
 
-    constructor(id: Long?, game: Game) {
+    @ManyToOne
+    private val platformUser: PlatformUser
+
+    constructor(id: Long?, game: Game, platformUser: PlatformUser) {
         this.id = id
         this.game = game
+        this.platformUser = platformUser
     }
 
     fun game() = game
+
+    fun platformUser() = platformUser
 }

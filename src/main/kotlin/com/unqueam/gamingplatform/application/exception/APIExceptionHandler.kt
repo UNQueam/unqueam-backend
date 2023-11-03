@@ -91,6 +91,16 @@ class APIExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest, exception.errorsMap)
     }
 
+    @ExceptionHandler(GameIsAlreadyAddedAsFavoriteException::class)
+    fun handleGameIsAlreadyAddedAsFavorite(exception: GameIsAlreadyAddedAsFavoriteException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
+    }
+
+    @ExceptionHandler(UserHasNotPermissionException::class)
+    fun handleUserHasNotPermissionException(exception: UserHasNotPermissionException, httpRequest: HttpServletRequest): ResponseEntity<Map<String, Any>> {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception, httpRequest)
+    }
+
     private fun buildErrorResponse(httpStatus: HttpStatus, exception: RuntimeException, httpRequest: HttpServletRequest, errorsMap: Map<String, Any> = mapOf()) : ResponseEntity<Map<String, Any>> {
         return ResponseEntity
             .status(httpStatus)

@@ -1,16 +1,20 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.FavoriteGameOutput
+import com.unqueam.gamingplatform.core.domain.FavoriteGame
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.exceptions.Exceptions
+import com.unqueam.gamingplatform.core.exceptions.GameIsAlreadyAddedAsFavoriteException
+import com.unqueam.gamingplatform.core.exceptions.UserHasNotPermissionException
 import com.unqueam.gamingplatform.core.mapper.FavoritesGamesMapper
 import com.unqueam.gamingplatform.core.services.IFavoriteGamesService
 import com.unqueam.gamingplatform.core.services.IUserService
 import com.unqueam.gamingplatform.infrastructure.persistence.FavoriteGamesRepository
 import com.unqueam.gamingplatform.infrastructure.persistence.GameRepository
 import jakarta.persistence.EntityNotFoundException
+import jakarta.transaction.Transactional
 
-class FavoriteGamesService : IFavoriteGamesService {
+open class FavoriteGamesService : IFavoriteGamesService {
 
     private val userService: IUserService
     private val favoriteGamesRepository: FavoriteGamesRepository
@@ -30,19 +34,30 @@ class FavoriteGamesService : IFavoriteGamesService {
             .map { favoritesGamesMapper.mapToOutput(it) }
     }
 
+    @Transactional
     override fun addGameAsFavorite(authenticatedUser: PlatformUser, gameId: Long): FavoriteGameOutput {
         val game = gamesRepository.findById(gameId).orElseThrow { EntityNotFoundException(Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE.format(gameId)) }
 
-        val addedGame = authenticatedUser.addAsFavoriteGame(game)
+        val addedFavoriteGames = favoriteGamesRepository.findAllByPlatformUser(authenticatedUser.id!!)
 
-        userService.save(authenticatedUser)
-        return favoritesGamesMapper.mapToOutput(addedGame)
+        if (addedFavoriteGames.any { it.game() == game }) throw GameIsAlreadyAddedAsFavoriteException()
+
+        val favoriteGame = favoriteGamesRepository.save(FavoriteGame(null, game, authenticatedUser))
+        return favoritesGamesMapper.mapToOutput(favoriteGame)
     }
 
+    @Transactional
     override fun deleteGameFromFavorites(authenticatedUser: PlatformUser, gameId: Long): FavoriteGameOutput {
-        val game = favoriteGamesRepository.findByPlatformUserIdAndGameId(authenticatedUser.id!!, gameId).orElseThrow { EntityNotFoundException(Exceptions.FAVORITE_GAME_NOT_FOUND) }
+        val game = favoriteGamesRepository
+            .findById(gameId)
+            .orElseThrow { EntityNotFoundException(Exceptions.FAVORITE_GAME_NOT_FOUND) }
+        validateUserCanPerformTheAction(game.platformUser(), authenticatedUser)
         favoriteGamesRepository.deleteById(game.id!!)
         return favoritesGamesMapper.mapToOutput(game)
+    }
+
+    private fun validateUserCanPerformTheAction(platformUser: PlatformUser, authenticatedUser: PlatformUser) {
+        if (platformUser.id != authenticatedUser.id) throw UserHasNotPermissionException()
     }
 
 }

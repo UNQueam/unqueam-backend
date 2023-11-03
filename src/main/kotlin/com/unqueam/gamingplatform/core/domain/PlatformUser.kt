@@ -46,10 +46,4 @@ class PlatformUser {
     fun changeRoleTo(anotherRole: Role) {
         role = anotherRole
     }
-
-    fun addAsFavoriteGame(game: Game): FavoriteGame {
-        val favoriteGame = FavoriteGame(null, game)
-        favoritesGames.add(favoriteGame)
-        return favoriteGame
-    }
 }

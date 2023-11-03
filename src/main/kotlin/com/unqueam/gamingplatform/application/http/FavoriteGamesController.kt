@@ -21,7 +21,7 @@ class FavoriteGamesController {
         this.favoriteGamesService = favoriteGamesService
     }
 
-    @GetMapping ("${API.ENDPOINT_USERS}/{userId}/${API.ENDPOINT_FAVORITE_GAMES}")
+    @GetMapping ("/api/users/{userId}/games/favorites")
     fun fetchFavoriteGames(@PathVariable userId: Long): ResponseEntity<Any> {
         val favoriteGames = favoriteGamesService.findFavoriteGamesByUser(userId)
         return ResponseEntity.ok(favoriteGames)
