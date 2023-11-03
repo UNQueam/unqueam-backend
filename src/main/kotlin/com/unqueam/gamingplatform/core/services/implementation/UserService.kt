@@ -14,6 +14,12 @@ class UserService(private val userRepository: UserRepository) : IUserService {
             .orElseThrow { UsernameNotFoundException("Usuario no encontrado: $username") }
     }
 
+    override fun findUserById(id: Long): PlatformUser {
+        return userRepository
+            .findById(id)
+            .orElseThrow { UsernameNotFoundException("Usuario no encontrado: $id") }
+    }
+
     override fun findUserByUsernameOrEmail(username: String, email: String): Optional<PlatformUser> {
         return userRepository.findByUsernameOrEmail(username, email)
     }

@@ -25,6 +25,11 @@ class ServicesBeans {
     }
 
     @Bean
+    fun favoriteGamesService(userService: IUserService, favoriteGamesRepository: FavoriteGamesRepository, gamesRepository: GameRepository, favoritesGamesMapper: FavoritesGamesMapper): IFavoriteGamesService {
+        return FavoriteGamesService(userService, favoriteGamesRepository, gamesRepository, favoritesGamesMapper)
+    }
+
+    @Bean
     fun bannerService(bannerRepository: BannerRepository, bannerMapper: BannerMapper): IBannerService {
         return BannerService(bannerRepository, bannerMapper)
     }

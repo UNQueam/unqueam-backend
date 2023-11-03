@@ -14,6 +14,11 @@ class MappersBeans {
     }
 
     @Bean
+    fun favoritesGamesMapper(gameMapper: GameMapper): FavoritesGamesMapper {
+        return FavoritesGamesMapper(gameMapper)
+    }
+
+    @Bean
     fun authMapper(passwordEncoder: PasswordEncoder): AuthMapper {
         return AuthMapper(passwordEncoder)
     }
