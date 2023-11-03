@@ -19,6 +19,7 @@ class GameMapper {
             .publishedBy(publisher)
             .isHidden(aGameRequest.isHidden ?: false)
             .withAlias(aGameRequest.alias)
+            .withLinkToDownload(aGameRequest.linkToDownload)
             .build()
     }
 
@@ -39,7 +40,8 @@ class GameMapper {
             publisherOutput,
             aGame.isHidden,
             mapToSet(aGame.comments) { CommentOutput(it.id!!, aGame.id!!, PublisherOutput(it.getPublisherId(), it.publisher.getUsername()), it.rating, it.content, it.creationTime, it.lastModification) },
-            aGame.alias
+            aGame.alias,
+            aGame.linkToDownload
         )
     }
 

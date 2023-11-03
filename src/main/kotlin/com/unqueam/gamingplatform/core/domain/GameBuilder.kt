@@ -17,6 +17,7 @@ class GameBuilder {
     private var isHidden: Boolean = false
     private var comments: Set<Comment> = setOf()
     private lateinit var alias: String
+    private var linkToDownload: String? = null
 
     fun developedBy(developers: Set<Developer>) : GameBuilder {
         this.developers = developers
@@ -83,6 +84,11 @@ class GameBuilder {
         return this
     }
 
+    fun withLinkToDownload(linkToDownload: String?) : GameBuilder {
+        this.linkToDownload = linkToDownload
+        return this
+    }
+
     fun build() : Game {
         return Game(
             null,
@@ -99,7 +105,8 @@ class GameBuilder {
             publisher,
             isHidden,
             comments,
-            alias
+            alias,
+            linkToDownload
         )
     }
 }

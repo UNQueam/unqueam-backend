@@ -21,7 +21,8 @@ class Game(
     publisher: PlatformUser,
     isHidden: Boolean,
     comments: Set<Comment>,
-    alias: String
+    alias: String,
+    linkToDownload: String? = null
 ) {
 
     @Id
@@ -47,6 +48,7 @@ class Game(
     val developmentTeam: String = developmentTeam
     var isHidden: Boolean = isHidden
     val alias: String = toKebabCase(alias)
+    val linkToDownload: String? = linkToDownload
 
     @OneToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "game")
     val comments: Set<Comment> = comments
@@ -68,7 +70,8 @@ class Game(
             this.publisher,
             updatedGame.isHidden,
             this.comments,
-            updatedGame.alias
+            updatedGame.alias,
+            updatedGame.linkToDownload
         )
     }
 
