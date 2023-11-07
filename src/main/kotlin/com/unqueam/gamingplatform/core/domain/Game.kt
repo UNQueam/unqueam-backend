@@ -22,7 +22,8 @@ class Game(
     isHidden: Boolean,
     comments: Set<Comment>,
     alias: String,
-    linkToDownload: String? = null
+    linkToDownload: String? = null,
+    period: Period? = null
 ) {
 
     @Id
@@ -50,6 +51,9 @@ class Game(
     val alias: String = toKebabCase(alias)
     val linkToDownload: String? = linkToDownload
 
+    @OneToOne (cascade = [CascadeType.ALL])
+    var period: Period? = period
+
     @OneToMany (cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "game")
     val comments: Set<Comment> = comments
 
@@ -71,7 +75,8 @@ class Game(
             updatedGame.isHidden,
             this.comments,
             updatedGame.alias,
-            updatedGame.linkToDownload
+            updatedGame.linkToDownload,
+            updatePeriod(updatedGame.period)
         )
     }
 
@@ -85,6 +90,11 @@ class Game(
             return true
         }
         return false
+    }
+
+    private fun updatePeriod(updatedPeriod: Period?): Period? {
+        if (Objects.isNull(this.period)) return updatedPeriod
+        return this.period?.syncWith(updatedPeriod)
     }
 
     companion object {

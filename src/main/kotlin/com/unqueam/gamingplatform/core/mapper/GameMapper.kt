@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.core.mapper
 
 import com.unqueam.gamingplatform.application.dtos.*
 import com.unqueam.gamingplatform.core.domain.*
+import java.util.*
 
 class GameMapper {
 
@@ -20,6 +21,7 @@ class GameMapper {
             .isHidden(aGameRequest.isHidden ?: false)
             .withAlias(aGameRequest.alias)
             .withLinkToDownload(aGameRequest.linkToDownload)
+            .withPeriod(mapToPeriod(aGameRequest.period))
             .build()
     }
 
@@ -41,7 +43,26 @@ class GameMapper {
             aGame.isHidden,
             mapToSet(aGame.comments) { CommentOutput(it.id!!, aGame.id!!, PublisherOutput(it.getPublisherId(), it.publisher.getUsername()), it.rating, it.content, it.creationTime, it.lastModification) },
             aGame.alias,
-            aGame.linkToDownload
+            aGame.linkToDownload,
+            mapToPeriodDTO(aGame.period)
+        )
+    }
+
+    private fun mapToPeriodDTO(period: Period?): PeriodDTO? {
+        if (period == null) return null
+        return PeriodDTO(
+            id = period.id,
+            year = period.year,
+            semester = period.semester
+        )
+    }
+
+    private fun mapToPeriod(periodDTO: PeriodDTO?): Period? {
+        if (periodDTO == null) return null
+        return Period(
+            anId = periodDTO.id,
+            aYear = periodDTO.year,
+            aSemester = periodDTO.semester
         )
     }
 
