@@ -18,6 +18,12 @@ class GameBuilder {
     private var comments: Set<Comment> = setOf()
     private lateinit var alias: String
     private var linkToDownload: String? = null
+    private var period: Period? = null
+
+    fun withPeriod(period: Period?): GameBuilder {
+        this.period = period
+        return this
+    }
 
     fun developedBy(developers: Set<Developer>) : GameBuilder {
         this.developers = developers
@@ -106,7 +112,8 @@ class GameBuilder {
             isHidden,
             comments,
             alias,
-            linkToDownload
+            linkToDownload,
+            period
         )
     }
 }

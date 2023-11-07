@@ -266,7 +266,8 @@ class DatabaseSeeder {
             genres,
             developmentTeam,
             isHidden!!,
-            alias
+            alias,
+            period = null
         )
     }
 

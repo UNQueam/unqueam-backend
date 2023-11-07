@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.application.dtos
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.unqueam.gamingplatform.core.domain.Semester
 import java.time.LocalDate
 
 data class GameRequest(
@@ -23,7 +24,8 @@ data class GameRequest(
     val isHidden: Boolean?,
     val alias: String,
     @JsonProperty (value = "link_to_download")
-    val linkToDownload: String? = null
+    val linkToDownload: String? = null,
+    val period: PeriodDTO?
 )
 
 data class DeveloperGameInput(
@@ -62,7 +64,14 @@ data class GameOutput(
     val comments: Set<CommentOutput>,
     val alias: String,
     @JsonProperty (value = "link_to_download")
-    val linkToDownload: String?
+    val linkToDownload: String?,
+    val period: PeriodDTO?
+)
+
+data class PeriodDTO(
+    val id: Long?,
+    val year: Int,
+    val semester: Semester
 )
 
 data class PublisherOutput(
