@@ -21,22 +21,23 @@ interface GameRepository : JpaRepository<Game, Long> {
     )
     fun findGameAndCountViewsWithAlias(@Param("alias") alias: String?): Optional<GameAndViewsRow>
 
-    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
+    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher", "comments"])
     override fun findAll(): List<Game>
 
     fun existsByAlias(alias: String): Boolean
 
+    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher", "comments"])
     fun findByAlias(alias: String): Optional<Game>
 
-    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
+    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher", "comments"])
     @Query("from Game game where game.publisher.username = :username")
     fun findGamesByUsername(@Param("username") username: String): List<Game>
 
-    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
+    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher", "comments"])
     @Query("from Game game where game.publisher.username = :username and game.isHidden = false")
     fun findNoHiddenGamesByUsername(username: String): List<Game>
 
-    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher"])
+    @EntityGraph(attributePaths=["developers", "images", "genres", "publisher", "comments"])
     @Query("from Game game where game.isHidden = false")
     fun findNoHiddenGames(): List<Game>
 }
