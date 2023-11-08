@@ -2,6 +2,8 @@ package com.unqueam.gamingplatform.utils
 
 import com.unqueam.gamingplatform.application.dtos.CommentInput
 import com.unqueam.gamingplatform.application.dtos.GameRequest
+import com.unqueam.gamingplatform.application.dtos.PeriodDTO
+import com.unqueam.gamingplatform.core.domain.Semester
 import java.time.LocalDate
 
 object GameRequestTestResource {
@@ -18,7 +20,9 @@ object GameRequestTestResource {
             setOf(),
             "developmentTeam",
             null,
-            "alias"
+            "alias",
+            null,
+            PeriodDTO(null, 2023, Semester.FIRST)
         )
     }
 
