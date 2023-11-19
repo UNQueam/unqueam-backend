@@ -55,6 +55,11 @@ class ServicesBeans {
     }
 
     @Bean
+    fun profileService(profileRepository: UserProfileRepository, aProfileMapper: ProfileMapper) : IProfileService {
+        return ProfileService(profileRepository, aProfileMapper)
+    }
+
+    @Bean
     @Profile("prod")
     fun prodEmailService(javaMailSender: JavaMailSender, templateEngine: TemplateEngine): IEmailService {
         return EmailService(javaMailSender, templateEngine)

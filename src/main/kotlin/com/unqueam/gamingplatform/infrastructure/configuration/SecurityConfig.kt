@@ -53,6 +53,7 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
             .requestMatchers("/api/games", "/api/games/**", "/api/genres","/api/users/{userId}/games/favorites", "/api/auth/signIn", "/api/auth/signUp")
             .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users/{id}/profile").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/requests").hasAnyRole("USER")
             .requestMatchers(HttpMethod.GET, "/api/requests/**").hasAnyRole("ADMIN")
             .requestMatchers("/api/auth/logout").authenticated()

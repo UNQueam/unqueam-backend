@@ -22,6 +22,8 @@ class PlatformUser {
     private val comments: List<Comment>
     @OneToMany (fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     private val favoritesGames: MutableList<FavoriteGame>
+    @OneToOne (fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var userProfile: UserProfile? = null
 
     constructor(id: Long?, username: String, password: String, email: String, role: Role, publishedGames: List<Game> = mutableListOf(),
     comments: List<Comment> = mutableListOf(), favoritesGames: List<FavoriteGame> = mutableListOf()) {
@@ -42,6 +44,11 @@ class PlatformUser {
     fun getEmail(): String = email
     fun getCreatedAt(): LocalDateTime = createdAt
     fun hasRole(role: Role): Boolean = this.role == role
+
+    fun setProfile(profile: UserProfile) {
+        this.userProfile = profile
+    }
+    fun getProfile(): UserProfile = userProfile!!
 
     fun changeRoleTo(anotherRole: Role) {
         role = anotherRole

@@ -19,4 +19,5 @@ object Exceptions {
     const val YOU_MUST_INSERT_A_TITLE_FOR_THE_BANNER = "Debes ingresar un título para el banner"
     const val YOU_MUST_INSERT_A_CONTENT = "Debes ingresar un contenido"
     const val YOU_MUST_INSERT_A_PICTURE_FOR_THE_BANNER = "Debes ingresar una imágen para el banner"
+    const val NOT_EXISTS_PROFILE_WITH_USER_ID = "No existe un perfil relacionado con el usuario con Id: %s"
 }
