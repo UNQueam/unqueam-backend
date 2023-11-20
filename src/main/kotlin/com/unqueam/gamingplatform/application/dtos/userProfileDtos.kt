@@ -7,5 +7,11 @@ data class UserProfileOutput (
         val profileId: Long,
         val description: String?,
         @JsonProperty("image_id")
-        val imageId: String?,
+        val imageId: String?
+)
+
+data class UserProfileRequest (
+        val description: String?,
+        @JsonProperty("image_id")
+        val imageId: String?
 )

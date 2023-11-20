@@ -1,11 +1,16 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.UserProfileOutput
+import com.unqueam.gamingplatform.application.dtos.UserProfileRequest
+import com.unqueam.gamingplatform.core.domain.PlatformUser
+import com.unqueam.gamingplatform.core.domain.UserProfile
 import com.unqueam.gamingplatform.core.exceptions.Exceptions
+import com.unqueam.gamingplatform.core.exceptions.UserHasNotPermissionException
 import com.unqueam.gamingplatform.core.mapper.ProfileMapper
 import com.unqueam.gamingplatform.core.services.IProfileService
 import com.unqueam.gamingplatform.infrastructure.persistence.UserProfileRepository
 import jakarta.persistence.EntityNotFoundException
+import java.util.*
 
 
 class ProfileService : IProfileService {
@@ -19,10 +24,29 @@ class ProfileService : IProfileService {
     }
 
     override fun findProfileByUserId(userId: Long): UserProfileOutput {
-        val profile = profileRepository
+        return profileMapper.mapToOutput(searchByUserId(userId))
+    }
+
+    override fun updateProfileByUserId(userId: Long, userProfileRequest: UserProfileRequest, user: PlatformUser): UserProfileOutput {
+        val profile = searchByUserId(userId)
+
+        validateIfIsProfileOwner(userId, user)
+
+        val updatedProfile = profile.syncWith(userProfileRequest)
+        return profileMapper.mapToOutput(profileRepository.save(updatedProfile))
+    }
+
+    private fun validateIfIsProfileOwner(userId: Long, user: PlatformUser) {
+        if (userId != user.id!!) {
+            throw UserHasNotPermissionException()
+        }
+    }
+
+
+    private fun searchByUserId(userId: Long): UserProfile {
+        return profileRepository
                 .findByPlatformUserId(userId)
                 .orElseThrow { EntityNotFoundException(Exceptions.NOT_EXISTS_PROFILE_WITH_USER_ID.format(userId)) }
-        return profileMapper.mapToOutput(profile)
     }
 
 

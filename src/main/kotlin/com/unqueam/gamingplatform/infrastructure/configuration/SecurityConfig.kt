@@ -54,6 +54,7 @@ class SecurityConfig ( @Autowired val jwtAuthenticationFilter : JwtAuthenticatio
             .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}/profile").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/users/{id}/profile").authenticated()
             .requestMatchers(HttpMethod.POST, "/api/requests").hasAnyRole("USER")
             .requestMatchers(HttpMethod.GET, "/api/requests/**").hasAnyRole("ADMIN")
             .requestMatchers("/api/auth/logout").authenticated()
