@@ -2,11 +2,16 @@ package com.unqueam.gamingplatform.integration_tests
 
 import com.unqueam.gamingplatform.application.dtos.SignInRequest
 import com.unqueam.gamingplatform.application.dtos.SignUpRequest
+import com.unqueam.gamingplatform.application.dtos.UserProfileOutput
+import com.unqueam.gamingplatform.application.dtos.UserProfileRequest
 import com.unqueam.gamingplatform.application.http.API
 import com.unqueam.gamingplatform.core.exceptions.Exceptions
 import com.unqueam.gamingplatform.infrastructure.configuration.jwt.JwtHelper
+import com.unqueam.gamingplatform.utils.GameRequestTestResource
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.util.Assert
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 
@@ -29,6 +34,7 @@ class AuthenticationIT : AbstractIntegrationTest() {
     6. signUp - 400 email already used
     7. signUp - 400 password does not satisfy requirements (1 mayus and minim 8 characters)
     8. logout - 200 ok success
+    9. signUp - A profile is created when the user is registered
      */
 
     @Test
@@ -125,4 +131,56 @@ class AuthenticationIT : AbstractIntegrationTest() {
             .andExpect(status().isOk())
             .andReturn()
     }
+
+    @Test
+    fun `9 - A profile is created when the user is registered`() {
+        val signUpRequest = asJson(SignUpRequest(USERNAME, EMAIL, PASSWORD))
+
+        val signUpResult = postTo(API.ENDPOINT_AUTH + "/signUp", signUpRequest)
+                .andReturn()
+
+        val responseBody =  objectMapper.readValue(signUpResult.response.contentAsString, HashMap::class.java)
+        val userId = responseBody["user_id"]
+        val token: String = responseBody["auth_token"] as String
+        val headersMap: MultiValueMap<String, String> = LinkedMultiValueMap()
+        headersMap.add(JwtHelper.AUTH_HEADER_KEY, token)
+
+        getTo("/api/users/$userId/profile",
+                headersMap)
+                .andExpect(status().isOk())
+                .andReturn()
+    }
+
+    @Test
+    fun `10 - A profile can be updated by the owner`() {
+        val updateRequest = asJson(UserProfileRequest("Description","An image"))
+
+        val user = userDataLoader.fetchLoadedUser("hulk")
+        val userId = user.id
+
+        val token = buildJwtTokenForUser(user)
+
+        putTo("/api/users/$userId/profile", updateRequest, token)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description").value("Description"))
+                .andExpect(jsonPath("$.image_id").value("An image"))
+                .andReturn()
+    }
+
+    @Test
+    fun `11 - A profile can not be updated by someone that is not the owner`() {
+        val updateRequest = asJson(UserProfileRequest("Description","An image"))
+
+        val user = userDataLoader.fetchLoadedUser("hulk")
+        val userId = user.id
+        val anotherUser = userDataLoader.fetchLoadedUser("admin.j")
+
+        val token = buildJwtTokenForUser(anotherUser)
+
+        putTo("/api/users/$userId/profile", updateRequest, token)
+                .andExpect(status().isBadRequest())
+                .andReturn()
+    }
+
+
 }
