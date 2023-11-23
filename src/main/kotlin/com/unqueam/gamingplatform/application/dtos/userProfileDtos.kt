@@ -11,7 +11,5 @@ data class UserProfileOutput (
 )
 
 data class UserProfileRequest (
-        val description: String?,
-        @JsonProperty("image_id")
-        val imageId: String?
+        val description: String?
 )

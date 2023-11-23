@@ -57,4 +57,8 @@ class Banner {
     fun deactivate() {
         this.isActive = false
     }
+
+    fun publisherProfileImage(): String? {
+        return publisher.getProfile().imageId
+    }
 }

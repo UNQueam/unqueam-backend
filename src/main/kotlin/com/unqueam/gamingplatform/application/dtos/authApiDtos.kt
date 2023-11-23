@@ -20,6 +20,8 @@ data class AuthenticationOutput(
     @JsonProperty ("user_id")
     val userId: Long,
     val username: String,
+    @JsonProperty("profile_image_id")
+    val profileImageId: String?,
     val role: Role,
     @JsonProperty ("auth_token")
     val authToken: String,

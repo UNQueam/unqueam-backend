@@ -23,14 +23,4 @@ class UserProfile {
     }
 
     fun platformUser() = platformUser
-
-
-    fun syncWith(userProfileRequest: UserProfileRequest): UserProfile {
-        return UserProfile(
-                id,
-                platformUser,
-                userProfileRequest.description,
-                userProfileRequest.imageId
-        )
-    }
 }

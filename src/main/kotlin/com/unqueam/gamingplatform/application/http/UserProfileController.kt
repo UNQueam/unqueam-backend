@@ -27,4 +27,11 @@ class UserProfileController {
         val output = userProfileService.updateProfileByUserId(userId, userProfileRequest, authenticatedUser)
         return ResponseEntity.status(HttpStatus.OK).body(output)
     }
+
+    @PutMapping("/api/users/{userId}/profile/{avatarKey}")
+    fun updateUserProfileAvatar(@PathVariable userId: Long, @PathVariable avatarKey: String): ResponseEntity<Any> {
+        val authenticatedUser = AuthContextHelper.getAuthenticatedUser()
+        val output = userProfileService.updateProfileAvatarByUserId(userId, avatarKey, authenticatedUser)
+        return ResponseEntity.status(HttpStatus.OK).body(output)
+    }
 }

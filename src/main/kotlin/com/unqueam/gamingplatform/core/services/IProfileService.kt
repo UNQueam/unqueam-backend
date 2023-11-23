@@ -7,4 +7,5 @@ import com.unqueam.gamingplatform.core.domain.PlatformUser
 interface IProfileService {
     fun findProfileByUserId(userId: Long): UserProfileOutput
     fun updateProfileByUserId(userId: Long, userProfileRequest: UserProfileRequest, user: PlatformUser): UserProfileOutput
+    fun updateProfileAvatarByUserId(userId: Long, avatarKey: String, user: PlatformUser): UserProfileOutput
 }

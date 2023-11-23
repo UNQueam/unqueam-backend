@@ -26,7 +26,11 @@ class BannerMapper(val fileMapper: FileMapper) {
     }
 
     private fun buildPublisherOutput(banner: Banner): PublisherOutput {
-        return PublisherOutput(banner.publisherId(), banner.publisherUsername())
+        return PublisherOutput(
+            banner.publisherId(),
+            banner.publisherUsername(),
+            banner.publisherProfileImage()
+        )
     }
 
     private fun mapToFile(fileInput: FileInput): File {

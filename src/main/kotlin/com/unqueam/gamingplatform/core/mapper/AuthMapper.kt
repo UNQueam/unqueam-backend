@@ -18,6 +18,7 @@ class AuthMapper(private val passwordEncoder: PasswordEncoder) {
         return AuthenticationOutput(
             platformUser.id!!,
             platformUser.getUsername(),
+            platformUser.getProfile().imageId,
             platformUser.getRole(),
             authToken,
             LocalDateTime.now()

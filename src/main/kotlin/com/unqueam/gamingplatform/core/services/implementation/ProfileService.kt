@@ -32,8 +32,17 @@ class ProfileService : IProfileService {
 
         validateIfIsProfileOwner(userId, user)
 
-        val updatedProfile = profile.syncWith(userProfileRequest)
-        return profileMapper.mapToOutput(profileRepository.save(updatedProfile))
+        profile.description = userProfileRequest.description
+        return profileMapper.mapToOutput(profileRepository.save(profile))
+    }
+
+    override fun updateProfileAvatarByUserId(userId: Long, avatarKey: String, user: PlatformUser): UserProfileOutput {
+        val profile = searchByUserId(userId)
+
+        validateIfIsProfileOwner(userId, user)
+
+        profile.imageId = avatarKey
+        return profileMapper.mapToOutput(profileRepository.save(profile))
     }
 
     private fun validateIfIsProfileOwner(userId: Long, user: PlatformUser) {

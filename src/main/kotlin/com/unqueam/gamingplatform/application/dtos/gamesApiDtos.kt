@@ -77,7 +77,9 @@ data class PeriodDTO(
 data class PublisherOutput(
     @JsonProperty("publisher_id")
     val publisherId: Long,
-    val username: String
+    val username: String,
+    @JsonProperty("profile_image_id")
+    val profileImageId: String?
 )
 
 data class DeveloperGameOutput(
