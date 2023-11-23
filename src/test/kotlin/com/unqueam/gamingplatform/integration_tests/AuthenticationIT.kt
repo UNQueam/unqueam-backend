@@ -153,7 +153,7 @@ class AuthenticationIT : AbstractIntegrationTest() {
 
     @Test
     fun `10 - A profile can be updated by the owner`() {
-        val updateRequest = asJson(UserProfileRequest("Description","An image"))
+        val updateRequest = asJson(UserProfileRequest("Description"))
 
         val user = userDataLoader.fetchLoadedUser("hulk")
         val userId = user.id
@@ -163,13 +163,12 @@ class AuthenticationIT : AbstractIntegrationTest() {
         putTo("/api/users/$userId/profile", updateRequest, token)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.description").value("Description"))
-                .andExpect(jsonPath("$.image_id").value("An image"))
                 .andReturn()
     }
 
     @Test
     fun `11 - A profile can not be updated by someone that is not the owner`() {
-        val updateRequest = asJson(UserProfileRequest("Description","An image"))
+        val updateRequest = asJson(UserProfileRequest("Description"))
 
         val user = userDataLoader.fetchLoadedUser("hulk")
         val userId = user.id

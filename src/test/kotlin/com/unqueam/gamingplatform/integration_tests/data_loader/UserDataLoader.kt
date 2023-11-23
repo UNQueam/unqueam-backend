@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.integration_tests.data_loader
 
 import com.unqueam.gamingplatform.core.domain.Role
 import com.unqueam.gamingplatform.core.domain.PlatformUser
+import com.unqueam.gamingplatform.core.domain.UserProfile
 import com.unqueam.gamingplatform.core.services.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Component
 class UserDataLoader(@Autowired private val userService: IUserService, @Autowired private val  passwordEncoder: PasswordEncoder) {
 
     fun loadNewUser(username: String, password: String, email: String = "some_email@gmail.com", role: Role = Role.USER, id: Long = 1): PlatformUser {
-        val platformUser: PlatformUser = PlatformUser(id, username, passwordEncoder.encode(password), email, role)
+        val platformUser = PlatformUser(id, username, passwordEncoder.encode(password), email, role)
+        val profile = UserProfile(1, platformUser, "", "")
+        platformUser.userProfile = profile
         userService.save(platformUser)
         return platformUser
     }
