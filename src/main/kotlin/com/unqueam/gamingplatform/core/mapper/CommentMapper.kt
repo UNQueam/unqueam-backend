@@ -24,7 +24,11 @@ class CommentMapper {
         return CommentOutput(
                 comment.id!!,
                 comment.gameId(),
-                PublisherOutput(comment.publisher.id!!, comment.publisher.getUsername()),
+                PublisherOutput(
+                    comment.publisher.id!!,
+                    comment.publisher.getUsername(),
+                    comment.publisher.getProfile().imageId
+                ),
                 comment.rating,
                 comment.content,
                 comment.creationTime,

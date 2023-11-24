@@ -26,7 +26,11 @@ class GameMapper {
     }
 
     fun mapToOutput(aGame: Game): GameOutput {
-        val publisherOutput = PublisherOutput(aGame.publisher.id!!, aGame.publisher.getUsername())
+        val publisherOutput = PublisherOutput(
+            aGame.publisher.id!!,
+            aGame.publisher.getUsername(),
+            aGame.publisher.getProfile().imageId
+        )
         return GameOutput(
             aGame.id!!,
             aGame.name,
@@ -41,7 +45,7 @@ class GameMapper {
             aGame.rankBadge.name,
             publisherOutput,
             aGame.isHidden,
-            mapToSet(aGame.comments) { CommentOutput(it.id!!, aGame.id!!, PublisherOutput(it.getPublisherId(), it.publisher.getUsername()), it.rating, it.content, it.creationTime, it.lastModification) },
+            mapToSet(aGame.comments) { CommentOutput(it.id!!, aGame.id!!, PublisherOutput(it.getPublisherId(), it.publisher.getUsername(), it.publisher.getProfile().imageId), it.rating, it.content, it.creationTime, it.lastModification) },
             aGame.alias,
             aGame.linkToDownload,
             mapToPeriodDTO(aGame.period)

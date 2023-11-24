@@ -43,6 +43,10 @@ class MappersBeans {
         return CommentMapper()
     }
 
+    @Bean
+    fun profileMapper(): ProfileMapper {
+        return ProfileMapper()
+    }
 
     @Bean
     fun requestToBeDeveloperMapper(): RequestToBeDeveloperMapper {

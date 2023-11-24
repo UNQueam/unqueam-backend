@@ -12,7 +12,8 @@ data class UserOutput(
         val email: String,
         val role: Role,
         @JsonProperty("created_at")
-        val createdAt: LocalDateTime
+        val createdAt: LocalDateTime,
+        val profile: UserProfileOutput?
 )
 
 data class RejectedMessage(

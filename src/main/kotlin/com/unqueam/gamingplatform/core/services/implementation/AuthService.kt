@@ -8,6 +8,7 @@ import com.unqueam.gamingplatform.application.dtos.SignUpRequest
 import com.unqueam.gamingplatform.core.exceptions.Exceptions
 import com.unqueam.gamingplatform.core.exceptions.SignUpFormException
 import com.unqueam.gamingplatform.core.domain.PlatformUser
+import com.unqueam.gamingplatform.core.domain.UserProfile
 import com.unqueam.gamingplatform.core.helper.IPasswordFormatValidator
 import com.unqueam.gamingplatform.core.mapper.AuthMapper
 import com.unqueam.gamingplatform.core.services.IAuthenticationService
@@ -38,6 +39,8 @@ class AuthService : IAuthenticationService {
         executeSignUpValidations(request)
 
         val platformUser: PlatformUser = authMapper.mapToInput(request)
+        val userProfile = UserProfile(null,platformUser)
+        platformUser.setProfile(userProfile)
         userService.save(platformUser)
         val authToken = generateAuthToken(platformUser)
 
