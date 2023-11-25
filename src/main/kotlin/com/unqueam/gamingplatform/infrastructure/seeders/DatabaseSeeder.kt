@@ -7,6 +7,9 @@ import com.unqueam.gamingplatform.application.dtos.GenreInput
 import com.unqueam.gamingplatform.application.http.GetHiddenGamesParam
 import com.unqueam.gamingplatform.core.domain.*
 import com.unqueam.gamingplatform.core.services.IGameService
+import com.unqueam.gamingplatform.core.services.ITrackingService
+import com.unqueam.gamingplatform.core.tracking.TrackingEntity
+import com.unqueam.gamingplatform.core.tracking.TrackingType
 import com.unqueam.gamingplatform.infrastructure.persistence.UserRepository
 import jakarta.transaction.Transactional
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
@@ -17,20 +20,34 @@ import org.springframework.context.event.EventListener
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 @Component
 class DatabaseSeeder {
 
+    private final val dates: List<LocalDateTime> = listOf(
+        LocalDateTime.now(),
+        LocalDateTime.now().minusDays(1),
+        LocalDateTime.now().minusDays(2),
+        LocalDateTime.now().minusDays(3),
+        LocalDateTime.now().minusDays(4),
+        LocalDateTime.now().minusDays(5),
+        LocalDateTime.now().minusDays(6),
+        LocalDateTime.now().minusDays(7)
+    )
+
     private final val gameService: IGameService
     private final val userRepository: UserRepository
     private final val passwordEncoder: PasswordEncoder
+    private final val trackingService: ITrackingService
 
     @Autowired
-    constructor(aGameService: IGameService, userRepository : UserRepository, passwordEncoder: PasswordEncoder) {
+    constructor(aGameService: IGameService, userRepository : UserRepository, passwordEncoder: PasswordEncoder, trackingService: ITrackingService) {
         this.gameService = aGameService
         this.userRepository = userRepository
         this.passwordEncoder = passwordEncoder
+        this.trackingService = trackingService
     }
 
     @Transactional
@@ -284,7 +301,9 @@ class DatabaseSeeder {
 
     private fun loadViewsForGameWithId(gameAlias: String, views: Int) {
         for (i in 1..views) {
-            gameService.fetchGameByAlias(gameAlias)
+            val game = gameService.fetchGameByAlias(gameAlias)
+            trackingService.track(TrackingEntity.GAME, TrackingType.VIEW, game.id, dates.random())
+            trackingService.track(TrackingEntity.PLAY_GAME, TrackingType.EVENT, game.id, dates.random())
         }
     }
 
