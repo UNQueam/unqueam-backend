@@ -2,6 +2,7 @@ package com.unqueam.gamingplatform.core.services.implementation
 
 import com.unqueam.gamingplatform.application.dtos.FavoriteGameOutput
 import com.unqueam.gamingplatform.core.domain.FavoriteGame
+import com.unqueam.gamingplatform.core.domain.Game
 import com.unqueam.gamingplatform.core.domain.PlatformUser
 import com.unqueam.gamingplatform.core.exceptions.Exceptions
 import com.unqueam.gamingplatform.core.exceptions.GameIsAlreadyAddedAsFavoriteException
@@ -38,9 +39,7 @@ open class FavoriteGamesService : IFavoriteGamesService {
     override fun addGameAsFavorite(authenticatedUser: PlatformUser, gameId: Long): FavoriteGameOutput {
         val game = gamesRepository.findById(gameId).orElseThrow { EntityNotFoundException(Exceptions.GAME_NOT_FOUND_ERROR_MESSAGE.format(gameId)) }
 
-        val addedFavoriteGames = favoriteGamesRepository.findAllByPlatformUser(authenticatedUser.id!!)
-
-        if (addedFavoriteGames.any { it.game() == game }) throw GameIsAlreadyAddedAsFavoriteException()
+        validateGameIsNotAlreadyAddedAsFavoriteForUser(authenticatedUser, game)
 
         val favoriteGame = favoriteGamesRepository.save(FavoriteGame(null, game, authenticatedUser))
         return favoritesGamesMapper.mapToOutput(favoriteGame)
@@ -54,6 +53,13 @@ open class FavoriteGamesService : IFavoriteGamesService {
         validateUserCanPerformTheAction(game.platformUser(), authenticatedUser)
         favoriteGamesRepository.deleteById(game.id!!)
         return favoritesGamesMapper.mapToOutput(game)
+    }
+
+    private fun validateGameIsNotAlreadyAddedAsFavoriteForUser(user: PlatformUser, game: Game) {
+        val addedFavoriteGames = favoriteGamesRepository.findAllByPlatformUser(user.id!!)
+
+        if (addedFavoriteGames.any { it.game() == game })
+            throw GameIsAlreadyAddedAsFavoriteException()
     }
 
     private fun validateUserCanPerformTheAction(platformUser: PlatformUser, authenticatedUser: PlatformUser) {

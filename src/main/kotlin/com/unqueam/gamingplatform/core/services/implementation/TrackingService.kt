@@ -1,6 +1,8 @@
 package com.unqueam.gamingplatform.core.services.implementation
 
+import com.unqueam.gamingplatform.application.dtos.TrackingDTO
 import com.unqueam.gamingplatform.core.services.ITrackingService
+import com.unqueam.gamingplatform.core.tracking.DailyMetricsReport
 import com.unqueam.gamingplatform.core.tracking.TrackingEntity
 import com.unqueam.gamingplatform.core.tracking.TrackingEvent
 import com.unqueam.gamingplatform.core.tracking.TrackingType
@@ -8,7 +10,7 @@ import com.unqueam.gamingplatform.infrastructure.persistence.TrackingEventsRepos
 import org.springframework.scheduling.annotation.Async
 import java.time.LocalDateTime
 
-class TrackingService : ITrackingService {
+open class TrackingService : ITrackingService {
 
     private val trackingRepository: TrackingEventsRepository
 
@@ -22,4 +24,18 @@ class TrackingService : ITrackingService {
         trackingRepository.save(trackingEvent)
     }
 
+    @Async
+    override fun track(trackingEntity: TrackingEntity, trackingType: TrackingType, entityId: Long, timeStamp: LocalDateTime) {
+        val trackingEvent = TrackingEvent(null, trackingType, trackingEntity, entityId, timeStamp)
+        trackingRepository.save(trackingEvent)
+    }
+
+    override fun getDailyMetrics(trackingDTO: TrackingDTO): DailyMetricsReport {
+        val result = trackingRepository.getDailyMetrics(
+            trackingDTO.entityId,
+            trackingDTO.trackingEntity,
+            trackingDTO.trackingType)
+
+        return DailyMetricsReport(result)
+    }
 }

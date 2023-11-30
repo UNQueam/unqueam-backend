@@ -97,7 +97,6 @@ class GameService : IGameService {
         validateRequest(updatedGameRequest, Optional.of(id))
         val updatedGameFromRequest = gameMapper.mapToInput(updatedGameRequest, publisher)
 
-
         verifyIfIsPublisherFromGame(publisher, storedGame)
 
         val updatedGame = storedGame.syncWith(updatedGameFromRequest)
