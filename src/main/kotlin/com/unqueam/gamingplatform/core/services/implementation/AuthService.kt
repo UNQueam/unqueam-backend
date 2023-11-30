@@ -39,11 +39,9 @@ class AuthService : IAuthenticationService {
         executeSignUpValidations(request)
 
         val platformUser: PlatformUser = authMapper.mapToInput(request)
-        val userProfile = UserProfile(null,platformUser)
-        platformUser.setProfile(userProfile)
         userService.save(platformUser)
-        val authToken = generateAuthToken(platformUser)
 
+        val authToken = generateAuthToken(platformUser)
         return authMapper.mapToOutput(platformUser, authToken)
     }
 
@@ -51,14 +49,18 @@ class AuthService : IAuthenticationService {
         try {
             val platformUser: PlatformUser = userService.findUserByUsername(request.username)
 
-            if (passwordEncoder.matches(request.password, platformUser.getPassword())) {
-                val authToken = generateAuthToken(platformUser)
-                return authMapper.mapToOutput(platformUser, authToken)
-            }
-            throw BadCredentialsException(Exceptions.USER_OR_PASSWORD_ARE_INCORRECT)
+            if (passwordDoesNotMatchWithPasswordOfRegisteredUser(request, platformUser))
+                throw BadCredentialsException(Exceptions.USER_OR_PASSWORD_ARE_INCORRECT)
+
+            val authToken = generateAuthToken(platformUser)
+            return authMapper.mapToOutput(platformUser, authToken)
         } catch (usernameNotFoundException: UsernameNotFoundException) {
             throw BadCredentialsException(Exceptions.USER_OR_PASSWORD_ARE_INCORRECT)
         }
+    }
+
+    private fun passwordDoesNotMatchWithPasswordOfRegisteredUser(request: SignInRequest, platformUser: PlatformUser): Boolean {
+        return !passwordEncoder.matches(request.password, platformUser.getPassword())
     }
 
     private fun executeSignUpValidations(request: SignUpRequest) {

@@ -70,7 +70,7 @@ class DeveloperRequestService : IDeveloperRequestService {
     }
 
     private fun validateThatTheRequestHasNotBeenModifiedToAnotherState(request: RequestToBeDeveloper) {
-        if (!request.status().equals(PENDING))
+        if (request.status() != PENDING)
             throw CannotChangeStatusOfARequestThatHasAlreadyBeenModifiedException()
     }
 
