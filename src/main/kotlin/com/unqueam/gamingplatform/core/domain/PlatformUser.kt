@@ -36,7 +36,6 @@ class PlatformUser {
         this.publishedGames = publishedGames
         this.comments = comments
         this.favoritesGames = favoritesGames.toMutableList()
-        this.userProfile = UserProfile(null, this)
     }
 
     fun getRole(): Role = role
