@@ -36,6 +36,11 @@ open class TrackingService : ITrackingService {
             trackingDTO.trackingEntity,
             trackingDTO.trackingType)
 
-        return DailyMetricsReport(result)
+        val totalCount: Long = trackingRepository.getTotal(
+            trackingDTO.entityId,
+            trackingDTO.trackingEntity,
+            trackingDTO.trackingType)
+
+        return DailyMetricsReport(totalCount, result)
     }
 }
