@@ -59,7 +59,7 @@ If you'd like to contribute to this project, you're welcome to do so! Open an is
 
 ## License
 
-This project is under the [MIT license](LICENSE).
+This project is under the [GNU Affero General Public License v3.0](LICENSE).
 
 ---
 
