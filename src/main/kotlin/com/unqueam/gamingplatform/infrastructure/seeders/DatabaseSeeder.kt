@@ -91,7 +91,7 @@ class DatabaseSeeder {
 
         return listOf(
             createGame(
-                "The girl in the forest",
+                "The Girl In The Forest",
                 "https://i.pinimg.com/1200x/aa/7b/be/aa7bbe9f794a45c7a947a96e9bdf2a13.jpg",
                 "Juego plataformero desarrollado durante la cursada de 2021 de la materia de introducción" +
                         "al desarrollo de videojuegos. Eres una niña que intenta escapar de un bosque muy peligroso.",
@@ -107,22 +107,22 @@ class DatabaseSeeder {
                 "Girl in the forest"
             ),
             createGame(
-                "Klaus mision rescate",
+                "Klaus Mision Rescate",
                 "https://raw.githubusercontent.com/IntroPV/IntroPV.github.io/master/docs/proyectos_previos/imagenes/2020s2-grupoD-1.png",
                 "Eres klaus y tienes que rescatar a tu compañero canino de las garras del mal. Utiliza a tus vasallos para abrirte paso " +
                         "ante las peligrosas cavernas.",
                 "https://mendezigna.github.io/klaus-mision-rescate/",
                 LocalDate.now(),
-                setOf(DeveloperGameInput("Anonymous"), DeveloperGameInput("Anonymous"), DeveloperGameInput("Anonymous")),
+                setOf(DeveloperGameInput("Jhon Doe"), DeveloperGameInput("Jane Smith"), DeveloperGameInput("Foo Bar")),
                 setOf(
                     GameImageInput("https://raw.githubusercontent.com/IntroPV/IntroPV.github.io/master/docs/proyectos_previos/imagenes/2020s2-grupoD-2.png"),
                 ),
                 setOf(GenreInput(Genre.PUZZLE.name), GenreInput(Genre.PLATFORMER.name)),
-                "Anonymous",
+                "Acme",
                 "Klaus"
             ),
             createGame(
-                "Baldurs gate 3",
+                "Baldurs Gate 3",
                 "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba706e54d68d10a0eb6ab7c36cdad9178c58b7fb7bb03d28.png",
                 "Representa la tercera entrega principal de la serie Baldur's Gate, basada en el sistema de juego de rol de mesa Dungeons & Dragons.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
@@ -153,7 +153,7 @@ class DatabaseSeeder {
                 "Ow 1"
             ),
             createGame(
-                "Sea of Stars",
+                "Sea Of Stars",
                 "https://sm.ign.com/t/ign_it/screenshot/default/sea-of-stars-2020-03-19-20-019-1_vy4y.1280.jpg",
                 "Overwatch 2 es un hero shooter, donde los jugadores se dividen en dos equipos y seleccionan uno de los más de 30 personajes héroes establecidos. Los personajes se dividen en 3 clases: daño, apoyo, y tanque.",
                 "https://trejojulian.github.io/entregas-ipv-trejo-julian/",
