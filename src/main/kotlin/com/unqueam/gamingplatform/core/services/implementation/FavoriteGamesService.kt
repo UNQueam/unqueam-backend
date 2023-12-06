@@ -48,7 +48,7 @@ open class FavoriteGamesService : IFavoriteGamesService {
     @Transactional
     override fun deleteGameFromFavorites(authenticatedUser: PlatformUser, gameId: Long): FavoriteGameOutput {
         val game = favoriteGamesRepository
-            .findFavoriteGameByGameId(gameId)
+            .findFavoriteGameByGameId(gameId, authenticatedUser.id!!)
             .orElseThrow { EntityNotFoundException(Exceptions.FAVORITE_GAME_NOT_FOUND) }
         validateUserCanPerformTheAction(game.platformUser(), authenticatedUser)
         favoriteGamesRepository.deleteById(game.id!!)

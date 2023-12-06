@@ -14,6 +14,6 @@ interface FavoriteGamesRepository : JpaRepository<FavoriteGame, Long> {
             "AND favGame.game.isHidden = false")
     fun findAllByPlatformUser(userId: Long): List<FavoriteGame>
 
-    @Query ("from FavoriteGame favGame where favGame.game.id = :gameId")
-    fun findFavoriteGameByGameId(gameId: Long): Optional<FavoriteGame>
+    @Query ("from FavoriteGame favGame where favGame.game.id = :gameId AND favGame.platformUser.id = :userId")
+    fun findFavoriteGameByGameId(gameId: Long, userId: Long): Optional<FavoriteGame>
 }
